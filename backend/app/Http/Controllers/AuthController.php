@@ -36,8 +36,17 @@ class AuthController extends Controller
             ], 403);
         }
 
-        // Revoke all existing tokens to prevent token accumulation
-        $user->tokens()->delete();
+        // Cleanup token lama (>30 hari tidak dipakai) untuk cegah akumulasi
+        // tanpa mematikan sesi multi-device yang masih aktif.
+        $user->tokens()
+            ->where(function ($q) {
+                $q->where('last_used_at', '<', now()->subDays(30))
+                  ->orWhere(function ($q2) {
+                      $q2->whereNull('last_used_at')
+                         ->where('created_at', '<', now()->subDays(30));
+                  });
+            })
+            ->delete();
 
         $token = $user->createToken('auth_token')->plainTextToken;
 
