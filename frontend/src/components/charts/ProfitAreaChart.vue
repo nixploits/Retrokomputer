@@ -3,9 +3,19 @@
     <div class="chart-header">
       <div>
         <h3 class="chart-title">Tren Laba Bersih</h3>
-        <p class="chart-subtitle">12 bulan terakhir</p>
+        <p class="chart-subtitle">{{ rangeMonths }} bulan terakhir</p>
       </div>
       <div class="chart-actions">
+        <!-- Toggle rentang waktu -->
+        <div class="filter-tabs">
+          <button
+            v-for="opt in rangeOptions"
+            :key="opt.value"
+            class="filter-tab"
+            :class="{ active: rangeMonths === opt.value }"
+            @click="rangeMonths = opt.value"
+          >{{ opt.label }}</button>
+        </div>
         <!-- Toggle series visibility -->
         <div class="legend-toggles">
           <button
@@ -50,7 +60,7 @@
     <div v-else-if="hasData" class="chart-body">
       <apexchart
         ref="chartRef"
-        type="area"
+        type="line"
         height="280"
         :options="chartOptions"
         :series="filteredSeries"
@@ -91,10 +101,20 @@ const loading = ref(true)
 // FIX: tipe data menggunakan ChartLabaRugi, bukan ChartPenjualanBulanan
 const data = ref<ChartLabaRugi[]>([])
 
+// Rentang waktu yang ditampilkan (default 6 bulan terakhir biar tidak banyak ruang kosong)
+const rangeMonths = ref<6 | 12>(6)
+const rangeOptions = [
+  { label: '6 Bln', value: 6 as const },
+  { label: '12 Bln', value: 12 as const },
+]
+
+// Data yang ditampilkan = N bulan terakhir
+const visibleData = computed(() => data.value.slice(-rangeMonths.value))
+
 const seriesConfig = [
-  { key: 'total_penjualan' as const, label: 'Penjualan', color: '#6366f1' },
-  { key: 'total_pembelian' as const, label: 'Pembelian', color: '#f97316' },
-  { key: 'laba_bersih'     as const, label: 'Laba Bersih', color: '#39FF14' },
+  { key: 'total_penjualan' as const, label: 'Penjualan', color: '#6366f1', type: 'column' as const },
+  { key: 'total_pembelian' as const, label: 'Pembelian', color: '#f97316', type: 'column' as const },
+  { key: 'laba_bersih'     as const, label: 'Laba Bersih', color: '#39FF14', type: 'line' as const },
 ]
 
 const visibleSeries = reactive<Record<string, boolean>>({
@@ -122,93 +142,101 @@ const filteredSeries = computed(() =>
     .filter(s => visibleSeries[s.key])
     .map(s => ({
       name: s.label,
-      data: data.value.map(d => d[s.key] ?? 0),
+      type: s.type,
+      data: visibleData.value.map(d => d[s.key] ?? 0),
       color: s.color,
     }))
 )
 
-const chartOptions = computed(() => ({
-  chart: {
-    type: 'area' as const,
-    height: 280,
-    stacked: false,
-    toolbar: { show: false },
-    fontFamily: 'inherit',
-    background: 'transparent',
-    animations: {
-      enabled: true,
-      easing: 'easeinout',
-      speed: 700,
-      dynamicAnimation: { enabled: true, speed: 400 },
+const chartOptions = computed(() => {
+  const visibleCfg = seriesConfig.filter(s => visibleSeries[s.key])
+  return {
+    chart: {
+      type: 'line' as const,
+      height: 280,
+      stacked: false,
+      toolbar: { show: false },
+      fontFamily: 'inherit',
+      background: 'transparent',
+      animations: {
+        enabled: true,
+        easing: 'easeinout',
+        speed: 600,
+        dynamicAnimation: { enabled: true, speed: 400 },
+      },
+      zoom: { enabled: false },
     },
-    zoom: { enabled: true, type: 'x' as const },
-  },
-  colors: seriesConfig.filter(s => visibleSeries[s.key]).map(s => s.color),
-  fill: {
-    type: 'gradient',
-    gradient: {
-      shadeIntensity: 1,
-      opacityFrom: 0.25,
-      opacityTo: 0.02,
-      stops: [0, 85, 100],
-    },
-  },
-  stroke: {
-    curve: 'smooth' as const,
-    width: seriesConfig.filter(s => visibleSeries[s.key]).map(s =>
-      s.key === 'laba_bersih' ? 3 : 2
-    ),
-  },
-  xaxis: {
-    categories: data.value.map(d => d.bulan),
-    labels: {
-      style: { colors: '#64748b', fontSize: isMobile.value ? '9px' : '10px' },
-      rotate: isMobile.value ? 0 : -30,
-      rotateAlways: false,
-      hideOverlappingLabels: true,
-    },
-    tickAmount: isMobile.value ? 6 : undefined,
-    axisBorder: { show: false },
-    axisTicks: { show: false },
-  },
-  yaxis: {
-    labels: {
-      style: { colors: '#64748b', fontSize: '11px' },
-      formatter: (val: number) => {
-        const abs = Math.abs(val)
-        if (abs >= 1_000_000) return `${(val / 1_000_000).toFixed(1)}jt`
-        if (abs >= 1_000) return `${(val / 1_000).toFixed(0)}rb`
-        return val.toString()
+    colors: visibleCfg.map(s => s.color),
+    plotOptions: {
+      bar: {
+        columnWidth: '60%',
+        borderRadius: 4,
+        borderRadiusApplication: 'end' as const,
       },
     },
-  },
-  grid: {
-    borderColor: '#1e293b',
-    strokeDashArray: 4,
-    padding: { left: 8, right: 8 },
-  },
-  legend: { show: false }, // kita custom sendiri
-  tooltip: {
-    theme: 'dark' as const,
-    shared: true,
-    intersect: false,
-    y: {
-      formatter: (val: number) =>
-        new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(val),
+    fill: {
+      // Bar solid, garis tidak diisi
+      type: visibleCfg.map(s => (s.type === 'line' ? 'solid' : 'solid')),
+      opacity: visibleCfg.map(s => (s.type === 'line' ? 1 : 0.9)),
     },
-  },
-  dataLabels: { enabled: false },
-  markers: {
-    size: 0,
-    hover: { size: 5, sizeOffset: 3 },
-  },
-}))
+    stroke: {
+      // Garis lurus (bukan spline) agar tidak menyesatkan; lebar 0 untuk bar
+      curve: 'straight' as const,
+      width: visibleCfg.map(s => (s.type === 'line' ? 3 : 0)),
+    },
+    markers: {
+      size: visibleCfg.map(s => (s.type === 'line' ? 4 : 0)),
+      hover: { size: 6 },
+    },
+    xaxis: {
+      categories: visibleData.value.map(d => d.bulan),
+      labels: {
+        style: { colors: '#64748b', fontSize: isMobile.value ? '9px' : '10px' },
+        rotate: isMobile.value ? 0 : -30,
+        rotateAlways: false,
+        hideOverlappingLabels: true,
+      },
+      tickAmount: isMobile.value ? 6 : undefined,
+      axisBorder: { show: false },
+      axisTicks: { show: false },
+    },
+    yaxis: {
+      labels: {
+        style: { colors: '#64748b', fontSize: '11px' },
+        formatter: (val: number) => {
+          const abs = Math.abs(val)
+          if (abs >= 1_000_000) return `${(val / 1_000_000).toFixed(1)}jt`
+          if (abs >= 1_000) return `${(val / 1_000).toFixed(0)}rb`
+          return val.toString()
+        },
+      },
+    },
+    grid: {
+      borderColor: '#1e293b',
+      strokeDashArray: 4,
+      padding: { left: 8, right: 8 },
+    },
+    legend: { show: false }, // kita custom sendiri
+    tooltip: {
+      theme: 'dark' as const,
+      shared: true,
+      intersect: false,
+      y: {
+        formatter: (val: number) =>
+          new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(val),
+      },
+    },
+    dataLabels: { enabled: false },
+  }
+})
 
 function formatCurrencyShort(v: number) {
-  if (v >= 1_000_000_000) return `Rp ${(v / 1_000_000_000).toFixed(1)}M`
-  if (v >= 1_000_000) return `Rp ${(v / 1_000_000).toFixed(1)}jt`
-  if (v >= 1_000) return `Rp ${(v / 1_000).toFixed(0)}rb`
-  return `Rp ${v}`
+  const abs = Math.abs(v)
+  const sign = v < 0 ? '-' : ''
+  if (abs >= 1_000_000_000) return `${sign}Rp ${(abs / 1_000_000_000).toFixed(1)}M`
+  if (abs >= 1_000_000) return `${sign}Rp ${(abs / 1_000_000).toFixed(1)}jt`
+  if (abs >= 1_000) return `${sign}Rp ${(abs / 1_000).toFixed(0)}rb`
+  return `${sign}Rp ${abs}`
 }
 
 async function exportExcel() {
@@ -265,6 +293,37 @@ onUnmounted(() => {
   display: flex;
   gap: 4px;
   flex-wrap: wrap;
+}
+
+.filter-tabs {
+  display: flex;
+  gap: 2px;
+  background: #0b0f19;
+  border: 1px solid #1e293b;
+  border-radius: 8px;
+  padding: 3px;
+}
+
+.filter-tab {
+  padding: 3px 10px;
+  font-size: 11px;
+  font-weight: 700;
+  border-radius: 5px;
+  border: none;
+  background: transparent;
+  color: #475569;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+  letter-spacing: 0.03em;
+}
+
+.filter-tab.active {
+  background: #1e293b;
+  color: #F28500;
+}
+
+.filter-tab:hover:not(.active) {
+  color: #94a3b8;
 }
 
 .legend-btn {

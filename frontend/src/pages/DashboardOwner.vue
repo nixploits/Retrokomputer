@@ -141,7 +141,7 @@
       <!-- Top Products Bar (All) -->
       <div v-if="activeTab === 'all'" class="chart-row">
         <div class="chart-col-large">
-          <ProfitAreaChart style="display: none;" /> <!-- invisible placeholder for spacing -->
+          <!-- spacer kosong; chart tidak dirender agar tidak fetch data sia-sia -->
         </div>
         <div class="chart-col-small">
           <TopProductsBar />

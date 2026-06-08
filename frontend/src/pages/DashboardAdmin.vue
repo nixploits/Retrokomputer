@@ -34,13 +34,23 @@
           <select
             v-model="filterMode"
             @change="onFilterModeChange"
-            class="text-xs rounded-md border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-slate-800 dark:text-slate-200 px-3 py-2 min-w-[140px] focus:ring-2 focus:ring-retro-orange/30"
+            class="text-xs rounded-md border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-slate-800 dark:text-slate-200 px-3 py-2 min-w-[160px] focus:ring-2 focus:ring-retro-orange/30"
           >
-            <option value="">Bulan Ini (Default)</option>
-            <option value="harian">Harian</option>
-            <option value="mingguan">Mingguan</option>
-            <option value="bulanan">Bulanan</option>
-            <option value="tanggal">Berdasarkan Tanggal</option>
+            <optgroup label="Default">
+              <option value="hari_ini">Hari Ini</option>
+              <option value="minggu_ini">Minggu Ini</option>
+              <option value="">Bulan Ini</option>
+            </optgroup>
+            <optgroup label="Periode">
+              <option value="harian">Hari</option>
+              <option value="mingguan">Minggu</option>
+              <option value="bulanan">Bulan</option>
+              <option value="tahunan">Tahun</option>
+            </optgroup>
+            <optgroup label="Spesifik">
+              <option value="tanggal">Berdasarkan Tanggal</option>
+              <option value="rentang">Rentang Waktu Khusus</option>
+            </optgroup>
           </select>
         </div>
 
@@ -101,6 +111,40 @@
             class="text-xs rounded-md border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-slate-800 dark:text-slate-200 px-3 py-2 min-w-[160px] focus:ring-2 focus:ring-retro-orange/30"
           />
         </div>
+
+        <!-- Sub-filter: Tahun (year) -->
+        <div v-if="filterMode === 'tahunan'" class="flex flex-col gap-1">
+          <label class="text-[11px] font-semibold text-slate-500 dark:text-slate-400 uppercase">Pilih Tahun</label>
+          <select
+            v-model="filterValue"
+            @change="applyFilter"
+            class="text-xs rounded-md border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-slate-800 dark:text-slate-200 px-3 py-2 min-w-[120px] focus:ring-2 focus:ring-retro-orange/30"
+          >
+            <option v-for="y in availableYears" :key="y" :value="String(y)">{{ y }}</option>
+          </select>
+        </div>
+
+        <!-- Sub-filter: Rentang Waktu Khusus (date range) -->
+        <template v-if="filterMode === 'rentang'">
+          <div class="flex flex-col gap-1">
+            <label class="text-[11px] font-semibold text-slate-500 dark:text-slate-400 uppercase">Dari Tanggal</label>
+            <input
+              v-model="filterStart"
+              type="date"
+              @change="applyFilter"
+              class="text-xs rounded-md border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-slate-800 dark:text-slate-200 px-3 py-2 min-w-[160px] focus:ring-2 focus:ring-retro-orange/30"
+            />
+          </div>
+          <div class="flex flex-col gap-1">
+            <label class="text-[11px] font-semibold text-slate-500 dark:text-slate-400 uppercase">Sampai Tanggal</label>
+            <input
+              v-model="filterEnd"
+              type="date"
+              @change="applyFilter"
+              class="text-xs rounded-md border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-slate-800 dark:text-slate-200 px-3 py-2 min-w-[160px] focus:ring-2 focus:ring-retro-orange/30"
+            />
+          </div>
+        </template>
 
         <!-- Reset Button -->
         <button
@@ -465,7 +509,15 @@ const allTransactions = ref<Transaksi[]>([])
 // ===== Filter State =====
 const filterMode = ref<string>('')
 const filterValue = ref<string>('')
+const filterStart = ref<string>('')
+const filterEnd = ref<string>('')
 const listFilter = ref<string>('minggu_ini')
+
+// Daftar tahun untuk filter mode "Tahun" (5 tahun terakhir)
+const availableYears = computed(() => {
+  const y = new Date().getFullYear()
+  return [y, y - 1, y - 2, y - 3, y - 4]
+})
 
 const monthNames = [
   'Januari',
@@ -492,16 +544,28 @@ const dayNames: Record<string, string> = {
   minggu: 'Minggu',
 }
 
+// Format tanggal pendek untuk label rentang
+function formatShortDate(d: string): string {
+  if (!d) return ''
+  return new Date(d).toLocaleDateString('id-ID', { day: '2-digit', month: 'short', year: 'numeric' })
+}
+
 // ===== Computed: active filter label =====
 const activeFilterLabel = computed(() => {
   if (!filterMode.value) return 'Bulan Ini'
   switch (filterMode.value) {
+    case 'hari_ini':
+      return 'Hari Ini'
+    case 'minggu_ini':
+      return 'Minggu Ini'
     case 'harian':
       return `Hari ${dayNames[filterValue.value] || filterValue.value}`
     case 'mingguan':
       return `Minggu ke-${filterValue.value}`
     case 'bulanan':
       return monthNames[parseInt(filterValue.value) - 1] || filterValue.value
+    case 'tahunan':
+      return `Tahun ${filterValue.value}`
     case 'tanggal':
       if (filterValue.value) {
         return new Date(filterValue.value).toLocaleDateString('id-ID', {
@@ -511,6 +575,11 @@ const activeFilterLabel = computed(() => {
         })
       }
       return 'Pilih tanggal'
+    case 'rentang':
+      if (filterStart.value && filterEnd.value) {
+        return `${formatShortDate(filterStart.value)} – ${formatShortDate(filterEnd.value)}`
+      }
+      return 'Pilih rentang'
     default:
       return 'Bulan Ini'
   }
@@ -520,17 +589,25 @@ const activeFilterLabel = computed(() => {
 const kpiPenjualanLabel = computed(() => {
   if (!filterMode.value) return 'Penjualan Bulan Ini'
   switch (filterMode.value) {
+    case 'hari_ini':
+      return 'Penjualan Hari Ini'
+    case 'minggu_ini':
+      return 'Penjualan Minggu Ini'
     case 'harian':
       return `Penjualan Hari ${dayNames[filterValue.value] || ''}`
     case 'mingguan':
       return `Penjualan Minggu ke-${filterValue.value}`
     case 'bulanan':
       return `Penjualan ${monthNames[parseInt(filterValue.value) - 1] || ''}`
+    case 'tahunan':
+      return `Penjualan Tahun ${filterValue.value}`
     case 'tanggal':
       if (filterValue.value) {
         return `Penjualan ${new Date(filterValue.value).toLocaleDateString('id-ID', { day: '2-digit', month: 'short' })}`
       }
       return 'Penjualan Tanggal'
+    case 'rentang':
+      return 'Penjualan Rentang'
     default:
       return 'Penjualan Bulan Ini'
   }
@@ -539,14 +616,24 @@ const kpiPenjualanLabel = computed(() => {
 const kpiSublabel = computed(() => {
   if (!filterMode.value) return 'Data bulan ini'
   switch (filterMode.value) {
+    case 'hari_ini':
+      return 'Data hari ini'
+    case 'minggu_ini':
+      return 'Data minggu ini'
     case 'harian':
       return `Setiap hari ${dayNames[filterValue.value] || ''} bulan ini`
     case 'mingguan':
       return `Minggu ke-${filterValue.value} bulan ini`
     case 'bulanan':
       return `Bulan ${monthNames[parseInt(filterValue.value) - 1] || ''}`
+    case 'tahunan':
+      return `Tahun ${filterValue.value}`
     case 'tanggal':
       return `Tanggal ${filterValue.value}`
+    case 'rentang':
+      return filterStart.value && filterEnd.value
+        ? `${formatShortDate(filterStart.value)} – ${formatShortDate(filterEnd.value)}`
+        : 'Rentang tanggal'
     default:
       return 'Data bulan ini'
   }
@@ -554,7 +641,29 @@ const kpiSublabel = computed(() => {
 
 // ===== Filter Logic =====
 function buildFilterParams(): DashboardFilterParams | undefined {
-  if (!filterMode.value || !filterValue.value) return undefined
+  // Bulan Ini (default) → biarkan backend pakai default
+  if (!filterMode.value) return undefined
+
+  // Mode tanpa sub-filter
+  if (filterMode.value === 'hari_ini' || filterMode.value === 'minggu_ini') {
+    return {
+      filter_mode: filterMode.value as DashboardFilterParams['filter_mode'],
+      filter_year: new Date().getFullYear(),
+    }
+  }
+
+  // Mode rentang: butuh tanggal awal & akhir
+  if (filterMode.value === 'rentang') {
+    if (!filterStart.value || !filterEnd.value) return undefined
+    return {
+      filter_mode: 'rentang',
+      filter_value: `${filterStart.value},${filterEnd.value}`,
+      filter_year: new Date().getFullYear(),
+    }
+  }
+
+  // Mode dengan sub-filter nilai (harian/mingguan/bulanan/tahunan/tanggal)
+  if (!filterValue.value) return undefined
   return {
     filter_mode: filterMode.value as DashboardFilterParams['filter_mode'],
     filter_value: filterValue.value,
@@ -574,9 +683,21 @@ function onFilterModeChange() {
     case 'bulanan':
       filterValue.value = String(new Date().getMonth() + 1)
       break
+    case 'tahunan':
+      filterValue.value = String(new Date().getFullYear())
+      break
     case 'tanggal':
       filterValue.value = new Date().toISOString().split('T')[0] || ''
       break
+    case 'rentang': {
+      // Default: awal bulan ini s/d hari ini
+      const today = new Date()
+      const firstDay = new Date(today.getFullYear(), today.getMonth(), 1)
+      filterStart.value = firstDay.toISOString().split('T')[0] || ''
+      filterEnd.value = today.toISOString().split('T')[0] || ''
+      filterValue.value = ''
+      break
+    }
     default:
       filterValue.value = ''
       break
@@ -588,6 +709,8 @@ function onFilterModeChange() {
 function resetFilter() {
   filterMode.value = ''
   filterValue.value = ''
+  filterStart.value = ''
+  filterEnd.value = ''
   listFilter.value = 'minggu_ini'
   applyFilter()
 }

@@ -6,6 +6,16 @@
         <p class="chart-subtitle">{{ subtitleLabel }}</p>
       </div>
       <div class="chart-actions">
+        <!-- Filter periode -->
+        <div class="filter-tabs">
+          <button
+            v-for="opt in periodeOptions"
+            :key="opt.value"
+            class="filter-tab"
+            :class="{ active: periode === opt.value }"
+            @click="setPeriode(opt.value)"
+          >{{ opt.label }}</button>
+        </div>
         <!-- Filter jumlah produk -->
         <div class="filter-tabs">
           <button
@@ -85,7 +95,7 @@
 
       <!-- Detailed text comparison list below the chart/table -->
       <div class="products-comparison-list">
-        <div class="comparison-header">Perbandingan dengan Bulan Lalu</div>
+        <div class="comparison-header">Perbandingan dengan {{ periodePembandingLabel }}</div>
         <div class="comparison-items">
           <div v-for="(item, idx) in displayData" :key="item.nama_produk" class="comparison-item">
             <div class="item-info">
@@ -94,7 +104,7 @@
             </div>
             <div class="item-stats">
               <span class="item-qty">
-                {{ item.total_terjual }} pcs <span class="qty-label">bulan ini</span>
+                {{ item.total_terjual }} pcs <span class="qty-label">{{ periodeLabel }}</span>
               </span>
               
               <!-- Growth Indicator -->
@@ -123,7 +133,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, watch } from 'vue'
 import VueApexCharts from 'vue3-apexcharts'
 import type { ChartProdukTerlaris } from '@/types'
 import { laporanService } from '@/services'
@@ -134,15 +144,36 @@ const loading = ref(true)
 const allData = ref<ChartProdukTerlaris[]>([])
 const topN = ref<5 | 10>(5)
 const viewMode = ref<'chart' | 'table'>('chart')
+const periode = ref<'bulan-ini' | 'bulan-lalu' | 'tahun-ini'>('bulan-ini')
 
 const topOptions = [
   { label: 'Top 5', value: 5 as const },
   { label: 'Top 10', value: 10 as const },
 ]
 
+const periodeOptions = [
+  { label: 'Bln Ini', value: 'bulan-ini' as const },
+  { label: 'Bln Lalu', value: 'bulan-lalu' as const },
+  { label: 'Thn Ini', value: 'tahun-ini' as const },
+]
+
+// Label periode untuk subtitle & teks pembanding
+const periodeLabel = computed(() => {
+  const map = { 'bulan-ini': 'bulan ini', 'bulan-lalu': 'bulan lalu', 'tahun-ini': 'tahun ini' }
+  return map[periode.value]
+})
+const periodePembandingLabel = computed(() => {
+  const map = {
+    'bulan-ini': 'Bulan Lalu',
+    'bulan-lalu': 'Bulan Sebelumnya',
+    'tahun-ini': 'Tahun Lalu',
+  }
+  return map[periode.value]
+})
+
 const barColors = ['#F28500', '#FFD700', '#fb923c', '#fbbf24', '#fde68a', '#f59e0b', '#fcd34d', '#fef08a', '#fed7aa', '#fdba74']
 
-const subtitleLabel = computed(() => `Top ${topN.value} bulan ini`)
+const subtitleLabel = computed(() => `Top ${topN.value} ${periodeLabel.value}`)
 
 // Ambil hanya top N dari data
 const displayData = computed(() => allData.value.slice(0, topN.value))
@@ -259,11 +290,30 @@ function setTopN(val: 5 | 10) {
   topN.value = val
 }
 
+function setPeriode(val: 'bulan-ini' | 'bulan-lalu' | 'tahun-ini') {
+  periode.value = val
+}
+
+async function loadData() {
+  loading.value = true
+  try {
+    const res = await (laporanService.getChartProdukTerlaris as any)({ limit: 10, periode: periode.value })
+      .catch(() => laporanService.getChartProdukTerlaris())
+    allData.value = res.data as ChartProdukTerlaris[]
+  } catch (e) {
+    console.error('Failed to load top products chart:', e)
+    allData.value = []
+  } finally {
+    loading.value = false
+  }
+}
+
 async function exportExcel() {
   const token = localStorage.getItem('auth_token') ?? ''
   const url = new URL('/api/laporan/export-excel', window.location.origin)
   url.searchParams.set('type', 'produk-terlaris')
   url.searchParams.set('limit', String(topN.value))
+  url.searchParams.set('periode', periode.value)
   if (token) url.searchParams.set('token', token)
   try {
     const res = await fetch(url.toString())
@@ -281,17 +331,10 @@ async function exportExcel() {
   }
 }
 
-onMounted(async () => {
-  try {
-    const res = await (laporanService.getChartProdukTerlaris as any)({ limit: 10 })
-      .catch(() => laporanService.getChartProdukTerlaris())
-    allData.value = res.data as ChartProdukTerlaris[]
-  } catch (e) {
-    console.error('Failed to load top products chart:', e)
-  } finally {
-    loading.value = false
-  }
-})
+onMounted(loadData)
+
+// Reload saat periode berubah
+watch(periode, loadData)
 
 // Helper functions for comparison
 function getGrowthClass(current: number, previous: number) {
