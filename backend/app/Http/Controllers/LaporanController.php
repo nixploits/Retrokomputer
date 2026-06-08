@@ -52,14 +52,18 @@ class LaporanController extends Controller
         $this->applyDateFilter($pembelianQuery, $filterMode, $filterValue, $filterYear);
         $pembelianBulanIni = $pembelianQuery->sum('total');
 
-        // Riwayat stok rusak/hilang
+        // Riwayat stok rusak/hilang — agregasi tanpa memuat seluruh baris ke memori
         $kerugianQuery = RiwayatStok::whereIn('sumber', ['Barang Rusak', 'Barang Hilang']);
         $this->applyDateFilter($kerugianQuery, $filterMode, $filterValue, $filterYear);
-        $kerugianInventaris = $kerugianQuery->with('produk')
-                                            ->get()
-                                            ->sum(function ($item) {
-                                                return $item->qty * $item->produk->harga_beli;
-                                            });
+        $kerugianRows = $kerugianQuery
+            ->select('produk_id', DB::raw('SUM(qty) as total_qty'))
+            ->groupBy('produk_id')
+            ->get();
+        $hargaBeliMap = Produk::whereIn('id', $kerugianRows->pluck('produk_id'))
+            ->pluck('harga_beli', 'id');
+        $kerugianInventaris = $kerugianRows->sum(function ($row) use ($hargaBeliMap) {
+            return $row->total_qty * ($hargaBeliMap[$row->produk_id] ?? 0);
+        });
 
         $labaBersih = $penjualanBulanIni - $pembelianBulanIni - $kerugianInventaris;
 
@@ -74,11 +78,42 @@ class LaporanController extends Controller
 
     /**
      * Apply date filter to a query based on filter_mode and filter_value.
-     * If no filter_mode is provided, defaults to current month.
+     *
+     * Modes:
+     * - harian   : filter by day-of-week within the current month/year (filter_year is ignored)
+     * - mingguan : filter by week number (1-5) within the current month/year (filter_year is ignored)
+     * - bulanan  : filter by month (1-12) within filter_year
+     * - tanggal  : filter by exact date (YYYY-MM-DD)
+     * - default  : current month and year
      */
     private function applyDateFilter($query, $filterMode, $filterValue, $filterYear)
     {
+        $now = Carbon::now();
+
         switch ($filterMode) {
+            case 'hari_ini':
+                $query->whereDate('created_at', $now->toDateString());
+                break;
+
+            case 'minggu_ini':
+                $query->whereBetween('created_at', [
+                    $now->copy()->startOfWeek(),
+                    $now->copy()->endOfWeek(),
+                ]);
+                break;
+
+            case 'bulan_ini':
+                $query->whereMonth('created_at', $now->month)
+                      ->whereYear('created_at', $now->year);
+                break;
+
+            case 'tahunan':
+                // filter_value = tahun (mis. 2026)
+                $year = intval($filterValue ?: $now->year);
+                if ($year < 2000 || $year > 2100) $year = $now->year;
+                $query->whereYear('created_at', $year);
+                break;
+
             case 'harian':
                 // filter_value = day name in Indonesian: senin, selasa, rabu, kamis, jumat, sabtu, minggu
                 $dayMap = [
@@ -94,17 +129,19 @@ class LaporanController extends Controller
                 if ($dayOfWeek !== null) {
                     $query->whereRaw('DAYOFWEEK(created_at) = ?', [$dayOfWeek % 7 + 1]);
                 }
-                // Also scope to current month by default
-                $query->whereMonth('created_at', Carbon::now()->month)
-                      ->whereYear('created_at', $filterYear);
+                // Always scope to current month + year for consistency
+                $query->whereMonth('created_at', $now->month)
+                      ->whereYear('created_at', $now->year);
                 break;
 
             case 'mingguan':
-                // filter_value = 1, 2, 3, 4 (week number in current month)
+                // filter_value = 1, 2, 3, 4, 5 (week number in current month)
                 $weekNum = intval($filterValue ?? 1);
-                $now = Carbon::now();
-                $startOfMonth = Carbon::create($filterYear, $now->month, 1)->startOfDay();
+                if ($weekNum < 1) $weekNum = 1;
+                if ($weekNum > 5) $weekNum = 5;
 
+                // Always use current month + year
+                $startOfMonth = $now->copy()->startOfMonth();
                 $weekStart = $startOfMonth->copy()->addWeeks($weekNum - 1);
                 $weekEnd = $weekStart->copy()->addDays(6)->endOfDay();
 
@@ -122,7 +159,10 @@ class LaporanController extends Controller
 
             case 'bulanan':
                 // filter_value = 1-12 (month number)
-                $month = intval($filterValue ?? Carbon::now()->month);
+                $month = intval($filterValue ?? $now->month);
+                if ($month < 1 || $month > 12) {
+                    $month = $now->month;
+                }
                 $query->whereMonth('created_at', $month)
                       ->whereYear('created_at', $filterYear);
                 break;
@@ -142,14 +182,47 @@ class LaporanController extends Controller
                 }
                 break;
 
+            case 'rentang':
+                // filter_value = "YYYY-MM-DD,YYYY-MM-DD" (tanggal awal, tanggal akhir)
+                $parts = explode(',', (string) $filterValue);
+                if (count($parts) === 2 && trim($parts[0]) !== '' && trim($parts[1]) !== '') {
+                    try {
+                        $start = Carbon::parse(trim($parts[0]))->startOfDay();
+                        $end = Carbon::parse(trim($parts[1]))->endOfDay();
+                        if ($start->gt($end)) {
+                            [$start, $end] = [$end->copy()->startOfDay(), $start->copy()->endOfDay()];
+                        }
+                        $query->whereBetween('created_at', [$start, $end]);
+                    } catch (\Exception $e) {
+                        $query->whereDate('created_at', Carbon::today()->toDateString());
+                    }
+                } else {
+                    $query->whereDate('created_at', Carbon::today()->toDateString());
+                }
+                break;
+
             default:
                 // Default: current month
-                $query->whereMonth('created_at', Carbon::now()->month)
-                      ->whereYear('created_at', Carbon::now()->year);
+                $query->whereMonth('created_at', $now->month)
+                      ->whereYear('created_at', $now->year);
                 break;
         }
 
         return $query;
+    }
+
+    /**
+     * Hitung total kerugian inventaris (barang rusak/hilang) untuk satu bulan
+     * via agregasi SQL — tidak memuat baris ke memori (aman untuk data besar).
+     */
+    private function sumKerugianByMonth(int $month, int $year): float
+    {
+        return (float) DB::table('riwayat_stoks')
+            ->join('produks', 'riwayat_stoks.produk_id', '=', 'produks.id')
+            ->whereIn('riwayat_stoks.sumber', ['Barang Rusak', 'Barang Hilang'])
+            ->whereMonth('riwayat_stoks.created_at', $month)
+            ->whereYear('riwayat_stoks.created_at', $year)
+            ->sum(DB::raw('riwayat_stoks.qty * produks.harga_beli'));
     }
 
     public function stok(Request $request)
@@ -255,14 +328,7 @@ class LaporanController extends Controller
                 ->whereYear('created_at', $year)
                 ->sum('total');
 
-            $kerugian = RiwayatStok::whereIn('sumber', ['Barang Rusak', 'Barang Hilang'])
-                ->whereMonth('created_at', $month)
-                ->whereYear('created_at', $year)
-                ->with('produk')
-                ->get()
-                ->sum(function ($item) {
-                    return $item->qty * ($item->produk->harga_beli ?? 0);
-                });
+            $kerugian = $this->sumKerugianByMonth($month, $year);
 
             $result[] = [
                 'bulan' => $date->translatedFormat('M Y'),
@@ -322,9 +388,11 @@ class LaporanController extends Controller
         $limit = intval($request->query('limit', 5));
         if ($limit <= 0) $limit = 5;
 
-        $now = Carbon::now();
-        $lastMonth = Carbon::now()->subMonth();
+        [$start, $end, $prevStart, $prevEnd] = $this->resolveProdukTerlarisPeriode(
+            $request->query('periode', 'bulan-ini')
+        );
 
+        // Top produk pada periode terpilih (whereBetween = index-friendly untuk data besar)
         $data = DB::table('transaksi_details')
             ->join('transaksis', 'transaksi_details.transaksi_id', '=', 'transaksis.id')
             ->join('produks', 'transaksi_details.produk_id', '=', 'produks.id')
@@ -334,25 +402,70 @@ class LaporanController extends Controller
                 DB::raw('SUM(transaksi_details.qty) as total_terjual'),
                 DB::raw('SUM(transaksi_details.subtotal) as total_pendapatan')
             )
-            ->whereMonth('transaksis.created_at', $now->month)
-            ->whereYear('transaksis.created_at', $now->year)
+            ->whereBetween('transaksis.created_at', [$start, $end])
             ->groupBy('produks.id', 'produks.nama_produk')
             ->orderByDesc('total_terjual')
             ->limit($limit)
             ->get();
 
-        foreach ($data as $item) {
-            $lastMonthQty = DB::table('transaksi_details')
+        // Ambil qty periode sebelumnya dalam SATU query (hindari N+1)
+        $ids = $data->pluck('id')->all();
+        $prevQty = collect();
+        if (!empty($ids)) {
+            $prevQty = DB::table('transaksi_details')
                 ->join('transaksis', 'transaksi_details.transaksi_id', '=', 'transaksis.id')
-                ->where('transaksi_details.produk_id', $item->id)
-                ->whereMonth('transaksis.created_at', $lastMonth->month)
-                ->whereYear('transaksis.created_at', $lastMonth->year)
-                ->sum('transaksi_details.qty');
+                ->whereIn('transaksi_details.produk_id', $ids)
+                ->whereBetween('transaksis.created_at', [$prevStart, $prevEnd])
+                ->groupBy('transaksi_details.produk_id')
+                ->select('transaksi_details.produk_id as produk_id', DB::raw('SUM(transaksi_details.qty) as qty'))
+                ->pluck('qty', 'produk_id');
+        }
 
-            $item->total_terjual_bulan_lalu = (int) $lastMonthQty;
+        foreach ($data as $item) {
+            $item->total_terjual_bulan_lalu = (int) ($prevQty[$item->id] ?? 0);
         }
 
         return response()->json($data);
+    }
+
+    /**
+     * Resolve periode produk terlaris menjadi rentang tanggal [start, end]
+     * beserta rentang periode pembanding sebelumnya [prevStart, prevEnd].
+     *
+     * @return array{0:\Carbon\Carbon,1:\Carbon\Carbon,2:\Carbon\Carbon,3:\Carbon\Carbon}
+     */
+    private function resolveProdukTerlarisPeriode(string $periode): array
+    {
+        $now = Carbon::now();
+
+        switch ($periode) {
+            case 'bulan-lalu':
+                $ref = $now->copy()->subMonth();
+                $start = $ref->copy()->startOfMonth();
+                $end = $ref->copy()->endOfMonth();
+                $prev = $ref->copy()->subMonth();
+                $prevStart = $prev->copy()->startOfMonth();
+                $prevEnd = $prev->copy()->endOfMonth();
+                break;
+
+            case 'tahun-ini':
+                $start = $now->copy()->startOfYear();
+                $end = $now->copy()->endOfYear();
+                $prevStart = $now->copy()->subYear()->startOfYear();
+                $prevEnd = $now->copy()->subYear()->endOfYear();
+                break;
+
+            case 'bulan-ini':
+            default:
+                $start = $now->copy()->startOfMonth();
+                $end = $now->copy()->endOfMonth();
+                $prev = $now->copy()->subMonth();
+                $prevStart = $prev->copy()->startOfMonth();
+                $prevEnd = $prev->copy()->endOfMonth();
+                break;
+        }
+
+        return [$start, $end, $prevStart, $prevEnd];
     }
 
     public function exportExcel(Request $request)
@@ -440,14 +553,7 @@ class LaporanController extends Controller
                             ->whereYear('created_at', $yearVal)
                             ->sum('total');
 
-                        $kerugian = RiwayatStok::whereIn('sumber', ['Barang Rusak', 'Barang Hilang'])
-                            ->whereMonth('created_at', $month)
-                            ->whereYear('created_at', $yearVal)
-                            ->with('produk')
-                            ->get()
-                            ->sum(function ($item) {
-                                return $item->qty * ($item->produk->harga_beli ?? 0);
-                            });
+                        $kerugian = $this->sumKerugianByMonth($month, $yearVal);
 
                         $rows[] = [
                             $no++,
@@ -472,14 +578,7 @@ class LaporanController extends Controller
                             ->whereYear('created_at', $yearVal)
                             ->sum('total');
 
-                        $kerugian = RiwayatStok::whereIn('sumber', ['Barang Rusak', 'Barang Hilang'])
-                            ->whereMonth('created_at', $month)
-                            ->whereYear('created_at', $yearVal)
-                            ->with('produk')
-                            ->get()
-                            ->sum(function ($item) {
-                                return $item->qty * ($item->produk->harga_beli ?? 0);
-                            });
+                        $kerugian = $this->sumKerugianByMonth($month, $yearVal);
 
                         $rows[] = [
                             $no++,
@@ -535,8 +634,9 @@ class LaporanController extends Controller
                 $limit = intval($request->query('limit', 5));
                 if ($limit <= 0) $limit = 5;
 
-                $now = Carbon::now();
-                $lastMonth = Carbon::now()->subMonth();
+                [$start, $end, $prevStart, $prevEnd] = $this->resolveProdukTerlarisPeriode(
+                    $request->query('periode', 'bulan-ini')
+                );
 
                 $data = DB::table('transaksi_details')
                     ->join('transaksis', 'transaksi_details.transaksi_id', '=', 'transaksis.id')
@@ -547,32 +647,36 @@ class LaporanController extends Controller
                         DB::raw('SUM(transaksi_details.qty) as total_terjual'),
                         DB::raw('SUM(transaksi_details.subtotal) as total_pendapatan')
                     )
-                    ->whereMonth('transaksis.created_at', $now->month)
-                    ->whereYear('transaksis.created_at', $now->year)
+                    ->whereBetween('transaksis.created_at', [$start, $end])
                     ->groupBy('produks.id', 'produks.nama_produk')
                     ->orderByDesc('total_terjual')
                     ->limit($limit)
                     ->get();
 
+                $prevIds = $data->pluck('id')->all();
+                $prevQtyMap = collect();
+                if (!empty($prevIds)) {
+                    $prevQtyMap = DB::table('transaksi_details')
+                        ->join('transaksis', 'transaksi_details.transaksi_id', '=', 'transaksis.id')
+                        ->whereIn('transaksi_details.produk_id', $prevIds)
+                        ->whereBetween('transaksis.created_at', [$prevStart, $prevEnd])
+                        ->groupBy('transaksi_details.produk_id')
+                        ->select('transaksi_details.produk_id as produk_id', DB::raw('SUM(transaksi_details.qty) as qty'))
+                        ->pluck('qty', 'produk_id');
+                }
+
                 $headers = [
                     'No',
                     'Nama Produk',
-                    'Terjual Bulan Ini',
-                    'Terjual Bulan Lalu',
+                    'Terjual Periode Ini',
+                    'Terjual Periode Lalu',
                     'Perubahan (%)',
-                    'Pendapatan Bulan Ini (IDR)'
+                    'Pendapatan Periode Ini (IDR)'
                 ];
                 $currencyColumns = [5];
                 $no = 1;
                 foreach ($data as $item) {
-                    $lastMonthQty = DB::table('transaksi_details')
-                        ->join('transaksis', 'transaksi_details.transaksi_id', '=', 'transaksis.id')
-                        ->where('transaksi_details.produk_id', $item->id)
-                        ->whereMonth('transaksis.created_at', $lastMonth->month)
-                        ->whereYear('transaksis.created_at', $lastMonth->year)
-                        ->sum('transaksi_details.qty');
-
-                    $totalTerjualBulanLalu = (int) $lastMonthQty;
+                    $totalTerjualBulanLalu = (int) ($prevQtyMap[$item->id] ?? 0);
                     $diffPctLabel = 'Baru';
                     if ($totalTerjualBulanLalu > 0) {
                         $diff = (($item->total_terjual - $totalTerjualBulanLalu) / $totalTerjualBulanLalu) * 100;

@@ -10,13 +10,16 @@ class ProdukController extends Controller
     public function index(Request $request)
     {
         $query = Produk::query();
-        
-        if ($request->has('search')) {
-            $query->where('nama_produk', 'like', '%' . $request->search . '%')
-                  ->orWhere('kode_produk', 'like', '%' . $request->search . '%');
+
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->where('nama_produk', 'like', '%' . $search . '%')
+                  ->orWhere('kode_produk', 'like', '%' . $search . '%');
+            });
         }
 
-        if ($request->has('kategori')) {
+        if ($request->filled('kategori')) {
             $query->where('kategori', $request->kategori);
         }
 

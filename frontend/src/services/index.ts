@@ -108,7 +108,7 @@ export const laporanService = {
     api.get<ChartPenjualanBulanan[]>('/laporan/chart/penjualan-bulanan', { params }),
   getChartMetodePembayaran: (params?: { periode?: string }) =>
     api.get<ChartMetodePembayaran[]>('/laporan/chart/metode-pembayaran', { params }),
-  getChartProdukTerlaris: (params?: { limit?: number }) =>
+  getChartProdukTerlaris: (params?: { limit?: number; periode?: string }) =>
     api.get<ChartProdukTerlaris[]>('/laporan/chart/produk-terlaris', { params }),
 }
 
