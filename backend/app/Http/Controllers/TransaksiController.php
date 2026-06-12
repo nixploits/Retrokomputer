@@ -197,7 +197,7 @@ class TransaksiController extends Controller
             ]);
 
             foreach ($validated['items'] as $item) {
-                $produk = Produk::findOrFail($item['produk_id']);
+                $produk = Produk::lockForUpdate()->findOrFail($item['produk_id']);
                 
                 if ($produk->stok < $item['qty']) {
                     throw new \Exception("Stok tidak cukup untuk produk: " . $produk->nama_produk);

@@ -37,7 +37,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
     // Profile Management
     Route::get('/profile', [ProfileController::class, 'getProfile']);
     Route::post('/profile/verify-password', [ProfileController::class, 'verifyPassword']);
-    Route::post('/profile/send-otp', [ProfileController::class, 'sendOtp']);
+    Route::post('/profile/send-otp', [ProfileController::class, 'sendOtp'])->middleware('throttle:3,1');
     Route::post('/profile/verify-otp', [ProfileController::class, 'verifyOtp']);
     Route::put('/profile', [ProfileController::class, 'updateProfile']);
 

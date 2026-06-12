@@ -65,7 +65,14 @@ class LaporanController extends Controller
             return $row->total_qty * ($hargaBeliMap[$row->produk_id] ?? 0);
         });
 
-        $labaBersih = $penjualanBulanIni - $pembelianBulanIni - $kerugianInventaris;
+        // Hitung HPP / COGS dari transaksi penjualan terpilih
+        $transactionIds = (clone $penjualanQuery)->pluck('id');
+        $cogs = DB::table('transaksi_details')
+            ->join('produks', 'transaksi_details.produk_id', '=', 'produks.id')
+            ->whereIn('transaksi_details.transaksi_id', $transactionIds)
+            ->sum(DB::raw('transaksi_details.qty * produks.harga_beli'));
+
+        $labaBersih = $penjualanBulanIni - $cogs - $kerugianInventaris;
 
         return response()->json([
             'penjualan_bulan_ini' => $penjualanBulanIni,
@@ -330,13 +337,22 @@ class LaporanController extends Controller
 
             $kerugian = $this->sumKerugianByMonth($month, $year);
 
+            $trxIds = Transaksi::whereMonth('created_at', $month)
+                ->whereYear('created_at', $year)
+                ->pluck('id');
+
+            $cogs = DB::table('transaksi_details')
+                ->join('produks', 'transaksi_details.produk_id', '=', 'produks.id')
+                ->whereIn('transaksi_details.transaksi_id', $trxIds)
+                ->sum(DB::raw('transaksi_details.qty * produks.harga_beli'));
+
             $result[] = [
                 'bulan' => $date->translatedFormat('M Y'),
                 'bulan_num' => $month,
                 'tahun' => $year,
                 'total_penjualan' => (float) $penjualan,
                 'total_pembelian' => (float) $pembelian,
-                'laba_bersih' => (float) ($penjualan - $pembelian - $kerugian),
+                'laba_bersih' => (float) ($penjualan - $cogs - $kerugian),
             ];
         }
 
@@ -555,13 +571,22 @@ class LaporanController extends Controller
 
                         $kerugian = $this->sumKerugianByMonth($month, $yearVal);
 
+                        $trxIds = Transaksi::whereMonth('created_at', $month)
+                            ->whereYear('created_at', $yearVal)
+                            ->pluck('id');
+
+                        $cogs = DB::table('transaksi_details')
+                            ->join('produks', 'transaksi_details.produk_id', '=', 'produks.id')
+                            ->whereIn('transaksi_details.transaksi_id', $trxIds)
+                            ->sum(DB::raw('transaksi_details.qty * produks.harga_beli'));
+
                         $rows[] = [
                             $no++,
                             $date->translatedFormat('F'),
                             $yearVal,
                             (float) $penjualan,
                             (float) $pembelian,
-                            (float) ($penjualan - $pembelian - $kerugian)
+                            (float) ($penjualan - $cogs - $kerugian)
                         ];
                     }
                 } else {
@@ -569,7 +594,7 @@ class LaporanController extends Controller
                         $date = Carbon::now()->subMonths($i);
                         $month = $date->month;
                         $yearVal = $date->year;
-
+ 
                         $penjualan = Transaksi::whereMonth('created_at', $month)
                             ->whereYear('created_at', $yearVal)
                             ->sum('total');
@@ -580,13 +605,22 @@ class LaporanController extends Controller
 
                         $kerugian = $this->sumKerugianByMonth($month, $yearVal);
 
+                        $trxIds = Transaksi::whereMonth('created_at', $month)
+                            ->whereYear('created_at', $yearVal)
+                            ->pluck('id');
+
+                        $cogs = DB::table('transaksi_details')
+                            ->join('produks', 'transaksi_details.produk_id', '=', 'produks.id')
+                            ->whereIn('transaksi_details.transaksi_id', $trxIds)
+                            ->sum(DB::raw('transaksi_details.qty * produks.harga_beli'));
+
                         $rows[] = [
                             $no++,
                             $date->translatedFormat('F'),
                             $yearVal,
                             (float) $penjualan,
                             (float) $pembelian,
-                            (float) ($penjualan - $pembelian - $kerugian)
+                            (float) ($penjualan - $cogs - $kerugian)
                         ];
                     }
                 }
