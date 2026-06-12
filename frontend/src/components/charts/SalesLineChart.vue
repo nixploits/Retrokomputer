@@ -231,7 +231,7 @@ const chartOptions = computed(() => ({
                 text: `Avg: ${formatCurrencyShort(avgHarian.value)}`,
                 style: {
                   background: '#F28500',
-                  color: '#000',
+                  color: '#fff',
                   fontSize: '10px',
                   fontWeight: 700,
                   padding: { left: 6, right: 6, top: 2, bottom: 2 },

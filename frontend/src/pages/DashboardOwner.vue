@@ -14,7 +14,7 @@
     <!-- ============ FILTER BAR ============ -->
     <div class="filter-bar-card">
       <h3 class="filter-title">
-        <span class="filter-bullet">■</span>
+        <span class="filter-bullet"></span>
         Filter Data Analitis
       </h3>
       <div class="filter-inputs">
@@ -807,7 +807,11 @@ onMounted(async () => {
 }
 
 .filter-bullet {
-  color: var(--color-primary);
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  background-color: var(--color-primary);
+  border-radius: 9999px;
 }
 
 .filter-inputs {
