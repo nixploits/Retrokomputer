@@ -197,7 +197,7 @@ export interface FilterParams {
 }
 
 export interface DashboardFilterParams {
-  filter_mode?: 'harian' | 'mingguan' | 'bulanan' | 'tanggal'
+  filter_mode?: 'hari_ini' | 'minggu_ini' | 'bulan_ini' | 'harian' | 'mingguan' | 'bulanan' | 'tahunan' | 'tanggal' | 'rentang'
   filter_value?: string
   filter_year?: number
 }

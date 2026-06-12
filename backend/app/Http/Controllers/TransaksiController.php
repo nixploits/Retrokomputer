@@ -34,10 +34,41 @@ class TransaksiController extends Controller
 
     /**
      * Apply date filter to a query based on filter_mode and filter_value.
+     *
+     * Modes:
+     * - harian   : filter by day-of-week within the current month/year (filter_year is ignored)
+     * - mingguan : filter by week number (1-5) within the current month/year (filter_year is ignored)
+     * - bulanan  : filter by month (1-12) within filter_year
+     * - tanggal  : filter by exact date (YYYY-MM-DD)
+     * - default  : current month and year
      */
     private function applyDateFilter($query, $filterMode, $filterValue, $filterYear)
     {
+        $now = Carbon::now();
+
         switch ($filterMode) {
+            case 'hari_ini':
+                $query->whereDate('created_at', $now->toDateString());
+                break;
+
+            case 'minggu_ini':
+                $query->whereBetween('created_at', [
+                    $now->copy()->startOfWeek(),
+                    $now->copy()->endOfWeek(),
+                ]);
+                break;
+
+            case 'bulan_ini':
+                $query->whereMonth('created_at', $now->month)
+                      ->whereYear('created_at', $now->year);
+                break;
+
+            case 'tahunan':
+                $year = intval($filterValue ?: $now->year);
+                if ($year < 2000 || $year > 2100) $year = $now->year;
+                $query->whereYear('created_at', $year);
+                break;
+
             case 'harian':
                 $dayMap = [
                     'senin' => Carbon::MONDAY,
@@ -52,15 +83,18 @@ class TransaksiController extends Controller
                 if ($dayOfWeek !== null) {
                     $query->whereRaw('DAYOFWEEK(created_at) = ?', [$dayOfWeek % 7 + 1]);
                 }
-                $query->whereMonth('created_at', Carbon::now()->month)
-                      ->whereYear('created_at', $filterYear);
+                // Always scope to current month + year for consistency
+                $query->whereMonth('created_at', $now->month)
+                      ->whereYear('created_at', $now->year);
                 break;
 
             case 'mingguan':
                 $weekNum = intval($filterValue ?? 1);
-                $now = Carbon::now();
-                $startOfMonth = Carbon::create($filterYear, $now->month, 1)->startOfDay();
+                if ($weekNum < 1) $weekNum = 1;
+                if ($weekNum > 5) $weekNum = 5;
 
+                // Always use current month + year
+                $startOfMonth = $now->copy()->startOfMonth();
                 $weekStart = $startOfMonth->copy()->addWeeks($weekNum - 1);
                 $weekEnd = $weekStart->copy()->addDays(6)->endOfDay();
 
@@ -76,7 +110,10 @@ class TransaksiController extends Controller
                 break;
 
             case 'bulanan':
-                $month = intval($filterValue ?? Carbon::now()->month);
+                $month = intval($filterValue ?? $now->month);
+                if ($month < 1 || $month > 12) {
+                    $month = $now->month;
+                }
                 $query->whereMonth('created_at', $month)
                       ->whereYear('created_at', $filterYear);
                 break;
@@ -92,6 +129,32 @@ class TransaksiController extends Controller
                 } else {
                     $query->whereDate('created_at', Carbon::today()->toDateString());
                 }
+                break;
+
+            case 'rentang':
+                // filter_value = "YYYY-MM-DD,YYYY-MM-DD" (tanggal awal, tanggal akhir)
+                $parts = explode(',', (string) $filterValue);
+                if (count($parts) === 2 && trim($parts[0]) !== '' && trim($parts[1]) !== '') {
+                    try {
+                        $start = Carbon::parse(trim($parts[0]))->startOfDay();
+                        $end = Carbon::parse(trim($parts[1]))->endOfDay();
+                        // Tukar jika urutan terbalik
+                        if ($start->gt($end)) {
+                            [$start, $end] = [$end->copy()->startOfDay(), $start->copy()->endOfDay()];
+                        }
+                        $query->whereBetween('created_at', [$start, $end]);
+                    } catch (\Exception $e) {
+                        $query->whereDate('created_at', Carbon::today()->toDateString());
+                    }
+                } else {
+                    $query->whereDate('created_at', Carbon::today()->toDateString());
+                }
+                break;
+
+            default:
+                // Unknown mode → fallback to current month
+                $query->whereMonth('created_at', $now->month)
+                      ->whereYear('created_at', $now->year);
                 break;
         }
 
@@ -174,9 +237,15 @@ class TransaksiController extends Controller
         }
     }
 
-    public function show($id)
+    public function show(Request $request, $id)
     {
         $transaksi = Transaksi::with(['details.produk', 'kasir:id,name'])->findOrFail($id);
+
+        // Kasir hanya boleh melihat transaksi miliknya sendiri
+        if ($request->user()->role === 'kasir' && $transaksi->user_id !== $request->user()->id) {
+            return response()->json(['message' => 'Anda tidak berhak melihat transaksi ini.'], 403);
+        }
+
         return response()->json($transaksi);
     }
 
