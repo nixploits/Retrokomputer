@@ -14,13 +14,13 @@
   --text-secondary: #94a3b8;         /* Muted blue-gray text */
   --text-muted: #475569;             /* Muted slate text */
   
-  --color-primary: #6366f1;          /* Calming Indigo */
-  --color-primary-hover: #4f46e5;
-  --color-primary-glow: rgba(99, 102, 241, 0.15);
+  --color-primary: #1D4ED8;          /* Blue in Light Mode */
+  --color-primary-hover: #1e40af;
+  --color-primary-glow: rgba(29, 78, 216, 0.15);
   
-  --color-accent: #14b8a6;           /* Soothing Teal */
-  --color-accent-hover: #0d9488;
-  --color-accent-glow: rgba(20, 184, 166, 0.15);
+  --color-accent: #FF7A00;           /* Orange in Light Mode */
+  --color-accent-hover: #E05300;
+  --color-accent-glow: rgba(255, 122, 0, 0.15);
   
   --color-success: #10b981;          /* Emerald Green */
   --color-success-hover: #059669;
@@ -47,6 +47,16 @@ body {
   transition: background-color 0.3s ease, color 0.3s ease;
 }
 
+.dark {
+  --color-primary: #FF7A00;          /* Orange in Dark Mode */
+  --color-primary-hover: #E05300;
+  --color-primary-glow: rgba(255, 122, 0, 0.15);
+  
+  --color-accent: #3b82f6;           /* Lighter Blue in Dark Mode */
+  --color-accent-hover: #60a5fa;
+  --color-accent-glow: rgba(59, 130, 246, 0.15);
+}
+
 .dark body {
   background: var(--bg-deep) !important;
   color: var(--text-primary) !important;
@@ -57,7 +67,7 @@ body {
 ::-webkit-scrollbar-track { background: transparent; }
 .dark ::-webkit-scrollbar-track { background: var(--bg-deep) !important; }
 ::-webkit-scrollbar-thumb { 
-  background: rgba(99, 102, 241, 0.15) !important; 
+  background: rgba(255, 122, 0, 0.15) !important; 
   border-radius: 4px;
   border: 2px solid transparent;
   transition: var(--transition-smooth);
@@ -148,7 +158,7 @@ body {
 
 /* Router links, highlights & sidebar retro borders */
 .dark .router-link-active {
-  background-color: rgba(99, 102, 241, 0.08) !important;
+  background-color: var(--color-primary-glow) !important;
   color: #ffffff !important;
   font-weight: bold;
 }
@@ -162,8 +172,8 @@ body {
 }
 
 .dark .bg-white.rounded-lg.border.border-slate-200:hover {
-  border-color: rgba(99, 102, 241, 0.12) !important;
-  box-shadow: 0 15px 30px -5px rgba(0, 0, 0, 0.6), 0 0 15px rgba(99, 102, 241, 0.02) !important;
+  border-color: var(--color-primary-glow) !important;
+  box-shadow: 0 15px 30px -5px rgba(0, 0, 0, 0.6), 0 0 15px var(--color-primary-glow) !important;
 }
 
 /* Header & Aside borders */
@@ -181,7 +191,7 @@ body {
 
 /* Table rows hover */
 .dark tr:hover td {
-  background-color: rgba(99, 102, 241, 0.04) !important;
+  background-color: var(--color-primary-glow) !important;
   transition: var(--transition-smooth);
 }
 
@@ -224,7 +234,7 @@ body {
   border: 1px solid var(--border-color) !important;
   border-radius: 12px !important;
   box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7), 
-              0 0 30px rgba(99, 102, 241, 0.05) !important;
+              0 0 30px var(--color-primary-glow) !important;
   overflow: hidden !important;
 }
 
@@ -240,7 +250,7 @@ body {
 .dark .fixed.inset-0 .bg-retro-blue,
 .dark .fixed.inset-0 .bg-blue-600 {
   background: linear-gradient(90deg, #1e3a8a 0%, var(--color-primary) 100%) !important;
-  border-bottom: 1px solid rgba(99, 102, 241, 0.15) !important;
+  border-bottom: 1px solid var(--color-primary-glow) !important;
   padding: 12px 18px !important;
 }
 
@@ -353,8 +363,8 @@ html:not(.dark) .filter-tab.active {
   background: #1e293b !important;
   color: #ff7a00 !important; /* Gold/Accent for Monthly Sales & Top Products */
 }
-/* Indigo override for active tabs on SalesLineChart active filters */
-.dark .chart-card:has(.active[class*="indigo"]) .filter-tab.active,
+/* Primary override for active tabs on SalesLineChart active filters */
+.dark .chart-card:has(.active[class*="primary"]) .filter-tab.active,
 .dark .chart-card:has(.active:hover) .filter-tab.active {
   color: var(--color-primary) !important;
 }
@@ -371,7 +381,7 @@ html:not(.dark) .comp-item:hover,
 html:not(.dark) .metric:hover {
   background: #ffffff !important;
   border-color: var(--color-primary) !important;
-  box-shadow: 0 8px 20px rgba(99, 102, 241, 0.06) !important;
+  box-shadow: 0 8px 20px var(--color-primary-glow) !important;
 }
 
 .dark .stat-pill,
@@ -409,7 +419,7 @@ html:not(.dark) .metric:hover .metric-label {
   color: #fdba74 !important;
 }
 .dark .comp-item:hover .comp-label {
-  color: #a5b4fc !important;
+  color: #fed7aa !important;
 }
 
 /* --- Values in Pills/Metrics --- */

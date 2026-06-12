@@ -3,7 +3,7 @@
     <!-- Header -->
     <div class="flex items-center justify-between">
       <div class="flex items-center gap-3">
-        <div class="w-1 h-6 rounded-full bg-gradient-to-b from-indigo-400 to-teal-400"></div>
+        <div class="w-1 h-6 rounded-full bg-gradient-to-b from-retro-accent to-retro-primary"></div>
         <h2 class="text-sm font-semibold tracking-wider uppercase text-slate-800 dark:text-slate-200">
           Laporan Laba Kotor
         </h2>
@@ -17,7 +17,7 @@
     <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl overflow-hidden shadow-sm">
       <div class="px-6 py-4 border-b border-slate-100 dark:border-slate-800">
         <h3 class="text-xs font-bold text-slate-600 dark:text-slate-400 uppercase tracking-wider flex items-center gap-2">
-          <span class="inline-block w-1.5 h-1.5 bg-indigo-500 rounded-full"></span>
+          <span class="inline-block w-1.5 h-1.5 bg-retro-primary rounded-full"></span>
           Detail Ringkasan
         </h3>
       </div>
@@ -39,7 +39,7 @@
         </div>
         <div class="pt-4 flex justify-between items-center">
           <span class="font-bold text-sm uppercase tracking-wide text-slate-800 dark:text-slate-100">Laba Bersih</span>
-          <span class="font-bold text-lg" :class="stats.laba_bersih >= 0 ? 'text-teal-600 dark:text-teal-400' : 'text-rose-600 dark:text-rose-400'">
+          <span class="font-bold text-lg" :class="stats.laba_bersih >= 0 ? 'text-retro-success' : 'text-rose-600 dark:text-rose-400'">
             {{ formatCurrency(stats.laba_bersih) }}
           </span>
         </div>

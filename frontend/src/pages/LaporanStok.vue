@@ -3,7 +3,7 @@
     <!-- Header -->
     <div class="flex items-center justify-between">
       <div class="flex items-center gap-3">
-        <div class="w-1 h-6 rounded-full bg-gradient-to-b from-indigo-400 to-teal-400"></div>
+        <div class="w-1 h-6 rounded-full bg-gradient-to-b from-retro-accent to-retro-primary"></div>
         <h2 class="text-sm font-semibold tracking-wider uppercase text-slate-800 dark:text-slate-200">
           Laporan Stok
         </h2>
@@ -18,9 +18,9 @@
         <p class="text-xl font-bold tracking-tight mt-1.5 text-slate-800 dark:text-slate-100">{{ stokStats.total_jenis_produk }}</p>
       </div>
       <!-- Card 2: Stok Aman -->
-      <div class="kpi-card group bg-white dark:bg-gradient-to-br dark:from-slate-900 dark:to-slate-950 border border-slate-200 dark:border-teal-500/20 rounded-xl p-5 transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5">
+      <div class="kpi-card group bg-white dark:bg-gradient-to-br dark:from-slate-900 dark:to-slate-950 border border-slate-200 dark:border-retro-primary/20 rounded-xl p-5 transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5">
         <p class="text-[11px] font-medium uppercase tracking-wider text-slate-500 dark:text-slate-400">Stok Aman</p>
-        <p class="text-xl font-bold tracking-tight mt-1.5 text-teal-600 dark:text-teal-400">{{ stokStats.stok_aman }}</p>
+        <p class="text-xl font-bold tracking-tight mt-1.5 text-retro-primary">{{ stokStats.stok_aman }}</p>
       </div>
       <!-- Card 3: Stok Rendah -->
       <div class="kpi-card group bg-white dark:bg-gradient-to-br dark:from-slate-900 dark:to-slate-950 border border-slate-200 dark:border-amber-500/20 rounded-xl p-5 transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5">
@@ -57,7 +57,7 @@
               :key="p.id"
               class="transition-colors duration-200 hover:bg-slate-50/50 dark:hover:bg-slate-800/30 border-b border-slate-100 dark:border-slate-800/50"
             >
-              <td class="px-4 py-3 font-mono font-bold text-indigo-600 dark:text-indigo-400">
+              <td class="px-4 py-3 font-mono font-bold text-retro-primary">
                 {{ p.kode_produk }}
               </td>
               <td class="px-4 py-3 font-semibold font-sans text-slate-700 dark:text-slate-300">

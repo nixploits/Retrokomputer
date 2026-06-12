@@ -21,7 +21,7 @@
         <span class="wf-metric-label">Kerugian</span>
         <span class="wf-metric-val">-{{ formatCurrencyShort(kerugian) }}</span>
       </div>
-      <div class="wf-metric" :style="{ '--mc': labaBersih >= 0 ? '#6366f1' : '#ef4444' }">
+      <div class="wf-metric" :style="{ '--mc': labaBersih >= 0 ? 'var(--color-primary)' : '#ef4444' }">
         <span class="wf-metric-label">Laba Bersih</span>
         <span class="wf-metric-val">{{ formatCurrencyShort(labaBersih) }}</span>
       </div>
@@ -57,6 +57,7 @@
         height="320"
         :options="chartOptions"
         :series="series"
+        :key="chartKey"
       />
     </div>
     <div v-else class="chart-empty">
@@ -69,11 +70,14 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, watch } from 'vue'
 import VueApexCharts from 'vue3-apexcharts'
 import type { DashboardStats } from '@/types'
 import { laporanService } from '@/services'
+import { useTheme } from '@/utils/theme'
 
+const { isDark } = useTheme()
+const chartKey = ref(0)
 const apexchart = VueApexCharts
 const chartRef = ref<any>(null)
 
@@ -142,7 +146,7 @@ const series = computed(() => {
       {
         x: 'Laba Bersih',
         y: [0, l],
-        fillColor: l >= 0 ? '#6366f1' : '#ef4444',
+        fillColor: l >= 0 ? (isDark.value ? '#FF7A00' : '#1D4ED8') : '#ef4444',
       },
     ],
   }]
@@ -231,7 +235,7 @@ const chartOptions = computed(() => ({
       const label = d.x.replace('\n', ' ')
       const isDeduction = dataPointIndex === 1 || dataPointIndex === 2
       const sign = isDeduction ? '-' : ''
-      const color = isDeduction ? '#ef4444' : (dataPointIndex === 3 ? '#6366f1' : '#10b981')
+      const color = isDeduction ? '#ef4444' : (dataPointIndex === 3 ? (isDark.value ? '#FF7A00' : '#1D4ED8') : '#10b981')
 
       return `<div style="padding: 10px 14px; font-size: 12px; line-height: 1.6;">
         <div style="font-weight: 700; margin-bottom: 4px; color: #e2e8f0;">${label}</div>
@@ -268,6 +272,10 @@ function formatCurrencyFull(v: number) {
     minimumFractionDigits: 0,
   }).format(v)
 }
+
+watch(isDark, () => {
+  chartKey.value++
+})
 
 onMounted(async () => {
   try {

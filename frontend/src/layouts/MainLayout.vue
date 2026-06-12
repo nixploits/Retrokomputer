@@ -55,7 +55,7 @@
             :class="[
               'flex items-center gap-3 px-3.5 py-2.5 rounded-lg text-[13px] transition-all sidebar-link',
               isActive(item.path)
-                ? 'bg-indigo-600 text-white font-bold'
+                ? 'bg-retro-primary text-white font-bold shadow-md shadow-retro-primary/20'
                 : 'text-slate-400 hover:bg-slate-800/40 hover:text-white',
             ]"
             @click="isMobile && (sidebarOpen = false)"
@@ -88,7 +88,7 @@
             <p class="text-xs font-medium text-slate-800 dark:text-slate-200 truncate">{{ authStore.userName }}</p>
             <p class="text-[10px] text-slate-400 uppercase font-semibold font-mono">
               {{ authStore.user?.role }}
-              <span v-if="authStore.activeKasirProfile?.nama" class="text-retro-blue font-bold font-sans lowercase text-[9px] block">
+              <span v-if="authStore.activeKasirProfile?.nama" class="text-retro-primary font-bold font-sans lowercase text-[9px] block">
                 kasir: {{ authStore.activeKasirProfile.nama }}
               </span>
             </p>
@@ -130,7 +130,7 @@
           <router-link
             v-if="authStore.isKasir"
             to="/pos"
-            class="text-xs font-bold px-3 py-1.5 bg-retro-blue text-white rounded hover:bg-blue-700 transition-colors hidden sm:inline-flex items-center gap-1.5"
+            class="text-xs font-bold px-3 py-1.5 bg-retro-primary hover:bg-retro-primary-hover text-white rounded transition-colors hidden sm:inline-flex items-center gap-1.5"
           >
             <span>⊞</span> Kasir POS
           </router-link>
@@ -145,14 +145,14 @@
               @click="toggleDropdown"
               class="flex items-center gap-2 p-1 rounded-md hover:bg-slate-50 border border-slate-100 transition-colors"
             >
-              <div class="w-8 h-8 rounded bg-retro-blue/10 flex items-center justify-center">
-                <span class="text-retro-blue font-bold text-xs font-mono">{{ userInitial }}</span>
+              <div class="w-8 h-8 rounded bg-retro-primary/10 flex items-center justify-center">
+                <span class="text-retro-primary font-bold text-xs font-mono">{{ userInitial }}</span>
               </div>
               <div class="hidden md:flex flex-col text-left shrink-0 max-w-[120px]">
                 <span class="text-xs font-semibold text-slate-700 truncate leading-tight">{{ authStore.userName }}</span>
                 <span class="text-[9px] font-bold font-mono text-slate-400 uppercase leading-none">
                   {{ authStore.user?.role }}
-                  <span v-if="authStore.activeKasirProfile?.nama" class="text-retro-blue font-bold">
+                  <span v-if="authStore.activeKasirProfile?.nama" class="text-retro-primary font-bold">
                     ({{ authStore.activeKasirProfile.nama }})
                   </span>
                 </span>
@@ -211,11 +211,11 @@
 
     <!-- Confirmation Modal -->
     <div v-if="showLogoutConfirm" class="fixed inset-0 z-[100] flex items-center justify-center bg-retro-dark/60 backdrop-blur-sm animate-fadeIn">
-      <div class="bg-white border-2 border-retro-blue rounded-lg max-w-sm w-full mx-4 overflow-hidden shadow-2xl font-mono">
+      <div class="bg-white border-2 border-retro-primary rounded-lg max-w-sm w-full mx-4 overflow-hidden shadow-2xl font-mono">
         <!-- Title bar -->
-        <div class="bg-retro-blue text-white px-4 py-2 flex items-center justify-between">
+        <div class="bg-retro-primary text-white px-4 py-2 flex items-center justify-between">
           <span class="font-bold text-xs font-mono">KONFIRMASI KELUAR</span>
-          <button @click="showLogoutConfirm = false" class="text-white hover:text-retro-yellow transition-colors font-bold text-lg leading-none">×</button>
+          <button @click="showLogoutConfirm = false" class="text-white hover:text-retro-accent transition-colors font-bold text-lg leading-none">×</button>
         </div>
         <div class="p-6">
           <div class="flex items-start gap-3">
@@ -439,12 +439,12 @@ onUnmounted(() => {
 }
 
 .sidebar-link.router-link-active {
-  background-color: var(--color-primary, #6366f1) !important;
+  background-color: var(--color-primary, #ff7a00) !important;
   color: #ffffff !important;
   border-left: none !important;
   font-weight: 700 !important;
   border-radius: 8px !important;
-  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.25) !important;
+  box-shadow: 0 4px 12px rgba(255, 122, 0, 0.25) !important;
 }
 
 .sidebar-link :deep(svg) {
@@ -453,7 +453,7 @@ onUnmounted(() => {
 
 .sidebar-link:hover :deep(svg) {
   transform: scale(1.1) translateX(2px);
-  color: var(--color-accent, #14b8a6) !important;
+  color: var(--color-accent, #1D4ED8) !important;
 }
 </style>
 

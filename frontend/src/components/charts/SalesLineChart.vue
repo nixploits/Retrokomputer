@@ -75,7 +75,9 @@ import { ref, computed, onMounted, watch, onUnmounted } from 'vue'
 import VueApexCharts from 'vue3-apexcharts'
 import type { ChartPenjualanHarian } from '@/types'
 import { laporanService } from '@/services'
+import { useTheme } from '@/utils/theme'
 
+const { isDark } = useTheme()
 const apexchart = VueApexCharts
 
 const isMobile = ref(false)
@@ -138,7 +140,7 @@ const chartOptions = computed(() => ({
     },
     zoom: { enabled: false },
   },
-  colors: ['#6366f1'],
+  colors: [isDark.value ? '#FF7A00' : '#1D4ED8'],
   fill: {
     type: 'gradient',
     gradient: {
@@ -255,6 +257,9 @@ function setRange(val: 7 | 14 | 30) {
 }
 
 watch(selectedRange, loadData)
+watch(isDark, () => {
+  chartKey.value++
+})
 
 async function exportExcel() {
   const token = localStorage.getItem('auth_token') ?? ''
@@ -321,7 +326,7 @@ onUnmounted(() => {
 
 .filter-tab.active {
   background: #1e293b;
-  color: #6366f1;
+  color: #ff7a00;
 }
 
 .filter-tab:hover:not(.active) {
@@ -349,9 +354,9 @@ onUnmounted(() => {
 
 .comp-item:hover {
   background: #111827;
-  border-color: #6366f1;
+  border-color: #ff7a00;
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.15);
+  box-shadow: 0 4px 12px rgba(255, 122, 0, 0.15);
 }
 
 .comp-label {
@@ -364,7 +369,7 @@ onUnmounted(() => {
 }
 
 .comp-item:hover .comp-label {
-  color: #a5b4fc;
+  color: #fdba74;
 }
 
 .comp-val {

@@ -10,6 +10,15 @@ export default {
         mono: ['JetBrains Mono', 'Fira Code', 'Courier New', 'monospace'],
       },
       colors: {
+        'retro-primary': 'var(--color-primary)',
+        'retro-primary-hover': 'var(--color-primary-hover)',
+        'retro-primary-glow': 'var(--color-primary-glow)',
+        'retro-accent': 'var(--color-accent)',
+        'retro-accent-hover': 'var(--color-accent-hover)',
+        'retro-accent-glow': 'var(--color-accent-glow)',
+        'retro-success': 'var(--color-success)',
+        'retro-success-hover': 'var(--color-success-hover)',
+        'retro-success-glow': 'var(--color-success-glow)',
         'retro-orange': '#FF7A00',
         'retro-orange-dark': '#E05300',
         'retro-blue': '#1D4ED8', // Rich royal blue from logo swirl/outline
