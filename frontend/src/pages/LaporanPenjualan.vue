@@ -654,17 +654,29 @@ async function triggerPdfDownload(params: DashboardFilterParams) {
       return
     }
 
-    const title = 'Laporan Rincian Transaksi Penjualan'
+    const baseTitle = 'Laporan Rincian Transaksi Penjualan'
     let periodLabel = 'Semua Periode'
+    let periodFileSuffix = 'Semua_Periode'
     if (downloadPeriod.value === 'active') {
       periodLabel = activeFilterLabel.value
+      // sanitize period label for filenames
+      periodFileSuffix = activeFilterLabel.value
+        .replace(/[^a-zA-Z0-9]/g, '_')
+        .replace(/__+/g, '_')
+        .replace(/^_+|_+$/g, '')
     } else if (downloadPeriod.value === 'mingguan') {
       periodLabel = 'Minggu Ini (7 Hari Terakhir)'
+      periodFileSuffix = 'Mingguan'
     } else if (downloadPeriod.value === 'bulanan') {
       periodLabel = 'Bulan Ini'
+      periodFileSuffix = 'Bulanan'
     } else if (downloadPeriod.value === 'tahunan') {
       periodLabel = 'Tahun Ini'
+      periodFileSuffix = 'Tahunan'
     }
+
+    const timestamp = new Date().toISOString().slice(0, 10).replace(/-/g, '')
+    const documentTitle = `${baseTitle} - ${periodFileSuffix} (${timestamp})`
 
     const rowsHtml = transactions
       .map(
@@ -683,7 +695,7 @@ async function triggerPdfDownload(params: DashboardFilterParams) {
     printWindow.document.write(`
       <html>
         <head>
-          <title>${title}</title>
+          <title>${documentTitle}</title>
           <style>
             @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
             body {
@@ -768,7 +780,7 @@ async function triggerPdfDownload(params: DashboardFilterParams) {
         <body>
           <div class="header">
             <div class="logo-text">RETRO<span>KOMPUTER</span></div>
-            <div class="doc-title">${title}</div>
+            <div class="doc-title">${baseTitle}</div>
           </div>
 
           <div class="meta-info">
