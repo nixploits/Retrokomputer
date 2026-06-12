@@ -131,182 +131,119 @@
     </div>
 
     <!-- ============ KPI STATS CARDS ============ -->
-    <div class="kpi-grid">
+    <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4">
       <!-- Penjualan -->
-      <div class="kpi-card kpi-sales">
-        <div class="kpi-icon-wrap kpi-icon-sales">
-          <svg
-            width="20"
-            height="20"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
+      <div
+        class="bg-gradient-to-br from-retro-success-glow to-white dark:from-retro-success-glow dark:to-slate-800 rounded-lg border border-retro-success/20 dark:border-retro-success/30 p-3 md:p-5 hover:shadow-lg transition-all hover:border-retro-success/50 dark:hover:border-retro-success-hover min-h-[120px] md:min-h-[140px] flex flex-col justify-between"
+      >
+        <div>
+          <p
+            class="text-[10px] md:text-xs text-retro-success font-bold uppercase tracking-wider mb-1 md:mb-2 line-clamp-1"
           >
-            <line x1="12" y1="1" x2="12" y2="23" />
-            <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
-          </svg>
-        </div>
-        <div class="kpi-content">
-          <p class="kpi-label">{{ kpiPenjualanLabel }}</p>
-          <p class="kpi-value" :class="{ 'animate-count': !loading }">
+            {{ kpiPenjualanLabel }}
+          </p>
+          <p class="text-xl md:text-3xl font-bold text-retro-success mb-1 line-clamp-2 break-words">
             {{ formatCurrency(stats.penjualan_bulan_ini) }}
           </p>
-          <div
-            v-if="percentChange.penjualan !== null && !filterMode"
-            class="kpi-change"
-            :class="percentChange.penjualan >= 0 ? 'change-up' : 'change-down'"
-          >
-            <span>{{ percentChange.penjualan >= 0 ? '↑' : '↓' }}</span>
-            {{ Math.abs(percentChange.penjualan).toFixed(1) }}% vs bulan lalu
-          </div>
-          <div
-            v-else
-            class="kpi-change change-up"
-            style="background: rgba(59, 130, 246, 0.1); color: #3b82f6"
-          >
-            {{ kpiSublabel }}
-          </div>
         </div>
+        <p class="text-[10px] md:text-xs text-retro-success font-medium">
+          <span v-if="percentChange.penjualan !== null && !filterMode">
+            {{ percentChange.penjualan >= 0 ? '↑' : '↓' }}
+            {{ Math.abs(percentChange.penjualan).toFixed(1) }}% vs bulan lalu
+          </span>
+          <span v-else>{{ kpiSublabel }}</span>
+        </p>
       </div>
 
       <!-- Laba Bersih -->
-      <div class="kpi-card kpi-profit">
-        <div
-          class="kpi-icon-wrap"
-          :class="stats.laba_bersih >= 0 ? 'kpi-icon-profit' : 'kpi-icon-loss'"
-        >
-          <svg
-            v-if="stats.laba_bersih >= 0"
-            width="20"
-            height="20"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
+      <div
+        :class="[
+          stats.laba_bersih >= 0
+            ? 'bg-gradient-to-br from-retro-success-glow to-white dark:from-retro-success-glow dark:to-slate-800 border border-retro-success/20 dark:border-retro-success/30 hover:border-retro-success/50 dark:hover:border-retro-success-hover'
+            : 'bg-gradient-to-br from-red-50 to-white dark:from-red-900/20 dark:to-slate-800 border border-red-200/50 dark:border-red-800/50 hover:border-red-300 dark:hover:border-red-700',
+          'rounded-lg p-3 md:p-5 hover:shadow-lg transition-all min-h-[120px] md:min-h-[140px] flex flex-col justify-between',
+        ]"
+      >
+        <div>
+          <p
+            class="text-[10px] md:text-xs font-bold uppercase tracking-wider mb-1 md:mb-2 line-clamp-1"
+            :class="
+              stats.laba_bersih >= 0 ? 'text-retro-success' : 'text-red-600 dark:text-red-400'
+            "
           >
-            <polyline points="23 6 13.5 15.5 8.5 10.5 1 18" />
-            <polyline points="17 6 23 6 23 12" />
-          </svg>
-          <svg
-            v-else
-            width="20"
-            height="20"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
+            Laba Bersih
+          </p>
+          <p
+            class="text-xl md:text-3xl font-bold mb-1 line-clamp-2 break-words"
+            :class="
+              stats.laba_bersih >= 0 ? 'text-retro-success' : 'text-red-700 dark:text-red-300'
+            "
           >
-            <polyline points="23 18 13.5 8.5 8.5 13.5 1 6" />
-            <polyline points="17 18 23 18 23 12" />
-          </svg>
-        </div>
-        <div class="kpi-content">
-          <p class="kpi-label">Laba Bersih</p>
-          <p class="kpi-value" :class="stats.laba_bersih >= 0 ? 'text-emerald' : 'text-red'">
             {{ formatCurrency(stats.laba_bersih) }}
           </p>
-          <div
-            v-if="percentChange.laba !== null && !filterMode"
-            class="kpi-change"
-            :class="percentChange.laba >= 0 ? 'change-up' : 'change-down'"
-          >
-            <span>{{ percentChange.laba >= 0 ? '↑' : '↓' }}</span>
-            {{ Math.abs(percentChange.laba).toFixed(1) }}% vs bulan lalu
-          </div>
-          <div
-            v-else
-            class="kpi-change change-up"
-            style="background: rgba(59, 130, 246, 0.1); color: #3b82f6"
-          >
-            {{ kpiSublabel }}
-          </div>
         </div>
+        <p
+          class="text-[10px] md:text-xs font-medium"
+          :class="
+            stats.laba_bersih >= 0 ? 'text-retro-success' : 'text-red-500 dark:text-red-500/80'
+          "
+        >
+          <span v-if="percentChange.laba !== null && !filterMode">
+            {{ percentChange.laba >= 0 ? '↑' : '↓' }} {{ Math.abs(percentChange.laba).toFixed(1) }}%
+            vs bulan lalu
+          </span>
+          <span v-else>{{ stats.laba_bersih >= 0 ? 'Keuntungan bersih' : 'Kerugian bersih' }}</span>
+        </p>
       </div>
 
       <!-- Total Transaksi -->
-      <div class="kpi-card kpi-transactions">
-        <div class="kpi-icon-wrap kpi-icon-trx">
-          <svg
-            width="20"
-            height="20"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
+      <div
+        class="bg-gradient-to-br from-blue-50 to-white dark:from-blue-900/20 dark:to-slate-800 rounded-lg border border-blue-200/50 dark:border-blue-800/50 p-3 md:p-5 hover:shadow-lg transition-all hover:border-blue-300 dark:hover:border-blue-700 min-h-[120px] md:min-h-[140px] flex flex-col justify-between"
+      >
+        <div>
+          <p
+            class="text-[10px] md:text-xs text-blue-600 dark:text-blue-400 font-bold uppercase tracking-wider mb-1 md:mb-2 line-clamp-1"
           >
-            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
-            <polyline points="14 2 14 8 20 8" />
-            <line x1="16" y1="13" x2="8" y2="13" />
-            <line x1="16" y1="17" x2="8" y2="17" />
-          </svg>
+            Total Transaksi
+          </p>
+          <p
+            class="text-xl md:text-3xl font-bold text-blue-700 dark:text-blue-300 mb-1 line-clamp-2"
+          >
+            {{ stats.total_transaksi }}
+          </p>
         </div>
-        <div class="kpi-content">
-          <p class="kpi-label">Total Transaksi</p>
-          <p class="kpi-value">{{ stats.total_transaksi }}</p>
-          <div
-            v-if="percentChange.transaksi !== null && !filterMode"
-            class="kpi-change"
-            :class="percentChange.transaksi >= 0 ? 'change-up' : 'change-down'"
-          >
-            <span>{{ percentChange.transaksi >= 0 ? '↑' : '↓' }}</span>
+        <p class="text-[10px] md:text-xs text-blue-500 dark:text-blue-500/80 font-medium">
+          <span v-if="percentChange.transaksi !== null && !filterMode">
+            {{ percentChange.transaksi >= 0 ? '↑' : '↓' }}
             {{ Math.abs(percentChange.transaksi).toFixed(1) }}% vs bulan lalu
-          </div>
-          <div
-            v-else
-            class="kpi-change change-up"
-            style="background: rgba(59, 130, 246, 0.1); color: #3b82f6"
-          >
-            {{ kpiSublabel }}
-          </div>
-        </div>
+          </span>
+          <span v-else>{{ kpiSublabel }}</span>
+        </p>
       </div>
 
       <!-- Pembelian -->
-      <div class="kpi-card kpi-purchases">
-        <div class="kpi-icon-wrap kpi-icon-purchase">
-          <svg
-            width="20"
-            height="20"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
+      <div
+        class="bg-gradient-to-br from-orange-50 to-white dark:from-orange-900/20 dark:to-slate-800 rounded-lg border border-orange-200/50 dark:border-orange-800/50 p-3 md:p-5 hover:shadow-lg transition-all hover:border-orange-300 dark:hover:border-orange-700 min-h-[120px] md:min-h-[140px] flex flex-col justify-between"
+      >
+        <div>
+          <p
+            class="text-[10px] md:text-xs text-orange-600 dark:text-orange-400 font-bold uppercase tracking-wider mb-1 md:mb-2 line-clamp-1"
           >
-            <circle cx="9" cy="21" r="1" />
-            <circle cx="20" cy="21" r="1" />
-            <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6" />
-          </svg>
+            {{ kpiPembelianLabel }}
+          </p>
+          <p
+            class="text-xl md:text-3xl font-bold text-orange-700 dark:text-orange-300 mb-1 line-clamp-2 break-words"
+          >
+            {{ formatCurrency(stats.pembelian_bulan_ini) }}
+          </p>
         </div>
-        <div class="kpi-content">
-          <p class="kpi-label">{{ kpiPembelianLabel }}</p>
-          <p class="kpi-value">{{ formatCurrency(stats.pembelian_bulan_ini) }}</p>
-          <div
-            v-if="percentChange.pembelian !== null && !filterMode"
-            class="kpi-change"
-            :class="percentChange.pembelian <= 0 ? 'change-up' : 'change-down'"
-          >
-            <span>{{ percentChange.pembelian <= 0 ? '↓' : '↑' }}</span>
+        <p class="text-[10px] md:text-xs text-orange-500 dark:text-orange-500/80 font-medium">
+          <span v-if="percentChange.pembelian !== null && !filterMode">
+            {{ percentChange.pembelian <= 0 ? '↓' : '↑' }}
             {{ Math.abs(percentChange.pembelian).toFixed(1) }}% vs bulan lalu
-          </div>
-          <div
-            v-else
-            class="kpi-change change-up"
-            style="background: rgba(59, 130, 246, 0.1); color: #3b82f6"
-          >
-            {{ kpiSublabel }}
-          </div>
-        </div>
+          </span>
+          <span v-else>Dari supplier</span>
+        </p>
       </div>
     </div>
 
@@ -974,178 +911,7 @@ onMounted(async () => {
   font-size: 14px;
 }
 
-/* ===== KPI Cards Grid ===== */
-.kpi-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 16px;
-}
-
-@media (max-width: 1024px) {
-  .kpi-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
-@media (max-width: 640px) {
-  .kpi-grid {
-    grid-template-columns: 1fr;
-  }
-}
-
-.kpi-card {
-  background: #ffffff;
-  border-radius: 14px;
-  border: 1px solid #e2e8f0;
-  padding: 18px;
-  display: flex;
-  align-items: flex-start;
-  gap: 14px;
-  position: relative;
-  overflow: hidden;
-  transition: all 0.3s ease;
-  box-shadow:
-    0 4px 6px -1px rgba(0, 0, 0, 0.05),
-    0 2px 4px -1px rgba(0, 0, 0, 0.03);
-}
-
-.kpi-card:hover {
-  transform: translateY(-2px);
-  border-color: #cbd5e1;
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.08);
-}
-
-.dark .kpi-card {
-  background: #131926;
-  border-color: var(--color-primary-glow);
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
-}
-
-.dark .kpi-card:hover {
-  box-shadow: 0 8px 30px var(--color-primary-glow);
-  border-color: var(--color-primary);
-}
-
-.kpi-card::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 3px;
-}
-
-.kpi-sales::before {
-  background: linear-gradient(90deg, #ff7a00, #fed7aa);
-}
-.kpi-profit::before {
-  background: linear-gradient(90deg, var(--color-success), var(--color-success-glow));
-}
-.kpi-transactions::before {
-  background: linear-gradient(90deg, #1d4ed8, #60a5fa);
-}
-.kpi-purchases::before {
-  background: linear-gradient(90deg, #f97316, #fed7aa);
-}
-
-.kpi-icon-wrap {
-  width: 44px;
-  height: 44px;
-  border-radius: 12px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 22px;
-  flex-shrink: 0;
-}
-
-.kpi-icon-sales {
-  background: linear-gradient(135deg, #fff7ed, #ffedd5);
-  color: #ff7a00;
-}
-.kpi-icon-profit {
-  background: var(--color-success-glow);
-  color: var(--color-success);
-}
-.kpi-icon-loss {
-  background: linear-gradient(135deg, #fef2f2, #fecaca);
-  color: #ef4444;
-}
-.kpi-icon-trx {
-  background: linear-gradient(135deg, #dbeafe, #eff6ff);
-  color: #1d4ed8;
-}
-.kpi-icon-purchase {
-  background: linear-gradient(135deg, #fff7ed, #fed7aa);
-  color: #f97316;
-}
-
-.kpi-content {
-  flex: 1;
-  min-width: 0;
-}
-
-.kpi-label {
-  font-size: 11px;
-  font-weight: 600;
-  color: #64748b;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  margin: 0;
-}
-.dark .kpi-label {
-  color: #94a3b8;
-}
-
-.kpi-value {
-  font-size: 20px;
-  font-weight: 800;
-  color: #0f172a;
-  margin: 4px 0 0 0;
-  line-height: 1.2;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-.dark .kpi-value {
-  color: #f8fafc;
-}
-
-.kpi-value.text-emerald {
-  color: var(--color-success);
-}
-.kpi-value.text-red {
-  color: #dc2626;
-}
-
-.kpi-change {
-  display: inline-flex;
-  align-items: center;
-  gap: 3px;
-  font-size: 10px;
-  font-weight: 700;
-  padding: 2px 8px;
-  border-radius: 20px;
-  margin-top: 6px;
-}
-
-.change-up {
-  background: var(--color-success-glow);
-  color: var(--color-success);
-}
-
-.change-down {
-  background: #fef2f2;
-  color: #dc2626;
-}
-
-.kpi-sparkline {
-  position: absolute;
-  bottom: 0;
-  right: 0;
-  opacity: 0.6;
-  pointer-events: none;
-}
+/* ===== KPI Cards Grid (Removed in favor of unified Tailwind CSS styling) ===== */
 
 /* ===== Chart Rows ===== */
 .chart-row {
