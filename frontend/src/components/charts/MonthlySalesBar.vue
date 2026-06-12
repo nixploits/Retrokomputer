@@ -10,9 +10,24 @@
         <select v-model="selectedYear" class="year-select" @change="filterByYear">
           <option v-for="y in availableYears" :key="y" :value="y">{{ y }}</option>
         </select>
-        <button v-if="hasData" class="btn-download-csv" @click="exportExcel" title="Unduh Laporan Excel">
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3"/>
+        <button
+          v-if="hasData"
+          class="btn-download-csv"
+          @click="exportExcel"
+          title="Unduh Laporan Excel"
+        >
+          <svg
+            class="w-4 h-4"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2.5"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3"
+            />
           </svg>
           Unduh Excel
         </button>
@@ -40,16 +55,23 @@
       <span>Memuat data...</span>
     </div>
     <div v-else-if="hasData" class="chart-body">
-      <apexchart
-        type="bar"
-        height="280"
-        :options="chartOptions"
-        :series="series"
-      />
+      <apexchart type="bar" height="280" :options="chartOptions" :series="series" />
     </div>
     <div v-else class="chart-empty">
       <div class="empty-icon-wrapper">
-        <svg class="w-8 h-8 text-slate-500 mx-auto mb-2" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 4.875c0-.621.504-1.125 1.125-1.125h4.5c.621 0 1.125.504 1.125 1.125v14.25c0 .621-.504 1.125-1.125 1.125h-4.5c-.621 0-1.125-.504-1.125-1.125V4.875zM13.5 10.125c0-.621.504-1.125 1.125-1.125h4.5c.621 0 1.125.504 1.125 1.125v9c0 .621-.504 1.125-1.125 1.125h-4.5c-.621 0-1.125-.504-1.125-1.125v-9z"/></svg>
+        <svg
+          class="w-8 h-8 text-slate-500 mx-auto mb-2"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.5"
+          viewBox="0 0 24 24"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            d="M3.75 4.875c0-.621.504-1.125 1.125-1.125h4.5c.621 0 1.125.504 1.125 1.125v14.25c0 .621-.504 1.125-1.125 1.125h-4.5c-.621 0-1.125-.504-1.125-1.125V4.875zM13.5 10.125c0-.621.504-1.125 1.125-1.125h4.5c.621 0 1.125.504 1.125 1.125v9c0 .621-.504 1.125-1.125 1.125h-4.5c-.621 0-1.125-.504-1.125-1.125v-9z"
+          />
+        </svg>
       </div>
       <p class="text-xs text-slate-500 font-mono">Belum ada data penjualan</p>
     </div>
@@ -75,28 +97,28 @@ const selectedYear = ref<number>(new Date().getFullYear())
 
 // Semua tahun yang tersedia dari data
 const availableYears = computed(() => {
-  const years = [...new Set(allData.value.map(d => d.tahun))].sort((a, b) => b - a)
+  const years = [...new Set(allData.value.map((d) => d.tahun))].sort((a, b) => b - a)
   return years.length > 0 ? years : [new Date().getFullYear()]
 })
 
 // Data difilter per tahun yang dipilih
-const data = computed(() =>
-  allData.value.filter(d => d.tahun === selectedYear.value)
-)
+const data = computed(() => allData.value.filter((d) => d.tahun === selectedYear.value))
 
-const hasData = computed(() => data.value.some(d => d.total_penjualan > 0))
+const hasData = computed(() => data.value.some((d) => d.total_penjualan > 0))
 
 const totalPenjualan = computed(() => data.value.reduce((s, d) => s + d.total_penjualan, 0))
-const maxPenjualan = computed(() => Math.max(...data.value.map(d => d.total_penjualan), 0))
+const maxPenjualan = computed(() => Math.max(...data.value.map((d) => d.total_penjualan), 0))
 const avgPenjualan = computed(() => {
-  const aktif = data.value.filter(d => d.total_penjualan > 0)
+  const aktif = data.value.filter((d) => d.total_penjualan > 0)
   return aktif.length > 0 ? totalPenjualan.value / aktif.length : 0
 })
 
-const series = computed(() => [{
-  name: 'Penjualan',
-  data: data.value.map(d => d.total_penjualan)
-}])
+const series = computed(() => [
+  {
+    name: 'Penjualan',
+    data: data.value.map((d) => d.total_penjualan),
+  },
+])
 
 const currentMonth = new Date().getMonth() + 1
 const currentYear = new Date().getFullYear()
@@ -135,12 +157,12 @@ const chartOptions = computed(() => {
       },
     },
     // FIX: warna per bar — bulan ini highlight orange, bulan lain slate
-    colors: data.value.map(d =>
+    colors: data.value.map((d) =>
       d.bulan_num === currentMonth && d.tahun === currentYear
         ? '#F28500'
         : d.total_penjualan === maxPenjualan.value && maxPenjualan.value > 0
           ? '#FFD700'
-          : '#1A3A5C'
+          : '#1A3A5C',
     ),
     legend: { show: false },
     dataLabels: {
@@ -154,7 +176,7 @@ const chartOptions = computed(() => {
       style: { fontSize: '10px', colors: ['#94a3b8'], fontWeight: 600 },
     },
     xaxis: {
-      categories: data.value.map(d => d.bulan),
+      categories: data.value.map((d) => d.bulan),
       labels: {
         style: { colors: '#64748b', fontSize: isMobile.value ? '9px' : '10px' },
         rotate: isMobile.value ? 0 : -30,
@@ -186,13 +208,17 @@ const chartOptions = computed(() => {
       y: {
         title: { formatter: () => 'Penjualan: ' },
         formatter: (val: number) =>
-          new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(val),
+          new Intl.NumberFormat('id-ID', {
+            style: 'currency',
+            currency: 'IDR',
+            minimumFractionDigits: 0,
+          }).format(val),
       },
       states: {
         hover: { filter: { type: 'lighten' as any, value: 0.15 } },
         active: { filter: { type: 'darken' as any, value: 0.1 } },
       },
-    }
+    },
   }
 })
 
@@ -268,14 +294,16 @@ onUnmounted(() => {
   border-radius: 6px;
   color: #94a3b8;
   cursor: pointer;
-  transition: border-color 0.2s, color 0.2s;
+  transition:
+    border-color 0.2s,
+    color 0.2s;
   outline: none;
 }
 
 .year-select:hover,
 .year-select:focus {
-  border-color: #F28500;
-  color: #F28500;
+  border-color: #f28500;
+  color: #f28500;
 }
 
 .stats-row {
@@ -299,7 +327,7 @@ onUnmounted(() => {
 
 .stat-pill:hover {
   background: #111827;
-  border-color: #F28500;
+  border-color: #f28500;
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(242, 133, 0, 0.15);
 }
@@ -330,7 +358,7 @@ onUnmounted(() => {
 }
 
 .stat-value.highlight {
-  color: #F28500;
+  color: #f28500;
 }
 
 @media (max-width: 640px) {

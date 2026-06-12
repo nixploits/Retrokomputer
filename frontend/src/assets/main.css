@@ -5,54 +5,80 @@
 @tailwind utilities;
 
 :root {
-  --bg-deep: #0b0f17;                /* Deep Indigo-Slate backdrop */
-  --bg-card: #111827;                /* Card Background */
-  --bg-input: #080c14;               /* Deep Input Background */
+  --bg-deep: #0b0f17; /* Deep Indigo-Slate backdrop */
+  --bg-card: #111827; /* Card Background */
+  --bg-input: #080c14; /* Deep Input Background */
   --border-color: rgba(255, 255, 255, 0.05); /* Low-opacity thin border */
-  
-  --text-primary: #cbd5e1;           /* Off-white (low-glare) main text */
-  --text-secondary: #94a3b8;         /* Muted blue-gray text */
-  --text-muted: #475569;             /* Muted slate text */
-  
-  --color-primary: #1D4ED8;          /* Blue in Light Mode */
+
+  --text-primary: #cbd5e1; /* Off-white (low-glare) main text */
+  --text-secondary: #94a3b8; /* Muted blue-gray text */
+  --text-muted: #475569; /* Muted slate text */
+
+  --color-primary: #1d4ed8; /* Blue in Light Mode */
   --color-primary-hover: #1e40af;
   --color-primary-glow: rgba(29, 78, 216, 0.15);
-  
-  --color-accent: #FF7A00;           /* Orange in Light Mode */
-  --color-accent-hover: #E05300;
+
+  --color-accent: #ff7a00; /* Orange in Light Mode */
+  --color-accent-hover: #e05300;
   --color-accent-glow: rgba(255, 122, 0, 0.15);
-  
-  --color-success: #10b981;          /* Emerald Green */
+
+  --color-success: #10b981; /* Emerald Green */
   --color-success-hover: #059669;
   --color-success-glow: rgba(16, 185, 129, 0.12);
-  
-  --color-warning: #f59e0b;          /* Soft Amber */
+
+  --color-warning: #f59e0b; /* Soft Amber */
   --color-warning-hover: #d97706;
   --color-warning-glow: rgba(245, 158, 11, 0.12);
-  
-  --color-danger: #f43f5e;           /* Soothing Rose Red */
+
+  --color-danger: #f43f5e; /* Soothing Rose Red */
   --color-danger-hover: #e11d48;
   --color-danger-glow: rgba(244, 63, 94, 0.15);
-  
+
   --transition-smooth: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 /* Base */
-html { font-size: 14px; }
+html {
+  font-size: 14px;
+}
 body {
   font-family: 'Inter', system-ui, sans-serif;
   background: #f8fafc;
   color: #1e293b;
   -webkit-font-smoothing: antialiased;
-  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Global transitions for smooth theme toggling */
+body,
+header,
+aside,
+.bg-white,
+[class*='bg-white'],
+[class*='bg-slate-'],
+.kpi-card,
+.filter-bar-card,
+.chart-card,
+th,
+td,
+input,
+select,
+textarea,
+button,
+.btn-download-csv,
+.active-filter-badge {
+  transition:
+    background-color 0.3s ease,
+    border-color 0.3s ease,
+    color 0.3s ease,
+    box-shadow 0.3s ease;
 }
 
 .dark {
-  --color-primary: #FF7A00;          /* Orange in Dark Mode */
-  --color-primary-hover: #E05300;
+  --color-primary: #ff7a00; /* Orange in Dark Mode */
+  --color-primary-hover: #e05300;
   --color-primary-glow: rgba(255, 122, 0, 0.15);
-  
-  --color-accent: #3b82f6;           /* Lighter Blue in Dark Mode */
+
+  --color-accent: #3b82f6; /* Lighter Blue in Dark Mode */
   --color-accent-hover: #60a5fa;
   --color-accent-glow: rgba(59, 130, 246, 0.15);
 }
@@ -63,11 +89,18 @@ body {
 }
 
 /* Scrollbar */
-::-webkit-scrollbar { width: 8px; height: 8px; }
-::-webkit-scrollbar-track { background: transparent; }
-.dark ::-webkit-scrollbar-track { background: var(--bg-deep) !important; }
-::-webkit-scrollbar-thumb { 
-  background: rgba(255, 122, 0, 0.15) !important; 
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+.dark ::-webkit-scrollbar-track {
+  background: var(--bg-deep) !important;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 122, 0, 0.15) !important;
   border-radius: 4px;
   border: 2px solid transparent;
   transition: var(--transition-smooth);
@@ -75,25 +108,47 @@ body {
 .dark ::-webkit-scrollbar-thumb {
   border-color: var(--bg-deep);
 }
-::-webkit-scrollbar-thumb:hover { 
-  background: var(--color-accent) !important; 
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-accent) !important;
 }
 
 /* Animations */
-@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-@keyframes slideUp { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
-.animate-fadeIn { animation: fadeIn 0.18s ease-out; }
-.animate-slideUp { animation: slideUp 0.22s cubic-bezier(0.34, 1.56, 0.64, 1); }
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.animate-fadeIn {
+  animation: fadeIn 0.18s ease-out;
+}
+.animate-slideUp {
+  animation: slideUp 0.22s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
 
 /* ====================================================================
    PREMIUM RETRO DARK (LOW-WHITE) THEME OVERRIDES (Scoped to .dark)
    ==================================================================== */
 
-.dark .bg-white, .dark [class*="bg-white"] {
+.dark .bg-white,
+.dark [class*='bg-white'] {
   background-color: var(--bg-card) !important;
 }
 
-.dark .bg-slate-50, .dark [class*="bg-slate-50"] {
+.dark .bg-slate-50,
+.dark [class*='bg-slate-50'] {
   background-color: var(--bg-deep) !important;
 }
 
@@ -105,11 +160,15 @@ body {
   background-color: #1e293b !important;
 }
 
-.dark .border-slate-100, .dark .border-slate-200, .dark .border-slate-300 {
+.dark .border-slate-100,
+.dark .border-slate-200,
+.dark .border-slate-300 {
   border-color: var(--border-color) !important;
 }
 
-.dark .text-slate-800, .dark .text-slate-900, .dark .text-slate-700 {
+.dark .text-slate-800,
+.dark .text-slate-900,
+.dark .text-slate-700 {
   color: var(--text-primary) !important;
 }
 
@@ -126,7 +185,9 @@ body {
 }
 
 /* Inputs, Selects, and Textareas */
-.dark input, .dark select, .dark textarea {
+.dark input,
+.dark select,
+.dark textarea {
   background-color: var(--bg-input) !important;
   color: var(--text-primary) !important;
   border: 1px solid var(--border-color) !important;
@@ -134,9 +195,23 @@ body {
   transition: var(--transition-smooth) !important;
 }
 
-.dark input:focus, .dark select:focus, .dark textarea:focus {
+.dark input:focus,
+.dark select:focus,
+.dark textarea:focus {
   border-color: var(--color-primary) !important;
   box-shadow: 0 0 0 3px var(--color-primary-glow) !important;
+}
+
+/* Dropdown Options styling for dark mode/contrast visibility */
+select option {
+  background-color: #ffffff !important;
+  color: #1e293b !important;
+}
+
+.dark select option,
+.dark option {
+  background-color: #0b0f19 !important;
+  color: #cbd5e1 !important;
 }
 
 .dark input::placeholder {
@@ -173,11 +248,14 @@ body {
 
 .dark .bg-white.rounded-lg.border.border-slate-200:hover {
   border-color: var(--color-primary-glow) !important;
-  box-shadow: 0 15px 30px -5px rgba(0, 0, 0, 0.6), 0 0 15px var(--color-primary-glow) !important;
+  box-shadow:
+    0 15px 30px -5px rgba(0, 0, 0, 0.6),
+    0 0 15px var(--color-primary-glow) !important;
 }
 
 /* Header & Aside borders */
-.dark header.border-b, .dark aside.border-r {
+.dark header.border-b,
+.dark aside.border-r {
   border-color: var(--border-color) !important;
 }
 
@@ -220,7 +298,7 @@ body {
    ==================================================================== */
 
 /* Modal Backdrop */
-.dark .fixed.inset-0[class*="bg-"] {
+.dark .fixed.inset-0[class*='bg-'] {
   background-color: rgba(4, 6, 10, 0.8) !important;
   backdrop-filter: blur(10px) !important;
   -webkit-backdrop-filter: blur(10px) !important;
@@ -233,8 +311,9 @@ body {
   background: linear-gradient(145deg, var(--bg-card) 0%, var(--bg-deep) 100%) !important;
   border: 1px solid var(--border-color) !important;
   border-radius: 12px !important;
-  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7), 
-              0 0 30px var(--color-primary-glow) !important;
+  box-shadow:
+    0 25px 50px -12px rgba(0, 0, 0, 0.7),
+    0 0 30px var(--color-primary-glow) !important;
   overflow: hidden !important;
 }
 
@@ -242,8 +321,9 @@ body {
 .dark .fixed.inset-0 .border-red-600,
 .dark .fixed.inset-0 .border-red-200 {
   border-color: var(--color-danger) !important;
-  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7), 
-              0 0 30px rgba(244, 63, 94, 0.1) !important;
+  box-shadow:
+    0 25px 50px -12px rgba(0, 0, 0, 0.7),
+    0 0 30px rgba(244, 63, 94, 0.1) !important;
 }
 
 /* Modal Title bar (Success/Primary modal) */
@@ -364,7 +444,7 @@ html:not(.dark) .filter-tab.active {
   color: #ff7a00 !important; /* Gold/Accent for Monthly Sales & Top Products */
 }
 /* Primary override for active tabs on SalesLineChart active filters */
-.dark .chart-card:has(.active[class*="primary"]) .filter-tab.active,
+.dark .chart-card:has(.active[class*='primary']) .filter-tab.active,
 .dark .chart-card:has(.active:hover) .filter-tab.active {
   color: var(--color-primary) !important;
 }
@@ -592,12 +672,27 @@ html:not(.dark) .apexcharts-legend-text {
   font-weight: 500 !important;
 }
 
+/* --- Annotation Labels --- */
+.apexcharts-text.apexcharts-yaxis-annotation-label,
+.apexcharts-text.apexcharts-xaxis-annotation-label {
+  fill: #ffffff !important;
+  color: #ffffff !important;
+}
+
+/* --- Donut / Pie Slice Datalabels --- */
+.apexcharts-text.apexcharts-pie-label {
+  fill: #ffffff !important;
+  color: #ffffff !important;
+  font-weight: 700 !important;
+  filter: drop-shadow(0px 1px 1.5px rgba(0, 0, 0, 0.7));
+}
+
 /* --- Donut Chart Inner Text Labels --- */
 html:not(.dark) .apexcharts-datalabel-label {
   fill: #64748b !important;
 }
 .dark .apexcharts-datalabel-label {
-  fill: var(--text-muted) !important;
+  fill: var(--text-secondary) !important;
 }
 
 html:not(.dark) .apexcharts-datalabel-value {
@@ -637,4 +732,3 @@ html:not(.dark) .apexcharts-tooltip-series-group {
 .dark .apexcharts-tooltip-series-group {
   color: var(--text-primary) !important;
 }
-

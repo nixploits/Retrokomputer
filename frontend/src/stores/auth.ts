@@ -98,8 +98,20 @@ export const useAuthStore = defineStore('auth', () => {
   }
 
   return {
-    user, token, loading, error, activeKasirProfile,
-    isAuthenticated, isAdmin, isOwner, isKasir, userName,
-    init, login, logout, fetchUser, fetchActiveKasirProfile,
+    user,
+    token,
+    loading,
+    error,
+    activeKasirProfile,
+    isAuthenticated,
+    isAdmin,
+    isOwner,
+    isKasir,
+    userName,
+    init,
+    login,
+    logout,
+    fetchUser,
+    fetchActiveKasirProfile,
   }
 })

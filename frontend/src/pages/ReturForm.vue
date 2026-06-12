@@ -26,9 +26,10 @@
           <!-- Searchable Reference ID Selector -->
           <div v-if="form.jenis_retur" class="relative">
             <label class="block text-xs font-bold text-slate-700 uppercase mb-1">
-              Referensi {{ form.jenis_retur === 'penjualan' ? 'Transaksi Penjualan' : 'Invoice Pembelian' }}
+              Referensi
+              {{ form.jenis_retur === 'penjualan' ? 'Transaksi Penjualan' : 'Invoice Pembelian' }}
             </label>
-            
+
             <!-- Custom Searchable Input Dropdown -->
             <div class="flex gap-2">
               <div class="relative flex-1">
@@ -36,10 +37,12 @@
                   v-model="tempSearchQuery"
                   @focus="showDropdown = true"
                   @input="showDropdown = true"
-                  :placeholder="selectedRefLabel ? selectedRefLabel : 'Cari kode transaksi / invoice...'"
+                  :placeholder="
+                    selectedRefLabel ? selectedRefLabel : 'Cari kode transaksi / invoice...'
+                  "
                   class="w-full px-3 py-2 text-sm border-2 border-slate-200 rounded focus:outline-none focus:border-retro-blue font-mono"
                 />
-                
+
                 <!-- Clear Button -->
                 <button
                   v-if="form.referensi_id"
@@ -72,7 +75,7 @@
                 </div>
               </div>
             </div>
-            
+
             <div
               v-else-if="showDropdown && searchQuery && filteredRefs.length === 0"
               class="absolute z-10 w-full mt-1 bg-white border-2 border-slate-200 rounded p-3 shadow-lg text-center text-xs text-slate-400 font-mono"
@@ -83,7 +86,9 @@
 
           <!-- Ongkir Field -->
           <div v-if="form.referensi_id">
-            <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Ongkos Kirim (Rp)</label>
+            <label class="block text-xs font-bold text-slate-700 uppercase mb-1"
+              >Ongkos Kirim (Rp)</label
+            >
             <input
               v-model="ongkirInput"
               @input="handleOngkirInput"
@@ -94,7 +99,9 @@
 
           <!-- Alasan -->
           <div>
-            <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Alasan Retur</label>
+            <label class="block text-xs font-bold text-slate-700 uppercase mb-1"
+              >Alasan Retur</label
+            >
             <textarea
               v-model="form.alasan"
               rows="2"
@@ -106,7 +113,9 @@
 
           <!-- Item Retur Selection -->
           <div v-if="form.referensi_id" class="border-2 border-dashed border-slate-200 rounded p-4">
-            <div class="text-xs font-bold text-slate-700 uppercase mb-3 flex items-center justify-between">
+            <div
+              class="text-xs font-bold text-slate-700 uppercase mb-3 flex items-center justify-between"
+            >
               <span>Item Tersedia untuk Retur</span>
               <span class="text-[10px] text-slate-400 italic">Pilih item yang ingin diretur</span>
             </div>
@@ -115,7 +124,10 @@
               Memuat daftar item...
             </div>
 
-            <div v-else-if="availableItems.length === 0" class="py-4 text-center text-xs text-slate-400 font-mono">
+            <div
+              v-else-if="availableItems.length === 0"
+              class="py-4 text-center text-xs text-slate-400 font-mono"
+            >
               Tidak ada item di referensi ini.
             </div>
 
@@ -136,7 +148,9 @@
                   <div>
                     <div class="font-bold text-slate-800">{{ item.nama_produk }}</div>
                     <div class="text-[10px] text-slate-500 mt-0.5">
-                      Kode: {{ item.kode_produk }} | {{ form.jenis_retur === 'penjualan' ? 'Jual' : 'Beli' }}: {{ item.max_qty }} pcs
+                      Kode: {{ item.kode_produk }} |
+                      {{ form.jenis_retur === 'penjualan' ? 'Jual' : 'Beli' }}:
+                      {{ item.max_qty }} pcs
                     </div>
                   </div>
                 </div>
@@ -158,13 +172,19 @@
           </div>
 
           <!-- Error Alert -->
-          <div v-if="error" class="p-3 rounded bg-red-50 border-2 border-red-200 text-red-600 text-xs font-mono">
+          <div
+            v-if="error"
+            class="p-3 rounded bg-red-50 border-2 border-red-200 text-red-600 text-xs font-mono"
+          >
             <strong>ERROR:</strong> {{ error }}
           </div>
 
           <!-- Form Buttons -->
           <div class="flex justify-end gap-2 pt-2">
-            <router-link to="/retur" class="text-xs font-mono font-bold px-3 py-2 rounded border-2 border-slate-200 text-slate-600 hover:bg-slate-50">
+            <router-link
+              to="/retur"
+              class="text-xs font-mono font-bold px-3 py-2 rounded border-2 border-slate-200 text-slate-600 hover:bg-slate-50"
+            >
               Batal
             </router-link>
             <button
@@ -215,7 +235,7 @@ const form = ref<any>({
   referensi_id: '',
   alasan: '',
   ongkir: '',
-  items: []
+  items: [],
 })
 
 const ongkirInput = ref('')
@@ -226,21 +246,19 @@ const availableItems = ref<any[]>([])
 const filteredRefs = computed(() => {
   const query = searchQuery.value.toLowerCase().trim()
   if (form.value.jenis_retur === 'penjualan') {
-    return transactions.value.filter(t => 
-      t.kode_transaksi.toLowerCase().includes(query) || 
-      t.id.toString() === query
+    return transactions.value.filter(
+      (t) => t.kode_transaksi.toLowerCase().includes(query) || t.id.toString() === query,
     )
   } else if (form.value.jenis_retur === 'pembelian') {
-    return purchases.value.filter(p => 
-      p.invoice.toLowerCase().includes(query) || 
-      p.id.toString() === query
+    return purchases.value.filter(
+      (p) => p.invoice.toLowerCase().includes(query) || p.id.toString() === query,
     )
   }
   return []
 })
 
 const selectedItemsCount = computed(() => {
-  return availableItems.value.filter(i => i.selected).length
+  return availableItems.value.filter((i) => i.selected).length
 })
 
 onMounted(async () => {
@@ -288,7 +306,7 @@ function formatDate(d: string) {
   return new Date(d).toLocaleDateString('id-ID', {
     day: '2-digit',
     month: 'short',
-    year: 'numeric'
+    year: 'numeric',
   })
 }
 
@@ -311,7 +329,7 @@ async function selectRef(item: any) {
         kode_produk: d.produk?.kode_produk || '',
         max_qty: d.qty,
         qty: d.qty,
-        selected: false
+        selected: false,
       }))
     } catch (err) {
       error.value = 'Gagal memuat detail transaksi'
@@ -329,7 +347,7 @@ async function selectRef(item: any) {
         kode_produk: d.produk?.kode_produk || '',
         max_qty: d.qty,
         qty: d.qty,
-        selected: false
+        selected: false,
       }))
     } catch (err) {
       error.value = 'Gagal memuat detail pembelian'
@@ -361,15 +379,17 @@ async function handleSubmit() {
 
   // Compile selected items
   const payloadItems = availableItems.value
-    .filter(i => i.selected)
-    .map(i => {
+    .filter((i) => i.selected)
+    .map((i) => {
       // Validate bounds
       if (i.qty > i.max_qty) {
-        throw new Error(`Kuantitas retur untuk ${i.nama_produk} melebihi jumlah pembelian (${i.max_qty}).`)
+        throw new Error(
+          `Kuantitas retur untuk ${i.nama_produk} melebihi jumlah pembelian (${i.max_qty}).`,
+        )
       }
       return {
         produk_id: i.produk_id,
-        qty: Number(i.qty)
+        qty: Number(i.qty),
       }
     })
 
@@ -384,7 +404,7 @@ async function handleSubmit() {
     referensi_id: Number(form.value.referensi_id),
     alasan: form.value.alasan,
     ongkir: Number(form.value.ongkir) || 0,
-    items: payloadItems
+    items: payloadItems,
   }
 
   try {
@@ -397,4 +417,3 @@ async function handleSubmit() {
   }
 }
 </script>
-

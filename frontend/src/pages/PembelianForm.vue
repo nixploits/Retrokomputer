@@ -2,7 +2,9 @@
   <div class="max-w-3xl mx-auto font-mono">
     <div class="bg-white rounded-lg border-2 border-retro-blue shadow-md">
       <!-- Title bar -->
-      <div class="bg-retro-blue text-white px-4 py-2 flex items-center justify-between rounded-t-md">
+      <div
+        class="bg-retro-blue text-white px-4 py-2 flex items-center justify-between rounded-t-md"
+      >
         <span class="font-bold text-xs">■ TAMBAH PEMBELIAN BARANG</span>
       </div>
 
@@ -21,7 +23,9 @@
               </select>
             </div>
             <div>
-              <label class="block text-xs font-bold text-slate-700 uppercase mb-1">No. Invoice / Referensi</label>
+              <label class="block text-xs font-bold text-slate-700 uppercase mb-1"
+                >No. Invoice / Referensi</label
+              >
               <input
                 v-model="form.invoice"
                 placeholder="INV-XXXX"
@@ -33,7 +37,9 @@
 
           <!-- Struk File Uploader -->
           <div>
-            <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Struk / Bukti Pembelian (Gambar)</label>
+            <label class="block text-xs font-bold text-slate-700 uppercase mb-1"
+              >Struk / Bukti Pembelian (Gambar)</label
+            >
             <input
               type="file"
               accept="image/*"
@@ -59,7 +65,9 @@
             <!-- Items Table -->
             <div class="border-2 border-slate-200 rounded-lg bg-white">
               <!-- Clear Table Headers -->
-              <div class="grid grid-cols-[1fr_100px_150px_45px] gap-3 px-3 py-2 bg-slate-50 border-b-2 border-slate-200 text-left font-bold text-[10px] uppercase text-slate-600 font-mono rounded-t-md">
+              <div
+                class="grid grid-cols-[1fr_100px_150px_45px] gap-3 px-3 py-2 bg-slate-50 border-b-2 border-slate-200 text-left font-bold text-[10px] uppercase text-slate-600 font-mono rounded-t-md"
+              >
                 <div>Nama Barang</div>
                 <div>Jumlah (Qty)</div>
                 <div>Harga Beli (Rp)</div>
@@ -83,7 +91,10 @@
                         class="w-full px-2 py-1.5 text-xs border border-slate-300 rounded focus:outline-none focus:border-retro-blue font-sans"
                         autocomplete="off"
                       />
-                      <ul v-if="item.filtered && item.filtered.length" class="absolute z-10 w-full bg-white border border-slate-300 rounded shadow-lg max-h-48 overflow-y-auto mt-1">
+                      <ul
+                        v-if="item.filtered && item.filtered.length"
+                        class="absolute z-10 w-full bg-white border border-slate-300 rounded shadow-lg max-h-48 overflow-y-auto mt-1"
+                      >
                         <li
                           v-for="p in item.filtered"
                           :key="p.id"
@@ -131,7 +142,10 @@
             </div>
           </div>
 
-          <div v-if="error" class="p-3 rounded bg-red-50 border-2 border-red-200 text-red-600 text-xs font-mono">
+          <div
+            v-if="error"
+            class="p-3 rounded bg-red-50 border-2 border-red-200 text-red-600 text-xs font-mono"
+          >
             <strong>ERROR:</strong> {{ error }}
           </div>
 
@@ -173,11 +187,20 @@ const selectedFile = ref<File | null>(null)
 const form = ref<any>({
   supplier: '',
   invoice: '',
-  items: [{ produk_id: '', qty: '', harga_beli: '', harga_beli_input: '', search: '', filtered: [] }]
+  items: [
+    { produk_id: '', qty: '', harga_beli: '', harga_beli_input: '', search: '', filtered: [] },
+  ],
 })
 
 function addRow() {
-  form.value.items.push({ produk_id: '', qty: '', harga_beli: '', harga_beli_input: '', search: '', filtered: [] })
+  form.value.items.push({
+    produk_id: '',
+    qty: '',
+    harga_beli: '',
+    harga_beli_input: '',
+    search: '',
+    filtered: [],
+  })
 }
 
 function handleFileChange(e: Event) {
@@ -190,7 +213,7 @@ function handleFileChange(e: Event) {
 function filterProducts(index: number) {
   const term = form.value.items[index].search?.toLowerCase() || ''
   form.value.items[index].filtered = produkList.value.filter((p: Produk) =>
-    p.nama_produk.toLowerCase().includes(term)
+    p.nama_produk.toLowerCase().includes(term),
   )
 }
 
@@ -263,17 +286,17 @@ async function handleSubmit() {
 
   saving.value = true
   error.value = ''
-  
+
   try {
     const formData = new FormData()
     formData.append('supplier', form.value.supplier)
     formData.append('invoice', form.value.invoice)
-    
+
     // Map items to clean data required by the backend
     const cleanItems = form.value.items.map((item: any) => ({
       produk_id: item.produk_id,
       qty: Number(item.qty),
-      harga_beli: Number(item.harga_beli)
+      harga_beli: Number(item.harga_beli),
     }))
     formData.append('items', JSON.stringify(cleanItems))
 
@@ -290,4 +313,3 @@ async function handleSubmit() {
   }
 }
 </script>
-

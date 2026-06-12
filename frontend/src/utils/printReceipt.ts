@@ -1,7 +1,11 @@
 import type { Transaksi } from '@/types'
 import { customDialog } from '@/utils/dialog'
 
-export function printReceipt(transaksi: Transaksi, uangDiterima?: number | null, logoText: string = 'RETRO KOMPUTER') {
+export function printReceipt(
+  transaksi: Transaksi,
+  uangDiterima?: number | null,
+  logoText: string = 'RETRO KOMPUTER',
+) {
   if (!transaksi) return
 
   const formatRupiah = (val: number | string): string => {
@@ -197,6 +201,8 @@ export function printReceipt(transaksi: Transaksi, uangDiterima?: number | null,
     printWindow.document.write(htmlContent)
     printWindow.document.close()
   } else {
-    customDialog.warning('Pop-up printer diblokir oleh browser. Harap izinkan pop-up untuk mencetak nota.')
+    customDialog.warning(
+      'Pop-up printer diblokir oleh browser. Harap izinkan pop-up untuk mencetak nota.',
+    )
   }
 }

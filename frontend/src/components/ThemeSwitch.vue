@@ -8,7 +8,9 @@
     title="Ganti Tema"
   >
     <!-- Background Track Icons -->
-    <span class="absolute inset-0 flex justify-between items-center px-2 pointer-events-none select-none">
+    <span
+      class="absolute inset-0 flex justify-between items-center px-2 pointer-events-none select-none"
+    >
       <!-- Sun Icon (left) -->
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -127,14 +129,18 @@ const { isDark, toggleTheme } = useTheme()
 .knob-light {
   background-color: #1d4ed8; /* Vibrant retro blue */
   transform: translateX(0);
-  box-shadow: 0 2px 4px rgba(29, 78, 216, 0.25), 0 0 8px rgba(29, 78, 216, 0.35);
+  box-shadow:
+    0 2px 4px rgba(29, 78, 216, 0.25),
+    0 0 8px rgba(29, 78, 216, 0.35);
 }
 
 /* Knob in Dark Mode - High Contrast Orange */
 .knob-dark {
   background-color: #ff7a00; /* Vibrant retro orange */
   transform: translateX(28px); /* 60px width - 6px padding - 26px knob = 28px */
-  box-shadow: 0 2px 4px rgba(255, 122, 0, 0.3), 0 0 10px rgba(255, 122, 0, 0.6);
+  box-shadow:
+    0 2px 4px rgba(255, 122, 0, 0.3),
+    0 0 10px rgba(255, 122, 0, 0.6);
 }
 
 /* Interactions */
@@ -145,9 +151,22 @@ const { isDark, toggleTheme } = useTheme()
   transform: translateX(26px); /* Adjust translation slightly during squash */
 }
 .theme-switch-knob {
-  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), 
-              width 0.2s ease, 
-              background-color 0.3s ease, 
-              box-shadow 0.3s ease;
+  transition:
+    transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1),
+    width 0.2s ease,
+    background-color 0.3s ease,
+    box-shadow 0.3s ease;
+}
+
+/* Spin animation for knob icon when toggling */
+.theme-switch-knob svg {
+  transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+  transform: scale(1);
+}
+.track-light .theme-switch-knob svg {
+  transform: rotate(360deg);
+}
+.track-dark .theme-switch-knob svg {
+  transform: rotate(-360deg);
 }
 </style>

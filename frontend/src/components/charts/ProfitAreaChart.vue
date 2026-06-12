@@ -14,7 +14,9 @@
             class="filter-tab"
             :class="{ active: rangeMonths === opt.value }"
             @click="rangeMonths = opt.value"
-          >{{ opt.label }}</button>
+          >
+            {{ opt.label }}
+          </button>
         </div>
         <!-- Toggle series visibility -->
         <div class="legend-toggles">
@@ -31,9 +33,24 @@
             {{ s.label }}
           </button>
         </div>
-        <button v-if="hasData" class="btn-download-csv" @click="exportExcel" title="Unduh Laporan Excel">
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3"/>
+        <button
+          v-if="hasData"
+          class="btn-download-csv"
+          @click="exportExcel"
+          title="Unduh Laporan Excel"
+        >
+          <svg
+            class="w-4 h-4"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2.5"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3"
+            />
           </svg>
           Unduh Excel
         </button>
@@ -69,7 +86,19 @@
     </div>
     <div v-else class="chart-empty">
       <div class="empty-icon-wrapper">
-        <svg class="w-8 h-8 text-slate-500 mx-auto mb-2" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 18L9 11.25l4.306 4.307a11.95 11.95 0 015.814-5.519l2.74-1.22m0 0l-5.94-2.28m5.94 2.28l-2.28 5.941"/></svg>
+        <svg
+          class="w-8 h-8 text-slate-500 mx-auto mb-2"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.5"
+          viewBox="0 0 24 24"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            d="M2.25 18L9 11.25l4.306 4.307a11.95 11.95 0 015.814-5.519l2.74-1.22m0 0l-5.94-2.28m5.94 2.28l-2.28 5.941"
+          />
+        </svg>
       </div>
       <p class="text-xs text-slate-500 font-mono">Belum ada data laba kotor</p>
     </div>
@@ -116,9 +145,19 @@ const rangeOptions = [
 const visibleData = computed(() => data.value.slice(-rangeMonths.value))
 
 const seriesConfig = computed(() => [
-  { key: 'total_penjualan' as const, label: 'Penjualan', color: isDark.value ? '#FF7A00' : '#1D4ED8', type: 'column' as const },
-  { key: 'total_pembelian' as const, label: 'Pembelian', color: isDark.value ? '#3b82f6' : '#FF7A00', type: 'column' as const },
-  { key: 'laba_bersih'     as const, label: 'Laba Bersih', color: '#10b981', type: 'line' as const },
+  {
+    key: 'total_penjualan' as const,
+    label: 'Penjualan',
+    color: isDark.value ? '#FF7A00' : '#1D4ED8',
+    type: 'column' as const,
+  },
+  {
+    key: 'total_pembelian' as const,
+    label: 'Pembelian',
+    color: isDark.value ? '#3b82f6' : '#FF7A00',
+    type: 'column' as const,
+  },
+  { key: 'laba_bersih' as const, label: 'Laba Bersih', color: '#10b981', type: 'line' as const },
 ])
 
 const visibleSeries = reactive<Record<string, boolean>>({
@@ -132,28 +171,28 @@ function toggleSeries(key: string) {
 }
 
 const hasData = computed(() =>
-  data.value.some(d => d.total_penjualan > 0 || d.total_pembelian > 0)
+  data.value.some((d) => d.total_penjualan > 0 || d.total_pembelian > 0),
 )
 
 // Data bulan paling akhir
 const latestData = computed(() => {
-  const aktif = data.value.filter(d => d.total_penjualan > 0 || d.laba_bersih !== undefined)
+  const aktif = data.value.filter((d) => d.total_penjualan > 0 || d.laba_bersih !== undefined)
   return aktif.length > 0 ? aktif[aktif.length - 1] : null
 })
 
 const filteredSeries = computed(() =>
   seriesConfig.value
-    .filter(s => visibleSeries[s.key])
-    .map(s => ({
+    .filter((s) => visibleSeries[s.key])
+    .map((s) => ({
       name: s.label,
       type: s.type,
-      data: visibleData.value.map(d => d[s.key] ?? 0),
+      data: visibleData.value.map((d) => d[s.key] ?? 0),
       color: s.color,
-    }))
+    })),
 )
 
 const chartOptions = computed(() => {
-  const visibleCfg = seriesConfig.value.filter(s => visibleSeries[s.key])
+  const visibleCfg = seriesConfig.value.filter((s) => visibleSeries[s.key])
   return {
     chart: {
       type: 'line' as const,
@@ -170,7 +209,7 @@ const chartOptions = computed(() => {
       },
       zoom: { enabled: false },
     },
-    colors: visibleCfg.map(s => s.color),
+    colors: visibleCfg.map((s) => s.color),
     plotOptions: {
       bar: {
         columnWidth: '60%',
@@ -180,20 +219,20 @@ const chartOptions = computed(() => {
     },
     fill: {
       // Bar solid, garis tidak diisi
-      type: visibleCfg.map(s => (s.type === 'line' ? 'solid' : 'solid')),
-      opacity: visibleCfg.map(s => (s.type === 'line' ? 1 : 0.9)),
+      type: visibleCfg.map((s) => (s.type === 'line' ? 'solid' : 'solid')),
+      opacity: visibleCfg.map((s) => (s.type === 'line' ? 1 : 0.9)),
     },
     stroke: {
       // Garis lurus (bukan spline) agar tidak menyesatkan; lebar 0 untuk bar
       curve: 'straight' as const,
-      width: visibleCfg.map(s => (s.type === 'line' ? 3 : 0)),
+      width: visibleCfg.map((s) => (s.type === 'line' ? 3 : 0)),
     },
     markers: {
-      size: visibleCfg.map(s => (s.type === 'line' ? 4 : 0)),
+      size: visibleCfg.map((s) => (s.type === 'line' ? 4 : 0)),
       hover: { size: 6 },
     },
     xaxis: {
-      categories: visibleData.value.map(d => d.bulan),
+      categories: visibleData.value.map((d) => d.bulan),
       labels: {
         style: { colors: '#64748b', fontSize: isMobile.value ? '9px' : '10px' },
         rotate: isMobile.value ? 0 : -30,
@@ -227,7 +266,11 @@ const chartOptions = computed(() => {
       intersect: false,
       y: {
         formatter: (val: number) =>
-          new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(val),
+          new Intl.NumberFormat('id-ID', {
+            style: 'currency',
+            currency: 'IDR',
+            minimumFractionDigits: 0,
+          }).format(val),
       },
     },
     dataLabels: { enabled: false },
@@ -268,9 +311,9 @@ onMounted(async () => {
   checkMobile()
   window.addEventListener('resize', checkMobile)
   try {
-// FIX: getChartLabaRugiBulanan — jika belum ada di service, fallback ke getChartPenjualanBulanan
-    const serviceMethod = (laporanService as any).getChartLabaRugiBulanan
-      ?? laporanService.getChartPenjualanBulanan
+    // FIX: getChartLabaRugiBulanan — jika belum ada di service, fallback ke getChartPenjualanBulanan
+    const serviceMethod =
+      (laporanService as any).getChartLabaRugiBulanan ?? laporanService.getChartPenjualanBulanan
     const res = await serviceMethod.call(laporanService)
     data.value = res.data as ChartLabaRugi[]
   } catch (e) {
@@ -321,13 +364,15 @@ onUnmounted(() => {
   background: transparent;
   color: #475569;
   cursor: pointer;
-  transition: background 0.15s, color 0.15s;
+  transition:
+    background 0.15s,
+    color 0.15s;
   letter-spacing: 0.03em;
 }
 
 .filter-tab.active {
   background: #1e293b;
-  color: #F28500;
+  color: #f28500;
 }
 
 .filter-tab:hover:not(.active) {
@@ -346,7 +391,10 @@ onUnmounted(() => {
   background: #0b0f19;
   color: var(--series-color);
   cursor: pointer;
-  transition: opacity 0.2s, border-color 0.2s, background 0.2s;
+  transition:
+    opacity 0.2s,
+    border-color 0.2s,
+    background 0.2s;
 }
 
 .legend-btn:hover {

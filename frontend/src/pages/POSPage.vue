@@ -5,7 +5,9 @@
       <div class="bg-white rounded-lg border-2 border-retro-blue p-4 shadow-sm">
         <div class="flex items-center justify-between mb-2">
           <label class="text-xs font-bold text-slate-700 uppercase">CARI BARANG</label>
-          <span class="text-[10px] text-slate-400 font-sans">Tekan nama barang untuk memasukkan ke keranjang</span>
+          <span class="text-[10px] text-slate-400 font-sans"
+            >Tekan nama barang untuk memasukkan ke keranjang</span
+          >
         </div>
         <input
           ref="searchInput"
@@ -29,17 +31,25 @@
             class="bg-white rounded-lg border-2 border-slate-200 p-3 text-left hover:border-retro-blue hover:bg-slate-50 transition-all disabled:opacity-40 disabled:cursor-not-allowed group relative overflow-hidden shadow-sm"
           >
             <div class="flex justify-between items-start mb-2">
-              <span class="text-[10px] font-mono font-bold text-retro-blue bg-retro-blue/5 px-1.5 py-0.5 rounded border border-retro-blue/10">
+              <span
+                class="text-[10px] font-mono font-bold text-retro-blue bg-retro-blue/5 px-1.5 py-0.5 rounded border border-retro-blue/10"
+              >
                 {{ p.kode_produk }}
               </span>
               <span
                 class="text-[9px] font-bold px-1.5 py-0.5 rounded font-mono uppercase"
-                :class="p.stok > 0 ? 'bg-retro-success-glow text-retro-success border border-retro-success/20' : 'bg-red-50 text-red-600 border border-red-200'"
+                :class="
+                  p.stok > 0
+                    ? 'bg-retro-success-glow text-retro-success border border-retro-success/20'
+                    : 'bg-red-50 text-red-600 border border-red-200'
+                "
               >
                 {{ p.stok > 0 ? `Stok: ${p.stok}` : 'Habis' }}
               </span>
             </div>
-            <p class="text-xs text-slate-800 font-bold truncate font-sans group-hover:text-retro-blue transition-colors">
+            <p
+              class="text-xs text-slate-800 font-bold truncate font-sans group-hover:text-retro-blue transition-colors"
+            >
               {{ p.nama_produk }}
             </p>
             <p class="text-xs font-bold text-retro-orange-dark mt-2 font-mono">
@@ -47,7 +57,10 @@
             </p>
           </button>
         </div>
-        <div v-if="!loadingProducts && filteredProducts.length === 0" class="py-12 text-center text-sm text-slate-400 font-mono">
+        <div
+          v-if="!loadingProducts && filteredProducts.length === 0"
+          class="py-12 text-center text-sm text-slate-400 font-mono"
+        >
           BARANG TIDAK DITEMUKAN
         </div>
       </div>
@@ -55,13 +68,18 @@
 
     <!-- Cart Panel -->
     <div class="lg:w-[45%] flex flex-col">
-      <div class="bg-white rounded-lg border-2 border-retro-blue flex-1 flex flex-col overflow-hidden shadow-sm">
+      <div
+        class="bg-white rounded-lg border-2 border-retro-blue flex-1 flex flex-col overflow-hidden shadow-sm"
+      >
         <!-- Cart Header -->
         <div class="bg-retro-blue text-white px-4 py-3 flex items-center justify-between">
           <span class="font-bold text-xs flex items-center gap-2">
             <span>⊞</span>
             <span>KERANJANG BELANJA</span>
-            <span v-if="cart.totalItems > 0" class="bg-white text-retro-blue text-[9px] font-bold px-1.5 py-0.5 rounded-full font-mono">
+            <span
+              v-if="cart.totalItems > 0"
+              class="bg-white text-retro-blue text-[9px] font-bold px-1.5 py-0.5 rounded-full font-mono"
+            >
               {{ cart.totalItems }}
             </span>
           </span>
@@ -82,12 +100,14 @@
             class="flex items-center gap-3 p-3 rounded border border-slate-100 bg-slate-50 hover:bg-slate-100/50 transition-colors group"
           >
             <div class="flex-1 min-w-0">
-              <p class="text-xs font-bold text-slate-800 truncate font-sans">{{ item.produk.nama_produk }}</p>
+              <p class="text-xs font-bold text-slate-800 truncate font-sans">
+                {{ item.produk.nama_produk }}
+              </p>
               <p class="text-[10px] text-slate-400 font-mono mt-0.5">
                 {{ formatCurrency(item.produk.harga_jual) }}
               </p>
             </div>
-            
+
             <!-- Interactive Qty Controller -->
             <div class="flex items-center gap-1 shrink-0">
               <button
@@ -96,7 +116,7 @@
               >
                 −
               </button>
-              
+
               <!-- Editable Quantity State -->
               <span
                 v-if="editingItemId !== item.produk.id"
@@ -106,7 +126,7 @@
               >
                 {{ item.qty }}
               </span>
-              
+
               <input
                 v-else
                 v-model.number="editQtyValue"
@@ -139,8 +159,11 @@
               ✕
             </button>
           </div>
-          
-          <div v-if="cart.items.length === 0" class="py-12 text-center text-sm text-slate-400 font-mono">
+
+          <div
+            v-if="cart.items.length === 0"
+            class="py-12 text-center text-sm text-slate-400 font-mono"
+          >
             KERANJANG KOSONG
           </div>
         </div>
@@ -160,12 +183,16 @@
 
           <div class="flex items-center justify-between border-b border-slate-200 pb-2">
             <span class="text-xs font-bold text-slate-600 uppercase">TOTAL PEMBAYARAN</span>
-            <span class="text-lg font-bold text-retro-blue font-mono">{{ formatCurrency(cart.grandTotal) }}</span>
+            <span class="text-lg font-bold text-retro-blue font-mono">{{
+              formatCurrency(cart.grandTotal)
+            }}</span>
           </div>
 
           <!-- Payment Method -->
           <div>
-            <label class="text-[10px] font-bold text-slate-500 uppercase mb-1.5 block">METODE PEMBAYARAN</label>
+            <label class="text-[10px] font-bold text-slate-500 uppercase mb-1.5 block"
+              >METODE PEMBAYARAN</label
+            >
             <div class="grid grid-cols-3 gap-2">
               <button
                 v-for="m in methods"
@@ -175,7 +202,7 @@
                   'py-2 px-2 rounded text-xs border-2 transition-all font-bold uppercase',
                   cart.metode_pembayaran === m.value
                     ? 'bg-retro-blue text-white border-retro-blue shadow-sm'
-                    : 'border-slate-200 bg-white text-slate-600 hover:bg-slate-100'
+                    : 'border-slate-200 bg-white text-slate-600 hover:bg-slate-100',
                 ]"
               >
                 {{ m.label }}
@@ -184,7 +211,10 @@
           </div>
 
           <!-- Uang Diterima & Kembalian (Only for Tunai) -->
-          <div v-if="cart.metode_pembayaran === 'tunai'" class="space-y-2 bg-white p-3 rounded border-2 border-slate-200">
+          <div
+            v-if="cart.metode_pembayaran === 'tunai'"
+            class="space-y-2 bg-white p-3 rounded border-2 border-slate-200"
+          >
             <div class="flex justify-between items-center">
               <label class="text-[10px] font-bold text-slate-500 uppercase">UANG DITERIMA</label>
               <span class="text-[9px] text-slate-400 font-sans">Nominal uang tunai</span>
@@ -198,9 +228,14 @@
                 placeholder="0"
               />
             </div>
-            <div v-if="uangDiterima !== null && (uangDiterima as any) !== ''" class="flex justify-between items-center text-xs font-bold font-mono pt-1">
+            <div
+              v-if="uangDiterima !== null && (uangDiterima as any) !== ''"
+              class="flex justify-between items-center text-xs font-bold font-mono pt-1"
+            >
               <span class="text-slate-500">KEMBALIAN:</span>
-              <span :class="uangDiterima >= cart.grandTotal ? 'text-retro-success' : 'text-red-500'">
+              <span
+                :class="uangDiterima >= cart.grandTotal ? 'text-retro-success' : 'text-red-500'"
+              >
                 {{ formatCurrency(kembalian) }}
               </span>
             </div>
@@ -219,26 +254,62 @@
     </div>
 
     <!-- Success Modal -->
-    <div v-if="showSuccess" class="fixed inset-0 bg-retro-dark/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-      <div class="bg-white border-2 border-retro-blue rounded-lg w-full max-w-xs overflow-hidden shadow-2xl animate-slideUp font-mono">
+    <div
+      v-if="showSuccess"
+      class="fixed inset-0 bg-retro-dark/60 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+    >
+      <div
+        class="bg-white border-2 border-retro-blue rounded-lg w-full max-w-xs overflow-hidden shadow-2xl animate-slideUp font-mono"
+      >
         <!-- Title bar -->
         <div class="bg-retro-blue text-white px-4 py-2 flex items-center justify-between">
           <span class="font-bold text-xs">TRANSAKSI BERHASIL</span>
-          <button @click="closeSuccessModal" class="text-white hover:text-retro-yellow font-bold text-lg leading-none">×</button>
+          <button
+            @click="closeSuccessModal"
+            class="text-white hover:text-retro-yellow font-bold text-lg leading-none"
+          >
+            ×
+          </button>
         </div>
         <div class="p-6 text-center">
-          <div class="w-12 h-12 rounded-full bg-retro-success-glow border-2 border-retro-success flex items-center justify-center mx-auto mb-3 text-retro-success">
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
+          <div
+            class="w-12 h-12 rounded-full bg-retro-success-glow border-2 border-retro-success flex items-center justify-center mx-auto mb-3 text-retro-success"
+          >
+            <svg
+              class="w-6 h-6"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="3"
+              viewBox="0 0 24 24"
+            >
+              <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" />
+            </svg>
           </div>
           <h3 class="text-sm font-bold text-slate-800 mb-1">Pembayaran Sukses!</h3>
-          <p class="text-[10px] text-slate-400 font-bold uppercase font-mono mb-2">{{ lastCode }}</p>
-          <p class="text-lg font-bold text-retro-orange-dark font-mono mb-4">{{ formatCurrency(lastTotal) }}</p>
+          <p class="text-[10px] text-slate-400 font-bold uppercase font-mono mb-2">
+            {{ lastCode }}
+          </p>
+          <p class="text-lg font-bold text-retro-orange-dark font-mono mb-4">
+            {{ formatCurrency(lastTotal) }}
+          </p>
           <div class="flex flex-col gap-2">
             <button
               @click="printLastReceipt"
               class="text-xs font-bold px-5 py-2 bg-retro-orange hover:bg-orange-600 text-white rounded transition-colors uppercase shadow-sm flex items-center justify-center gap-1.5"
             >
-              <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6.72 13.829c-.24.03-.48.062-.72.096m.72-.096a42.415 42.415 0 0110.56 0m-10.56 0L6.34 18m10.94-4.171c.24.03.48.062.72.096m-.72-.096L17.66 18m0 0l.229 2.523a1.125 1.125 0 01-1.12 1.227H7.231c-.615 0-1.115-.465-1.12-1.08L6 18m11.66 0H6.34m.665-4.171V6.375c0-.621.504-1.125 1.125-1.125h8.25c.621 0 1.125.504 1.125 1.125v7.454M16.5 7.5h.008v.008H16.5V7.5z"/></svg>
+              <svg
+                class="w-4 h-4"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M6.72 13.829c-.24.03-.48.062-.72.096m.72-.096a42.415 42.415 0 0110.56 0m-10.56 0L6.34 18m10.94-4.171c.24.03.48.062.72.096m-.72-.096L17.66 18m0 0l.229 2.523a1.125 1.125 0 01-1.12 1.227H7.231c-.615 0-1.115-.465-1.12-1.08L6 18m11.66 0H6.34m.665-4.171V6.375c0-.621.504-1.125 1.125-1.125h8.25c.621 0 1.125.504 1.125 1.125v7.454M16.5 7.5h.008v.008H16.5V7.5z"
+                />
+              </svg>
               CETAK NOTA
             </button>
             <button
@@ -303,20 +374,28 @@ const kembalian = computed(() => {
 
 const displayUangDiterima = computed({
   get() {
-    if (uangDiterima.value === null || uangDiterima.value === undefined || (uangDiterima.value as any) === '') return ''
+    if (
+      uangDiterima.value === null ||
+      uangDiterima.value === undefined ||
+      (uangDiterima.value as any) === ''
+    )
+      return ''
     return new Intl.NumberFormat('id-ID').format(uangDiterima.value)
   },
   set(val: string) {
     const clean = val.replace(/\D/g, '')
     uangDiterima.value = clean ? parseInt(clean, 10) : null
-  }
+  },
 })
 
-watch(() => cart.metode_pembayaran, (newVal) => {
-  if (newVal !== 'tunai') {
-    uangDiterima.value = null
-  }
-})
+watch(
+  () => cart.metode_pembayaran,
+  (newVal) => {
+    if (newVal !== 'tunai') {
+      uangDiterima.value = null
+    }
+  },
+)
 
 const methods = [
   { value: 'tunai', label: 'Tunai' },
@@ -329,7 +408,9 @@ onMounted(async () => {
     try {
       await authStore.fetchActiveKasirProfile()
       if (!authStore.activeKasirProfile) {
-        customDialog.warning('Harap aktifkan profil kasir terlebih dahulu pada menu Profil Kasir sebelum melakukan transaksi.')
+        customDialog.warning(
+          'Harap aktifkan profil kasir terlebih dahulu pada menu Profil Kasir sebelum melakukan transaksi.',
+        )
         router.push('/profil-kasir')
         return
       }
@@ -350,15 +431,20 @@ onMounted(async () => {
 
   try {
     const res = await produkService.getAll()
-    products.value = (res.data as Produk[]).filter(p => p.status === 'aktif')
-  } catch { /* silent */ }
-  finally { loadingProducts.value = false }
+    products.value = (res.data as Produk[]).filter((p) => p.status === 'aktif')
+  } catch {
+    /* silent */
+  } finally {
+    loadingProducts.value = false
+  }
 })
 
 const filteredProducts = computed(() => {
   if (!searchQuery.value) return products.value
   const q = searchQuery.value.toLowerCase()
-  return products.value.filter(p => p.nama_produk.toLowerCase().includes(q) || p.kode_produk.toLowerCase().includes(q))
+  return products.value.filter(
+    (p) => p.nama_produk.toLowerCase().includes(q) || p.kode_produk.toLowerCase().includes(q),
+  )
 })
 
 function addToCart(p: Produk) {
@@ -414,7 +500,11 @@ async function processPayment() {
 
   // Validate cash amount if payment method is Tunai
   if (cart.metode_pembayaran === 'tunai') {
-    if (uangDiterima.value === null || uangDiterima.value === undefined || (uangDiterima.value as any) === '') {
+    if (
+      uangDiterima.value === null ||
+      uangDiterima.value === undefined ||
+      (uangDiterima.value as any) === ''
+    ) {
       customDialog.warning('Harap masukkan nominal uang yang diterima!')
       return
     }
@@ -428,15 +518,15 @@ async function processPayment() {
   try {
     const res = await transaksiService.create({
       ...cart.getPayload(),
-      nama_pembeli: namaPembeli.value.trim() || undefined
+      nama_pembeli: namaPembeli.value.trim() || undefined,
     })
     lastCode.value = res.data.kode_transaksi
     lastTotal.value = res.data.total
     lastTransaksi.value = res.data
 
     // Update local stock
-    cart.items.forEach(item => {
-      const prod = products.value.find(p => p.id === item.produk.id)
+    cart.items.forEach((item) => {
+      const prod = products.value.find((p) => p.id === item.produk.id)
       if (prod) prod.stok -= item.qty
     })
     cart.clearCart()
@@ -462,7 +552,10 @@ function closeSuccessModal() {
 }
 
 function formatCurrency(v: number) {
-  return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(v)
+  return new Intl.NumberFormat('id-ID', {
+    style: 'currency',
+    currency: 'IDR',
+    minimumFractionDigits: 0,
+  }).format(v)
 }
 </script>
-

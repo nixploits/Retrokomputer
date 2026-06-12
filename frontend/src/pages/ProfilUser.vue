@@ -8,25 +8,35 @@
           PENGATURAN PROFIL
         </h2>
       </div>
-      <div class="text-xs text-slate-400 font-bold bg-slate-100 px-2 py-1 border border-slate-200 rounded">
+      <div
+        class="text-xs text-slate-400 font-bold bg-slate-100 px-2 py-1 border border-slate-200 rounded"
+      >
         Role: {{ authStore.user?.role?.toUpperCase() }}
       </div>
     </div>
 
     <!-- 1. VERIFICATION SCREEN -->
-    <div v-if="!verified" class="bg-white border-2 border-retro-blue rounded-lg overflow-hidden shadow-sm animate-fadeIn">
-      <div class="bg-retro-blue text-white px-4 py-3 text-xs font-bold uppercase flex items-center gap-2">
+    <div
+      v-if="!verified"
+      class="bg-white border-2 border-retro-blue rounded-lg overflow-hidden shadow-sm animate-fadeIn"
+    >
+      <div
+        class="bg-retro-blue text-white px-4 py-3 text-xs font-bold uppercase flex items-center gap-2"
+      >
         <span>🔒</span> VERIFIKASI KEAMANAN DIPERLUKAN
       </div>
 
       <div class="p-6 space-y-6">
         <div class="text-center max-w-md mx-auto space-y-2">
-          <div class="w-12 h-12 rounded-full bg-slate-100 flex items-center justify-center mx-auto text-slate-400 text-xl border border-slate-200">
+          <div
+            class="w-12 h-12 rounded-full bg-slate-100 flex items-center justify-center mx-auto text-slate-400 text-xl border border-slate-200"
+          >
             🛡️
           </div>
           <h3 class="text-sm font-black text-slate-800">Verifikasi Identitas Anda</h3>
           <p class="text-xs text-slate-500 font-sans leading-relaxed">
-            Sebelum dapat mengubah email atau kata sandi, Anda perlu memverifikasi identitas terlebih dahulu menggunakan salah satu metode di bawah ini.
+            Sebelum dapat mengubah email atau kata sandi, Anda perlu memverifikasi identitas
+            terlebih dahulu menggunakan salah satu metode di bawah ini.
           </p>
         </div>
 
@@ -38,7 +48,7 @@
               'flex-1 py-3 text-center font-bold border-b-2 transition-all',
               verificationMethod === 'password'
                 ? 'border-retro-blue text-retro-blue bg-blue-50/30'
-                : 'border-transparent text-slate-400 hover:text-slate-655'
+                : 'border-transparent text-slate-400 hover:text-slate-655',
             ]"
           >
             🔑 KATA SANDI
@@ -49,7 +59,7 @@
               'flex-1 py-3 text-center font-bold border-b-2 transition-all',
               verificationMethod === 'email'
                 ? 'border-retro-blue text-retro-blue bg-blue-50/30'
-                : 'border-transparent text-slate-400 hover:text-slate-655'
+                : 'border-transparent text-slate-400 hover:text-slate-655',
             ]"
           >
             ✉️ OTP EMAIL
@@ -60,7 +70,9 @@
         <div v-if="verificationMethod === 'password'" class="space-y-4 max-w-sm mx-auto">
           <form @submit.prevent="handlePasswordVerify" class="space-y-4">
             <div class="space-y-1.5">
-              <label class="text-[10px] font-bold text-slate-650 uppercase">KATA SANDI SAAT INI</label>
+              <label class="text-[10px] font-bold text-slate-650 uppercase"
+                >KATA SANDI SAAT INI</label
+              >
               <input
                 v-model="passwordForm.password"
                 type="password"
@@ -86,9 +98,11 @@
           <div v-if="!otpSent" class="space-y-4 text-center">
             <div class="p-3 bg-slate-50 border border-slate-200 rounded text-left">
               <p class="text-[10px] font-bold text-slate-400 uppercase">EMAIL TERDAFTAR</p>
-              <p class="text-xs font-black text-slate-700 font-sans mt-0.5">{{ maskedEmail || 'Memuat email...' }}</p>
+              <p class="text-xs font-black text-slate-700 font-sans mt-0.5">
+                {{ maskedEmail || 'Memuat email...' }}
+              </p>
             </div>
-            
+
             <button
               @click="handleSendOtp"
               :disabled="processing || !maskedEmail"
@@ -100,13 +114,18 @@
 
           <!-- State B: OTP Verification Input -->
           <div v-else class="space-y-4">
-            <div class="bg-emerald-50 border border-emerald-200 text-emerald-800 p-3 rounded text-xs font-sans leading-relaxed">
-              Kode OTP telah dikirim ke email <strong>{{ maskedEmail }}</strong>. Silakan periksa kotak masuk atau folder spam Anda.
+            <div
+              class="bg-emerald-50 border border-emerald-200 text-emerald-800 p-3 rounded text-xs font-sans leading-relaxed"
+            >
+              Kode OTP telah dikirim ke email <strong>{{ maskedEmail }}</strong
+              >. Silakan periksa kotak masuk atau folder spam Anda.
             </div>
 
             <form @submit.prevent="handleOtpVerify" class="space-y-4">
               <div class="space-y-1.5">
-                <label class="text-[10px] font-bold text-slate-650 uppercase block text-center">MASUKKAN 6 DIGIT KODE OTP</label>
+                <label class="text-[10px] font-bold text-slate-650 uppercase block text-center"
+                  >MASUKKAN 6 DIGIT KODE OTP</label
+                >
                 <input
                   v-model="otpForm.code"
                   type="text"
@@ -142,10 +161,17 @@
     </div>
 
     <!-- 2. PROFILE EDIT FORM (SHOWN AFTER VERIFICATION) -->
-    <div v-else class="bg-white border-2 border-emerald-500 rounded-lg overflow-hidden shadow-sm animate-fadeIn">
-      <div class="bg-emerald-500 text-white px-4 py-3 text-xs font-bold uppercase flex items-center justify-between">
+    <div
+      v-else
+      class="bg-white border-2 border-emerald-500 rounded-lg overflow-hidden shadow-sm animate-fadeIn"
+    >
+      <div
+        class="bg-emerald-500 text-white px-4 py-3 text-xs font-bold uppercase flex items-center justify-between"
+      >
         <span>🔓 AKSES DIIZINKAN - UBAH PROFIL</span>
-        <span class="text-[9px] bg-emerald-600 px-2 py-0.5 rounded text-white font-normal">Sesi Aktif</span>
+        <span class="text-[9px] bg-emerald-600 px-2 py-0.5 rounded text-white font-normal"
+          >Sesi Aktif</span
+        >
       </div>
 
       <div class="p-6">
@@ -154,7 +180,9 @@
             <!-- Nama Lengkap (Read-only / info) -->
             <div class="space-y-1.5">
               <label class="text-[10px] font-bold text-slate-400 uppercase">NAMA LENGKAP</label>
-              <div class="w-full px-3 py-2 text-xs border-2 border-slate-100 rounded bg-slate-50 font-sans text-slate-500">
+              <div
+                class="w-full px-3 py-2 text-xs border-2 border-slate-100 rounded bg-slate-50 font-sans text-slate-500"
+              >
                 {{ profileInfo.name }}
               </div>
             </div>
@@ -162,7 +190,9 @@
             <!-- Username (Read-only / info) -->
             <div class="space-y-1.5">
               <label class="text-[10px] font-bold text-slate-400 uppercase">USERNAME</label>
-              <div class="w-full px-3 py-2 text-xs border-2 border-slate-100 rounded bg-slate-50 font-sans text-slate-500">
+              <div
+                class="w-full px-3 py-2 text-xs border-2 border-slate-100 rounded bg-slate-50 font-sans text-slate-500"
+              >
                 @{{ profileInfo.username }}
               </div>
             </div>
@@ -184,12 +214,16 @@
           </div>
 
           <div class="border-t border-slate-100 pt-4 space-y-4">
-            <h3 class="text-xs font-black text-slate-700 uppercase">■ UBAH KATA SANDI (OPSIONAL)</h3>
-            
+            <h3 class="text-xs font-black text-slate-700 uppercase">
+              ■ UBAH KATA SANDI (OPSIONAL)
+            </h3>
+
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
               <!-- Password Baru -->
               <div class="space-y-1.5">
-                <label class="text-[10px] font-bold text-slate-655 uppercase">KATA SANDI BARU</label>
+                <label class="text-[10px] font-bold text-slate-655 uppercase"
+                  >KATA SANDI BARU</label
+                >
                 <input
                   v-model="editForm.password"
                   type="password"
@@ -200,7 +234,9 @@
 
               <!-- Konfirmasi Password Baru -->
               <div class="space-y-1.5">
-                <label class="text-[10px] font-bold text-slate-655 uppercase">KONFIRMASI KATA SANDI</label>
+                <label class="text-[10px] font-bold text-slate-655 uppercase"
+                  >KONFIRMASI KATA SANDI</label
+                >
                 <input
                   v-model="editForm.password_confirmation"
                   type="password"
@@ -258,22 +294,22 @@ const profileInfo = ref({
   name: '',
   username: '',
   email: '',
-  role: ''
+  role: '',
 })
 
 // Forms
 const passwordForm = ref({
-  password: ''
+  password: '',
 })
 
 const otpForm = ref({
-  code: ''
+  code: '',
 })
 
 const editForm = ref({
   email: '',
   password: '',
-  password_confirmation: ''
+  password_confirmation: '',
 })
 
 // Load basic profile info
@@ -283,11 +319,15 @@ async function loadProfile() {
     const data = res.data
     profileInfo.value = data
     editForm.value.email = data.email || ''
-    
+
     // Mask current email
     if (data.email) {
       const emailParts = data.email.split('@')
-      maskedEmail.value = emailParts[0].substring(0, 2) + '*'.repeat(Math.max(0, emailParts[0].length - 2)) + '@' + emailParts[1]
+      maskedEmail.value =
+        emailParts[0].substring(0, 2) +
+        '*'.repeat(Math.max(0, emailParts[0].length - 2)) +
+        '@' +
+        emailParts[1]
     } else {
       maskedEmail.value = 'Tidak ada email terdaftar. Silakan gunakan metode Kata Sandi.'
     }
@@ -352,7 +392,7 @@ async function handleOtpVerify() {
 // Save Profile Updates
 async function handleProfileUpdate() {
   if (processing.value) return
-  
+
   // Validation
   if (editForm.value.password) {
     if (editForm.value.password.length < 6) {
@@ -368,7 +408,7 @@ async function handleProfileUpdate() {
   processing.value = true
   try {
     const payload: { email?: string; password?: string; password_confirmation?: string } = {
-      email: editForm.value.email
+      email: editForm.value.email,
     }
     if (editForm.value.password) {
       payload.password = editForm.value.password
@@ -377,15 +417,15 @@ async function handleProfileUpdate() {
 
     await profileService.updateProfile(payload, verificationToken.value)
     customDialog.success('Perubahan profil berhasil disimpan.')
-    
+
     // Refresh local cache and auth store if current email/name was updated
     await loadProfile()
     await authStore.fetchUser()
-    
+
     // Reset passwords
     editForm.value.password = ''
     editForm.value.password_confirmation = ''
-    
+
     // Lock again
     lockProfile()
   } catch (err: any) {

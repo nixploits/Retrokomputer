@@ -16,7 +16,7 @@ const activeDialog = ref<DialogOptions | null>(null)
 
 export const customDialog = {
   activeDialog,
-  
+
   show(options: DialogOptions) {
     return new Promise<boolean>((resolve) => {
       activeDialog.value = {
@@ -30,7 +30,7 @@ export const customDialog = {
           if (options.onCancel) options.onCancel()
           resolve(false)
           activeDialog.value = null
-        }
+        },
       }
     })
   },
@@ -40,7 +40,7 @@ export const customDialog = {
       type: 'success',
       title,
       message,
-      confirmText: 'Oke'
+      confirmText: 'Oke',
     })
   },
 
@@ -49,7 +49,7 @@ export const customDialog = {
       type: 'error',
       title,
       message,
-      confirmText: 'Oke'
+      confirmText: 'Oke',
     })
   },
 
@@ -58,7 +58,7 @@ export const customDialog = {
       type: 'warning',
       title,
       message,
-      confirmText: 'Oke'
+      confirmText: 'Oke',
     })
   },
 
@@ -67,7 +67,7 @@ export const customDialog = {
       type: 'info',
       title,
       message,
-      confirmText: 'Oke'
+      confirmText: 'Oke',
     })
   },
 
@@ -77,7 +77,7 @@ export const customDialog = {
       title,
       message,
       confirmText: 'Ya',
-      cancelText: 'Batal'
+      cancelText: 'Batal',
     })
-  }
+  },
 }

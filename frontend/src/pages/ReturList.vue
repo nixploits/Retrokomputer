@@ -19,7 +19,7 @@
       <div v-if="loading" class="p-8 text-center text-sm text-slate-400 font-mono">
         Memuat data retur...
       </div>
-      
+
       <div v-else class="overflow-x-auto">
         <table class="w-full text-left border-collapse">
           <thead>
@@ -42,7 +42,11 @@
               <td class="px-4 py-3">
                 <span
                   class="px-2 py-0.5 rounded font-bold uppercase text-[10px]"
-                  :class="r.jenis_retur === 'penjualan' ? 'bg-amber-100 text-amber-800 border border-amber-300' : 'bg-blue-100 text-blue-800 border border-blue-300'"
+                  :class="
+                    r.jenis_retur === 'penjualan'
+                      ? 'bg-amber-100 text-amber-800 border border-amber-300'
+                      : 'bg-blue-100 text-blue-800 border border-blue-300'
+                  "
                 >
                   {{ r.jenis_retur }}
                 </span>
@@ -52,11 +56,20 @@
                   <span
                     v-if="r.jenis_retur === 'pembelian' && r.pembelian"
                     class="inline-flex items-center px-1.5 py-0.5 rounded bg-slate-100 border border-slate-200 text-[10px] font-mono font-bold text-slate-600 whitespace-nowrap"
-                  >#{{ r.referensi_id }}</span>
-                  <span class="text-xs text-slate-600 font-sans font-normal" v-if="r.jenis_retur === 'pembelian' && r.pembelian">
-                    Supplier: <span class="font-semibold text-slate-800">{{ r.pembelian.supplier }}</span>
+                    >#{{ r.referensi_id }}</span
+                  >
+                  <span
+                    class="text-xs text-slate-600 font-sans font-normal"
+                    v-if="r.jenis_retur === 'pembelian' && r.pembelian"
+                  >
+                    Supplier:
+                    <span class="font-semibold text-slate-800">{{ r.pembelian.supplier }}</span>
                   </span>
-                  <span class="font-bold text-slate-800" v-if="!(r.jenis_retur === 'pembelian' && r.pembelian)">#{{ r.referensi_id }}</span>
+                  <span
+                    class="font-bold text-slate-800"
+                    v-if="!(r.jenis_retur === 'pembelian' && r.pembelian)"
+                    >#{{ r.referensi_id }}</span
+                  >
                 </div>
               </td>
               <td class="px-4 py-3 text-right font-bold text-slate-800">
@@ -95,11 +108,16 @@
       v-if="activeRetur"
       class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4"
     >
-      <div class="bg-white rounded-lg border-2 border-retro-blue overflow-hidden shadow-2xl max-w-xl w-full">
+      <div
+        class="bg-white rounded-lg border-2 border-retro-blue overflow-hidden shadow-2xl max-w-xl w-full"
+      >
         <!-- Title Bar -->
         <div class="bg-retro-blue text-white px-4 py-2 flex items-center justify-between">
           <span class="font-bold text-xs">DETAIL RETUR #{{ activeRetur.id }}</span>
-          <button @click="activeRetur = null" class="text-white hover:text-red-300 font-bold text-sm">
+          <button
+            @click="activeRetur = null"
+            class="text-white hover:text-red-300 font-bold text-sm"
+          >
             ✕
           </button>
         </div>
@@ -113,15 +131,26 @@
             </div>
             <div class="space-y-1">
               <span class="block font-bold text-slate-500 uppercase">Referensi ID</span>
-              <span class="font-bold text-slate-800 font-mono">#{{ activeRetur.referensi_id }}</span>
+              <span class="font-bold text-slate-800 font-mono"
+                >#{{ activeRetur.referensi_id }}</span
+              >
             </div>
-            <div v-if="activeRetur.jenis_retur === 'pembelian' && activeRetur.pembelian" class="col-span-2 space-y-1 bg-blue-50/50 p-2.5 border border-blue-100 rounded">
-              <span class="block font-bold text-retro-blue uppercase text-[10px] tracking-wider">Supplier</span>
-              <span class="font-bold text-slate-800 text-xs">{{ activeRetur.pembelian.supplier }}</span>
+            <div
+              v-if="activeRetur.jenis_retur === 'pembelian' && activeRetur.pembelian"
+              class="col-span-2 space-y-1 bg-blue-50/50 p-2.5 border border-blue-100 rounded"
+            >
+              <span class="block font-bold text-retro-blue uppercase text-[10px] tracking-wider"
+                >Supplier</span
+              >
+              <span class="font-bold text-slate-800 text-xs">{{
+                activeRetur.pembelian.supplier
+              }}</span>
             </div>
             <div class="space-y-1">
               <span class="block font-bold text-slate-500 uppercase">Ongkos Kirim</span>
-              <span class="font-bold text-slate-800">Rp {{ formatRupiah(activeRetur.ongkir) }}</span>
+              <span class="font-bold text-slate-800"
+                >Rp {{ formatRupiah(activeRetur.ongkir) }}</span
+              >
             </div>
             <div class="space-y-1">
               <span class="block font-bold text-slate-500 uppercase">Dibuat Oleh</span>
@@ -129,7 +158,9 @@
             </div>
             <div class="col-span-2 space-y-1">
               <span class="block font-bold text-slate-500 uppercase">Alasan Retur</span>
-              <p class="text-slate-700 bg-slate-50 p-2.5 border border-slate-200 rounded text-xs leading-relaxed">
+              <p
+                class="text-slate-700 bg-slate-50 p-2.5 border border-slate-200 rounded text-xs leading-relaxed"
+              >
                 {{ activeRetur.alasan }}
               </p>
             </div>
@@ -137,7 +168,9 @@
 
           <!-- Returned Products Table -->
           <div class="border-2 border-slate-200 rounded overflow-hidden">
-            <div class="bg-slate-50 px-3 py-2 border-b border-slate-200 text-xs font-bold text-slate-700">
+            <div
+              class="bg-slate-50 px-3 py-2 border-b border-slate-200 text-xs font-bold text-slate-700"
+            >
               DAFTAR BARANG YANG DIRETUR
             </div>
             <table class="w-full text-left text-xs border-collapse">
@@ -156,9 +189,15 @@
                   class="border-b border-slate-100 last:border-0 hover:bg-slate-50/50"
                 >
                   <td class="px-3 py-2 text-center text-slate-400 font-mono">{{ index + 1 }}</td>
-                  <td class="px-3 py-2 font-mono text-slate-800">{{ item.produk?.kode_produk || '-' }}</td>
-                  <td class="px-3 py-2 text-slate-700 font-bold">{{ item.produk?.nama_produk || 'Produk Tidak Dikenal' }}</td>
-                  <td class="px-3 py-2 text-center font-bold text-retro-blue font-mono">{{ item.qty }} pcs</td>
+                  <td class="px-3 py-2 font-mono text-slate-800">
+                    {{ item.produk?.kode_produk || '-' }}
+                  </td>
+                  <td class="px-3 py-2 text-slate-700 font-bold">
+                    {{ item.produk?.nama_produk || 'Produk Tidak Dikenal' }}
+                  </td>
+                  <td class="px-3 py-2 text-center font-bold text-retro-blue font-mono">
+                    {{ item.qty }} pcs
+                  </td>
                 </tr>
               </tbody>
             </table>
@@ -210,7 +249,7 @@ function formatDate(d: string) {
     month: 'short',
     year: 'numeric',
     hour: '2-digit',
-    minute: '2-digit'
+    minute: '2-digit',
   })
 }
 
@@ -218,4 +257,3 @@ function showDetail(r: Retur) {
   activeRetur.value = r
 }
 </script>
-

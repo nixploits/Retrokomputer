@@ -20,7 +20,9 @@
     </div>
 
     <!-- ============ FILTER BAR ============ -->
-    <div class="bg-white dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 shadow-sm p-5">
+    <div
+      class="bg-white dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 shadow-sm p-5"
+    >
       <h3
         class="text-sm font-bold text-slate-800 dark:text-slate-200 uppercase tracking-wide mb-4 flex items-center gap-2"
       >
@@ -30,33 +32,44 @@
       <div class="flex flex-wrap items-end gap-3">
         <!-- Mode Filter -->
         <div class="flex flex-col gap-1">
-          <label class="text-[11px] font-semibold text-slate-500 dark:text-slate-400 uppercase">Mode</label>
+          <label class="text-[11px] font-semibold text-slate-500 dark:text-slate-400 uppercase"
+            >Mode</label
+          >
           <select
             v-model="filterMode"
             @change="onFilterModeChange"
             class="text-xs rounded-md border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-slate-800 dark:text-slate-200 px-3 py-2 min-w-[160px] focus:ring-2 focus:ring-retro-primary/30"
           >
-            <optgroup label="Default">
+            <template v-if="authStore.isKasir">
               <option value="hari_ini">Hari Ini</option>
               <option value="minggu_ini">Minggu Ini</option>
               <option value="">Bulan Ini</option>
-            </optgroup>
-            <optgroup label="Periode">
-              <option value="harian">Hari</option>
-              <option value="mingguan">Minggu</option>
-              <option value="bulanan">Bulan</option>
-              <option value="tahunan">Tahun</option>
-            </optgroup>
-            <optgroup label="Spesifik">
-              <option value="tanggal">Berdasarkan Tanggal</option>
-              <option value="rentang">Rentang Waktu Khusus</option>
-            </optgroup>
+            </template>
+            <template v-else>
+              <optgroup label="Default">
+                <option value="hari_ini">Hari Ini</option>
+                <option value="minggu_ini">Minggu Ini</option>
+                <option value="">Bulan Ini</option>
+              </optgroup>
+              <optgroup label="Periode">
+                <option value="harian">Hari</option>
+                <option value="mingguan">Minggu</option>
+                <option value="bulanan">Bulan</option>
+                <option value="tahunan">Tahun</option>
+              </optgroup>
+              <optgroup label="Spesifik">
+                <option value="tanggal">Berdasarkan Tanggal</option>
+                <option value="rentang">Rentang Waktu Khusus</option>
+              </optgroup>
+            </template>
           </select>
         </div>
 
         <!-- Sub-filter: Harian (day of week) -->
         <div v-if="filterMode === 'harian'" class="flex flex-col gap-1">
-          <label class="text-[11px] font-semibold text-slate-500 dark:text-slate-400 uppercase">Pilih Hari</label>
+          <label class="text-[11px] font-semibold text-slate-500 dark:text-slate-400 uppercase"
+            >Pilih Hari</label
+          >
           <select
             v-model="filterValue"
             @change="applyFilter"
@@ -74,7 +87,9 @@
 
         <!-- Sub-filter: Mingguan (week number) -->
         <div v-if="filterMode === 'mingguan'" class="flex flex-col gap-1">
-          <label class="text-[11px] font-semibold text-slate-500 dark:text-slate-400 uppercase">Pilih Minggu</label>
+          <label class="text-[11px] font-semibold text-slate-500 dark:text-slate-400 uppercase"
+            >Pilih Minggu</label
+          >
           <select
             v-model="filterValue"
             @change="applyFilter"
@@ -89,7 +104,9 @@
 
         <!-- Sub-filter: Bulanan (month) -->
         <div v-if="filterMode === 'bulanan'" class="flex flex-col gap-1">
-          <label class="text-[11px] font-semibold text-slate-500 dark:text-slate-400 uppercase">Pilih Bulan</label>
+          <label class="text-[11px] font-semibold text-slate-500 dark:text-slate-400 uppercase"
+            >Pilih Bulan</label
+          >
           <select
             v-model="filterValue"
             @change="applyFilter"
@@ -103,7 +120,9 @@
 
         <!-- Sub-filter: Tanggal (date picker) -->
         <div v-if="filterMode === 'tanggal'" class="flex flex-col gap-1">
-          <label class="text-[11px] font-semibold text-slate-500 dark:text-slate-400 uppercase">Pilih Tanggal</label>
+          <label class="text-[11px] font-semibold text-slate-500 dark:text-slate-400 uppercase"
+            >Pilih Tanggal</label
+          >
           <input
             v-model="filterValue"
             type="date"
@@ -114,7 +133,9 @@
 
         <!-- Sub-filter: Tahun (year) -->
         <div v-if="filterMode === 'tahunan'" class="flex flex-col gap-1">
-          <label class="text-[11px] font-semibold text-slate-500 dark:text-slate-400 uppercase">Pilih Tahun</label>
+          <label class="text-[11px] font-semibold text-slate-500 dark:text-slate-400 uppercase"
+            >Pilih Tahun</label
+          >
           <select
             v-model="filterValue"
             @change="applyFilter"
@@ -127,7 +148,9 @@
         <!-- Sub-filter: Rentang Waktu Khusus (date range) -->
         <template v-if="filterMode === 'rentang'">
           <div class="flex flex-col gap-1">
-            <label class="text-[11px] font-semibold text-slate-500 dark:text-slate-400 uppercase">Dari Tanggal</label>
+            <label class="text-[11px] font-semibold text-slate-500 dark:text-slate-400 uppercase"
+              >Dari Tanggal</label
+            >
             <input
               v-model="filterStart"
               type="date"
@@ -136,7 +159,9 @@
             />
           </div>
           <div class="flex flex-col gap-1">
-            <label class="text-[11px] font-semibold text-slate-500 dark:text-slate-400 uppercase">Sampai Tanggal</label>
+            <label class="text-[11px] font-semibold text-slate-500 dark:text-slate-400 uppercase"
+              >Sampai Tanggal</label
+            >
             <input
               v-model="filterEnd"
               type="date"
@@ -157,8 +182,13 @@
       </div>
 
       <!-- Active Filter Badge -->
-      <div v-if="filterMode" class="mt-4 pt-4 border-t border-slate-100 dark:border-slate-700 flex items-center gap-2">
-        <span class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Filter Aktif:</span>
+      <div
+        v-if="filterMode"
+        class="mt-4 pt-4 border-t border-slate-100 dark:border-slate-700 flex items-center gap-2"
+      >
+        <span class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider"
+          >Filter Aktif:</span
+        >
         <span
           class="text-xs px-3 py-1.5 rounded-full bg-retro-primary/10 text-retro-primary font-semibold border border-retro-primary/30"
         >
@@ -199,11 +229,15 @@
           >
             Total Transaksi
           </p>
-          <p class="text-xl md:text-3xl font-bold text-blue-700 dark:text-blue-300 mb-1 line-clamp-2">
+          <p
+            class="text-xl md:text-3xl font-bold text-blue-700 dark:text-blue-300 mb-1 line-clamp-2"
+          >
             {{ stats.total_transaksi }}
           </p>
         </div>
-        <p class="text-[10px] md:text-xs text-blue-500 dark:text-blue-500/80 font-medium">{{ kpiSublabel }}</p>
+        <p class="text-[10px] md:text-xs text-blue-500 dark:text-blue-500/80 font-medium">
+          {{ kpiSublabel }}
+        </p>
       </div>
 
       <!-- Pembelian (Admin Only) -->
@@ -217,11 +251,15 @@
           >
             Pembelian Bulan Ini
           </p>
-          <p class="text-xl md:text-3xl font-bold text-orange-700 dark:text-orange-300 mb-1 line-clamp-2 break-words">
+          <p
+            class="text-xl md:text-3xl font-bold text-orange-700 dark:text-orange-300 mb-1 line-clamp-2 break-words"
+          >
             {{ formatCurrency(stats.pembelian_bulan_ini) }}
           </p>
         </div>
-        <p class="text-[10px] md:text-xs text-orange-500 dark:text-orange-500/80 font-medium">Dari supplier</p>
+        <p class="text-[10px] md:text-xs text-orange-500 dark:text-orange-500/80 font-medium">
+          Dari supplier
+        </p>
       </div>
 
       <!-- Laba Bersih (Admin Only) -->
@@ -237,20 +275,26 @@
         <div>
           <p
             class="text-[10px] md:text-xs font-bold uppercase tracking-wider mb-1 md:mb-2 line-clamp-1"
-            :class="stats.laba_bersih >= 0 ? 'text-retro-success' : 'text-red-600 dark:text-red-400'"
+            :class="
+              stats.laba_bersih >= 0 ? 'text-retro-success' : 'text-red-600 dark:text-red-400'
+            "
           >
             Laba Bersih
           </p>
           <p
             class="text-xl md:text-3xl font-bold mb-1 line-clamp-2 break-words"
-            :class="stats.laba_bersih >= 0 ? 'text-retro-success' : 'text-red-700 dark:text-red-300'"
+            :class="
+              stats.laba_bersih >= 0 ? 'text-retro-success' : 'text-red-700 dark:text-red-300'
+            "
           >
             {{ formatCurrency(stats.laba_bersih) }}
           </p>
         </div>
         <p
           class="text-[10px] md:text-xs font-medium"
-          :class="stats.laba_bersih >= 0 ? 'text-retro-success' : 'text-red-500 dark:text-red-500/80'"
+          :class="
+            stats.laba_bersih >= 0 ? 'text-retro-success' : 'text-red-500 dark:text-red-500/80'
+          "
         >
           Keuntungan bersih
         </p>
@@ -304,22 +348,45 @@
       <!-- Transaction Table with Group Separators -->
       <div v-else class="overflow-x-auto">
         <table class="w-full text-sm">
-          <thead class="bg-slate-50 dark:bg-slate-700/50 border-b border-slate-200 dark:border-slate-700">
+          <thead
+            class="bg-slate-50 dark:bg-slate-700/50 border-b border-slate-200 dark:border-slate-700"
+          >
             <tr>
-              <th class="text-left text-xs font-semibold text-slate-600 dark:text-slate-300 px-4 py-3">
+              <th
+                class="text-left text-xs font-semibold text-slate-600 dark:text-slate-300 px-4 py-3"
+              >
                 Kode Transaksi
               </th>
-              <th class="text-left text-xs font-semibold text-slate-600 dark:text-slate-300 px-4 py-3">Waktu</th>
-              <th class="text-left text-xs font-semibold text-slate-600 dark:text-slate-300 px-4 py-3">Metode</th>
-              <th class="text-right text-xs font-semibold text-slate-600 dark:text-slate-300 px-4 py-3">Total</th>
-              <th class="text-center text-xs font-semibold text-slate-600 dark:text-slate-300 px-4 py-3">Aksi</th>
+              <th
+                class="text-left text-xs font-semibold text-slate-600 dark:text-slate-300 px-4 py-3"
+              >
+                Waktu
+              </th>
+              <th
+                class="text-left text-xs font-semibold text-slate-600 dark:text-slate-300 px-4 py-3"
+              >
+                Metode
+              </th>
+              <th
+                class="text-right text-xs font-semibold text-slate-600 dark:text-slate-300 px-4 py-3"
+              >
+                Total
+              </th>
+              <th
+                class="text-center text-xs font-semibold text-slate-600 dark:text-slate-300 px-4 py-3"
+              >
+                Aksi
+              </th>
             </tr>
           </thead>
           <tbody class="divide-y divide-slate-100 dark:divide-slate-700">
             <template v-for="(group, gIdx) in groupedTransactions" :key="gIdx">
               <!-- Group Separator Row -->
               <tr class="bg-slate-50 dark:bg-slate-700/30">
-                <td colspan="5" class="px-4 py-2.5 border-b border-t border-slate-200 dark:border-slate-700">
+                <td
+                  colspan="5"
+                  class="px-4 py-2.5 border-b border-t border-slate-200 dark:border-slate-700"
+                >
                   <div class="flex items-center gap-3">
                     <div
                       class="h-px flex-1 bg-gradient-to-r from-retro-primary/40 to-transparent"
@@ -349,7 +416,9 @@
                 <td class="px-4 py-3 text-xs font-mono text-retro-accent font-semibold">
                   {{ trx.kode_transaksi }}
                 </td>
-                <td class="px-4 py-3 text-xs text-slate-600 dark:text-slate-400">{{ formatTime(trx.created_at) }}</td>
+                <td class="px-4 py-3 text-xs text-slate-600 dark:text-slate-400">
+                  {{ formatTime(trx.created_at) }}
+                </td>
                 <td class="px-4 py-3">
                   <span
                     class="text-[11px] px-2.5 py-1 rounded-full font-semibold"
@@ -370,7 +439,9 @@
                     }}
                   </span>
                 </td>
-                <td class="px-4 py-3 text-xs font-bold text-slate-900 dark:text-slate-100 text-right">
+                <td
+                  class="px-4 py-3 text-xs font-bold text-slate-900 dark:text-slate-100 text-right"
+                >
                   {{ formatCurrency(trx.total) }}
                 </td>
                 <td class="px-4 py-3 text-center">
@@ -490,7 +561,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted, watch } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import type { DashboardStats, Transaksi, DashboardFilterParams } from '@/types'
 import { laporanService, transaksiService } from '@/services'
 import { useAuthStore } from '@/stores/auth'
@@ -547,7 +618,11 @@ const dayNames: Record<string, string> = {
 // Format tanggal pendek untuk label rentang
 function formatShortDate(d: string): string {
   if (!d) return ''
-  return new Date(d).toLocaleDateString('id-ID', { day: '2-digit', month: 'short', year: 'numeric' })
+  return new Date(d).toLocaleDateString('id-ID', {
+    day: '2-digit',
+    month: 'short',
+    year: 'numeric',
+  })
 }
 
 // ===== Computed: active filter label =====

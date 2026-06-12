@@ -18,11 +18,28 @@
             class="filter-tab"
             :class="{ active: selectedRange === opt.value }"
             @click="setRange(opt.value)"
-          >{{ opt.label }}</button>
+          >
+            {{ opt.label }}
+          </button>
         </div>
-        <button v-if="hasData" class="btn-download-csv" @click="exportExcel" title="Unduh Laporan Excel">
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3"/>
+        <button
+          v-if="hasData"
+          class="btn-download-csv"
+          @click="exportExcel"
+          title="Unduh Laporan Excel"
+        >
+          <svg
+            class="w-4 h-4"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2.5"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3"
+            />
           </svg>
           Unduh Excel
         </button>
@@ -63,9 +80,23 @@
     </div>
     <div v-else class="chart-empty">
       <div class="empty-icon-wrapper">
-        <svg class="w-8 h-8 text-slate-500 mx-auto mb-2" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 18L9 11.25l4.306 4.307a11.95 11.95 0 015.814-5.519l2.74-1.22m0 0l-5.94-2.28m5.94 2.28l-2.28 5.941"/></svg>
+        <svg
+          class="w-8 h-8 text-slate-500 mx-auto mb-2"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.5"
+          viewBox="0 0 24 24"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            d="M2.25 18L9 11.25l4.306 4.307a11.95 11.95 0 015.814-5.519l2.74-1.22m0 0l-5.94-2.28m5.94 2.28l-2.28 5.941"
+          />
+        </svg>
       </div>
-      <p class="text-xs text-slate-500 font-mono">Belum ada data penjualan {{ selectedRange }} hari terakhir</p>
+      <p class="text-xs text-slate-500 font-mono">
+        Belum ada data penjualan {{ selectedRange }} hari terakhir
+      </p>
     </div>
   </div>
 </template>
@@ -98,10 +129,10 @@ const rangeOptions = [
 
 const subtitleLabel = computed(() => `${selectedRange.value} hari terakhir`)
 
-const hasData = computed(() => data.value.some(d => d.total > 0))
+const hasData = computed(() => data.value.some((d) => d.total > 0))
 const totalPenjualan = computed(() => data.value.reduce((s, d) => s + d.total, 0))
 const totalTransaksi = computed(() => data.value.reduce((s, d) => s + (d.jumlah_transaksi ?? 0), 0))
-const hariAktif = computed(() => data.value.filter(d => d.total > 0).length)
+const hariAktif = computed(() => data.value.filter((d) => d.total > 0).length)
 const avgHarian = computed(() => {
   return hariAktif.value > 0 ? totalPenjualan.value / hariAktif.value : 0
 })
@@ -119,10 +150,12 @@ const bestDay = computed(() => {
   }
 })
 
-const series = computed(() => [{
-  name: 'Penjualan',
-  data: data.value.map(d => d.total)
-}])
+const series = computed(() => [
+  {
+    name: 'Penjualan',
+    data: data.value.map((d) => d.total),
+  },
+])
 
 const chartOptions = computed(() => ({
   chart: {
@@ -155,17 +188,17 @@ const chartOptions = computed(() => ({
     width: 2.5,
   },
   xaxis: {
-    categories: data.value.map(d => {
+    categories: data.value.map((d) => {
       const date = new Date(d.tanggal)
       return date.toLocaleDateString('id-ID', { day: '2-digit', month: 'short' })
     }),
     labels: {
       style: { colors: '#64748b', fontSize: isMobile.value ? '9px' : '10px' },
-      rotate: isMobile.value ? 0 : (selectedRange.value === 30 ? -40 : -20),
+      rotate: isMobile.value ? 0 : selectedRange.value === 30 ? -40 : -20,
       rotateAlways: false,
       hideOverlappingLabels: true,
     },
-    tickAmount: isMobile.value ? 5 : (selectedRange.value === 30 ? 12 : undefined),
+    tickAmount: isMobile.value ? 5 : selectedRange.value === 30 ? 12 : undefined,
     axisBorder: { show: false },
     axisTicks: { show: false },
   },
@@ -186,30 +219,39 @@ const chartOptions = computed(() => ({
   },
   // Annotations: garis rata-rata
   annotations: {
-    yaxis: avgHarian.value > 0 ? [{
-      y: avgHarian.value,
-      borderColor: '#F28500',
-      borderWidth: 1,
-      strokeDashArray: 4,
-      label: {
-        text: `Avg: ${formatCurrencyShort(avgHarian.value)}`,
-        style: {
-          background: '#F28500',
-          color: '#000',
-          fontSize: '10px',
-          fontWeight: 700,
-          padding: { left: 6, right: 6, top: 2, bottom: 2 },
-        },
-        position: 'right',
-        offsetX: -8,
-      },
-    }] : [],
+    yaxis:
+      avgHarian.value > 0
+        ? [
+            {
+              y: avgHarian.value,
+              borderColor: '#F28500',
+              borderWidth: 1,
+              strokeDashArray: 4,
+              label: {
+                text: `Avg: ${formatCurrencyShort(avgHarian.value)}`,
+                style: {
+                  background: '#F28500',
+                  color: '#fff',
+                  fontSize: '10px',
+                  fontWeight: 700,
+                  padding: { left: 6, right: 6, top: 2, bottom: 2 },
+                },
+                position: 'right',
+                offsetX: -8,
+              },
+            },
+          ]
+        : [],
   },
   tooltip: {
     theme: 'dark' as const,
     y: {
       formatter: (val: number) =>
-        new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(val),
+        new Intl.NumberFormat('id-ID', {
+          style: 'currency',
+          currency: 'IDR',
+          minimumFractionDigits: 0,
+        }).format(val),
     },
     // FIX: gunakan index dari data array, bukan _val string
     x: {
@@ -217,7 +259,11 @@ const chartOptions = computed(() => ({
         const item = data.value[opts?.dataPointIndex]
         if (!item) return ''
         const date = new Date(item.tanggal)
-        const tgl = date.toLocaleDateString('id-ID', { weekday: 'long', day: '2-digit', month: 'long' })
+        const tgl = date.toLocaleDateString('id-ID', {
+          weekday: 'long',
+          day: '2-digit',
+          month: 'long',
+        })
         const trx = item.jumlah_transaksi != null ? ` • ${item.jumlah_transaksi} transaksi` : ''
         return `${tgl}${trx}`
       },
@@ -240,8 +286,9 @@ function formatCurrencyShort(v: number) {
 async function loadData() {
   loading.value = true
   try {
-    const res = await (laporanService.getChartPenjualanHarian as any)({ hari: selectedRange.value })
-      .catch(() => laporanService.getChartPenjualanHarian())
+    const res = await (laporanService.getChartPenjualanHarian as any)({
+      hari: selectedRange.value,
+    }).catch(() => laporanService.getChartPenjualanHarian())
     data.value = res.data as ChartPenjualanHarian[]
     chartKey.value++
   } catch (e) {
@@ -320,7 +367,9 @@ onUnmounted(() => {
   background: transparent;
   color: #475569;
   cursor: pointer;
-  transition: background 0.15s, color 0.15s;
+  transition:
+    background 0.15s,
+    color 0.15s;
   letter-spacing: 0.03em;
 }
 
