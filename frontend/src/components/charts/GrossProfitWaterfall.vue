@@ -21,7 +21,10 @@
         <span class="wf-metric-label">Kerugian</span>
         <span class="wf-metric-val">-{{ formatCurrencyShort(kerugian) }}</span>
       </div>
-      <div class="wf-metric" :style="{ '--mc': labaBersih >= 0 ? 'var(--color-primary)' : '#ef4444' }">
+      <div
+        class="wf-metric"
+        :style="{ '--mc': labaBersih >= 0 ? 'var(--color-primary)' : '#ef4444' }"
+      >
         <span class="wf-metric-label">Laba Bersih</span>
         <span class="wf-metric-val">{{ formatCurrencyShort(labaBersih) }}</span>
       </div>
@@ -35,9 +38,12 @@
             class="margin-bar-fill"
             :style="{
               width: Math.min(Math.max(marginPercent, 0), 100) + '%',
-              background: marginPercent >= 20 ? 'linear-gradient(90deg, #10b981, #34d399)' :
-                          marginPercent >= 10 ? 'linear-gradient(90deg, #f59e0b, #fbbf24)' :
-                          'linear-gradient(90deg, #ef4444, #f87171)'
+              background:
+                marginPercent >= 20
+                  ? 'linear-gradient(90deg, #10b981, #34d399)'
+                  : marginPercent >= 10
+                    ? 'linear-gradient(90deg, #f59e0b, #fbbf24)'
+                    : 'linear-gradient(90deg, #ef4444, #f87171)',
             }"
           ></div>
         </div>
@@ -62,7 +68,19 @@
     </div>
     <div v-else class="chart-empty">
       <div class="empty-icon-wrapper">
-        <svg class="w-8 h-8 text-slate-500 mx-auto mb-2" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 18L9 11.25l4.306 4.307a11.95 11.95 0 015.814-5.519l2.74-1.22m0 0l-5.94-2.28m5.94 2.28l-2.28 5.941"/></svg>
+        <svg
+          class="w-8 h-8 text-slate-500 mx-auto mb-2"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.5"
+          viewBox="0 0 24 24"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            d="M2.25 18L9 11.25l4.306 4.307a11.95 11.95 0 015.814-5.519l2.74-1.22m0 0l-5.94-2.28m5.94 2.28l-2.28 5.941"
+          />
+        </svg>
       </div>
       <p class="text-xs text-slate-500 font-mono">Belum ada data laba kotor</p>
     </div>
@@ -125,31 +143,33 @@ const series = computed(() => {
   const afterHpp = p - h
   const afterKerugian = afterHpp - k
 
-  return [{
-    name: 'Laba Kotor',
-    data: [
-      {
-        x: 'Penjualan',
-        y: [0, p],
-        fillColor: '#10b981',
-      },
-      {
-        x: 'HPP',
-        y: [afterHpp, p],
-        fillColor: '#f97316',
-      },
-      {
-        x: 'Kerugian\nInventaris',
-        y: [afterKerugian, afterHpp],
-        fillColor: '#ef4444',
-      },
-      {
-        x: 'Laba Bersih',
-        y: [0, l],
-        fillColor: l >= 0 ? (isDark.value ? '#FF7A00' : '#1D4ED8') : '#ef4444',
-      },
-    ],
-  }]
+  return [
+    {
+      name: 'Laba Kotor',
+      data: [
+        {
+          x: 'Penjualan',
+          y: [0, p],
+          fillColor: '#10b981',
+        },
+        {
+          x: 'HPP',
+          y: [afterHpp, p],
+          fillColor: '#f97316',
+        },
+        {
+          x: 'Kerugian\nInventaris',
+          y: [afterKerugian, afterHpp],
+          fillColor: '#ef4444',
+        },
+        {
+          x: 'Laba Bersih',
+          y: [0, l],
+          fillColor: l >= 0 ? (isDark.value ? '#FF7A00' : '#1D4ED8') : '#ef4444',
+        },
+      ],
+    },
+  ]
 })
 
 const chartOptions = computed(() => ({
@@ -235,7 +255,13 @@ const chartOptions = computed(() => ({
       const label = d.x.replace('\n', ' ')
       const isDeduction = dataPointIndex === 1 || dataPointIndex === 2
       const sign = isDeduction ? '-' : ''
-      const color = isDeduction ? '#ef4444' : (dataPointIndex === 3 ? (isDark.value ? '#FF7A00' : '#1D4ED8') : '#10b981')
+      const color = isDeduction
+        ? '#ef4444'
+        : dataPointIndex === 3
+          ? isDark.value
+            ? '#FF7A00'
+            : '#1D4ED8'
+          : '#10b981'
 
       return `<div style="padding: 10px 14px; font-size: 12px; line-height: 1.6;">
         <div style="font-weight: 700; margin-bottom: 4px; color: #e2e8f0;">${label}</div>
@@ -382,9 +408,15 @@ onMounted(async () => {
   text-align: right;
 }
 
-.margin-good { color: #10b981; }
-.margin-warn { color: #f59e0b; }
-.margin-bad  { color: #ef4444; }
+.margin-good {
+  color: #10b981;
+}
+.margin-warn {
+  color: #f59e0b;
+}
+.margin-bad {
+  color: #ef4444;
+}
 
 .margin-label {
   font-size: 10px;

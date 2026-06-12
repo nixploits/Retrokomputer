@@ -5,12 +5,18 @@
       :class="[
         'fixed inset-y-0 left-0 z-50 flex flex-col bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 transition-all duration-300 ease-in-out lg:relative overflow-hidden',
         isMobile
-          ? (sidebarOpen ? 'w-56 translate-x-0' : 'w-56 -translate-x-full')
-          : (sidebarOpen ? 'w-56 translate-x-0' : 'w-16 translate-x-0')
+          ? sidebarOpen
+            ? 'w-56 translate-x-0'
+            : 'w-56 -translate-x-full'
+          : sidebarOpen
+            ? 'w-56 translate-x-0'
+            : 'w-16 translate-x-0',
       ]"
     >
       <!-- Logo & Header -->
-      <div class="flex items-center border-b border-slate-200 dark:border-slate-800 shrink-0 transition-all duration-150 justify-between select-none h-14">
+      <div
+        class="flex items-center border-b border-slate-200 dark:border-slate-800 shrink-0 transition-all duration-150 justify-between select-none h-14"
+      >
         <div v-if="sidebarOpen" class="flex items-center justify-between w-full px-4">
           <div class="flex items-center gap-2.5">
             <!-- Logo Image -->
@@ -18,13 +24,31 @@
               <img src="/logo.svg" alt="Retro Komputer" class="w-full h-full object-contain" />
             </div>
             <div class="flex flex-col text-left">
-              <span class="text-xs font-mono font-bold text-slate-800 dark:text-white tracking-wide uppercase leading-tight">Retrokomputer</span>
-              <span class="text-[9px] text-slate-500 dark:text-slate-400 font-sans mt-0.5 leading-none">POS & Inventory</span>
+              <span
+                class="text-xs font-mono font-bold text-slate-800 dark:text-white tracking-wide uppercase leading-tight"
+                >Retrokomputer</span
+              >
+              <span
+                class="text-[9px] text-slate-500 dark:text-slate-400 font-sans mt-0.5 leading-none"
+                >POS & Inventory</span
+              >
             </div>
           </div>
           <!-- Close button on Mobile -->
-          <button v-if="isMobile" @click="sidebarOpen = false" class="text-slate-400 hover:text-white transition-colors p-1" title="Tutup Menu">
-            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+          <button
+            v-if="isMobile"
+            @click="sidebarOpen = false"
+            class="text-slate-400 hover:text-white transition-colors p-1"
+            title="Tutup Menu"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="w-4 h-4"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2.5"
+              viewBox="0 0 24 24"
+            >
               <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
             </svg>
           </button>
@@ -43,7 +67,9 @@
           <p
             :class="[
               'px-3.5 pt-4 pb-1.5 text-[10px] font-bold uppercase tracking-wider text-slate-500 transition-all duration-300 ease-in-out truncate',
-              sidebarOpen ? 'opacity-100 max-h-10' : 'opacity-0 max-h-0 py-0 overflow-hidden pointer-events-none'
+              sidebarOpen
+                ? 'opacity-100 max-h-10'
+                : 'opacity-0 max-h-0 py-0 overflow-hidden pointer-events-none',
             ]"
           >
             {{ group.label }}
@@ -60,11 +86,16 @@
             ]"
             @click="isMobile && (sidebarOpen = false)"
           >
-            <span class="shrink-0 w-5 h-5 flex items-center justify-center" v-html="getIconSvg(item.icon)"></span>
+            <span
+              class="shrink-0 w-5 h-5 flex items-center justify-center"
+              v-html="getIconSvg(item.icon)"
+            ></span>
             <span
               :class="[
                 'transition-all duration-300 ease-in-out truncate',
-                sidebarOpen ? 'opacity-100 max-w-[120px] ml-0' : 'opacity-0 max-w-0 ml-0 overflow-hidden pointer-events-none'
+                sidebarOpen
+                  ? 'opacity-100 max-w-[120px] ml-0'
+                  : 'opacity-0 max-w-0 ml-0 overflow-hidden pointer-events-none',
               ]"
             >
               {{ item.label }}
@@ -74,21 +105,30 @@
       </nav>
 
       <!-- User Info -->
-      <div 
+      <div
         :class="[
           'border-t border-slate-200 dark:border-slate-800 shrink-0 transition-all duration-300 ease-in-out h-14 flex items-center px-4',
-          sidebarOpen ? 'opacity-100' : 'opacity-0 overflow-hidden pointer-events-none'
+          sidebarOpen ? 'opacity-100' : 'opacity-0 overflow-hidden pointer-events-none',
         ]"
       >
         <div class="flex items-center gap-2.5 w-full">
-          <div class="w-7 h-7 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center shrink-0">
-            <span class="text-slate-600 dark:text-slate-300 text-xs font-semibold">{{ userInitial }}</span>
+          <div
+            class="w-7 h-7 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center shrink-0"
+          >
+            <span class="text-slate-600 dark:text-slate-300 text-xs font-semibold">{{
+              userInitial
+            }}</span>
           </div>
           <div class="flex-1 min-w-0">
-            <p class="text-xs font-medium text-slate-800 dark:text-slate-200 truncate">{{ authStore.userName }}</p>
+            <p class="text-xs font-medium text-slate-800 dark:text-slate-200 truncate">
+              {{ authStore.userName }}
+            </p>
             <p class="text-[10px] text-slate-400 uppercase font-semibold font-mono">
               {{ authStore.user?.role }}
-              <span v-if="authStore.activeKasirProfile?.nama" class="text-retro-primary font-bold font-sans lowercase text-[9px] block">
+              <span
+                v-if="authStore.activeKasirProfile?.nama"
+                class="text-retro-primary font-bold font-sans lowercase text-[9px] block"
+              >
                 kasir: {{ authStore.activeKasirProfile.nama }}
               </span>
             </p>
@@ -98,7 +138,18 @@
             class="p-1 rounded hover:bg-red-50 dark:hover:bg-red-900/30 text-slate-400 hover:text-red-500 transition-colors"
             title="Logout"
           >
-            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M3 3a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h5a1 1 0 1 0 0-2H4V5h4a1 1 0 1 0 0-2H3zm12.293 3.293a1 1 0 0 1 1.414 0l3 3a1 1 0 0 1 0 1.414l-3 3a1 1 0 0 1-1.414-1.414L16.586 11H8a1 1 0 1 1 0-2h8.586l-1.293-1.293a1 1 0 0 1 0-1.414z" clip-rule="evenodd"/></svg>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="w-4 h-4"
+              viewBox="0 0 20 20"
+              fill="currentColor"
+            >
+              <path
+                fill-rule="evenodd"
+                d="M3 3a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h5a1 1 0 1 0 0-2H4V5h4a1 1 0 1 0 0-2H3zm12.293 3.293a1 1 0 0 1 1.414 0l3 3a1 1 0 0 1 0 1.414l-3 3a1 1 0 0 1-1.414-1.414L16.586 11H8a1 1 0 1 1 0-2h8.586l-1.293-1.293a1 1 0 0 1 0-1.414z"
+                clip-rule="evenodd"
+              />
+            </svg>
           </button>
         </div>
       </div>
@@ -114,13 +165,26 @@
     <!-- Main -->
     <div class="flex-1 flex flex-col overflow-hidden">
       <!-- Header -->
-      <header class="h-14 flex items-center justify-between px-4 lg:px-6 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 shrink-0">
+      <header
+        class="h-14 flex items-center justify-between px-4 lg:px-6 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 shrink-0"
+      >
         <div class="flex items-center gap-3">
           <button
             @click="sidebarOpen = !sidebarOpen"
             class="p-1.5 rounded-md hover:bg-slate-100 text-slate-500 transition-colors"
           >
-            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M3 5a1 1 0 0 1 1-1h12a1 1 0 1 1 0 2H4a1 1 0 0 1-1-1zm0 5a1 1 0 0 1 1-1h12a1 1 0 1 1 0 2H4a1 1 0 0 1-1-1zm0 5a1 1 0 0 1 1-1h6a1 1 0 1 1 0 2H4a1 1 0 0 1-1-1z" clip-rule="evenodd"/></svg>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="w-5 h-5"
+              viewBox="0 0 20 20"
+              fill="currentColor"
+            >
+              <path
+                fill-rule="evenodd"
+                d="M3 5a1 1 0 0 1 1-1h12a1 1 0 1 1 0 2H4a1 1 0 0 1-1-1zm0 5a1 1 0 0 1 1-1h12a1 1 0 1 1 0 2H4a1 1 0 0 1-1-1zm0 5a1 1 0 0 1 1-1h6a1 1 0 1 1 0 2H4a1 1 0 0 1-1-1z"
+                clip-rule="evenodd"
+              />
+            </svg>
           </button>
           <h2 class="text-sm font-semibold text-slate-800 font-sans">{{ pageTitle }}</h2>
         </div>
@@ -138,7 +202,6 @@
           <!-- Theme Toggle Switch -->
           <ThemeSwitch />
 
-
           <!-- Profile Dropdown -->
           <div class="relative profile-dropdown-container">
             <button
@@ -146,19 +209,35 @@
               class="flex items-center gap-2 p-1 rounded-md hover:bg-slate-50 border border-slate-100 transition-colors"
             >
               <div class="w-8 h-8 rounded bg-retro-primary/10 flex items-center justify-center">
-                <span class="text-retro-primary font-bold text-xs font-mono">{{ userInitial }}</span>
+                <span class="text-retro-primary font-bold text-xs font-mono">{{
+                  userInitial
+                }}</span>
               </div>
               <div class="hidden md:flex flex-col text-left shrink-0 max-w-[120px]">
-                <span class="text-xs font-semibold text-slate-700 truncate leading-tight">{{ authStore.userName }}</span>
+                <span class="text-xs font-semibold text-slate-700 truncate leading-tight">{{
+                  authStore.userName
+                }}</span>
                 <span class="text-[9px] font-bold font-mono text-slate-400 uppercase leading-none">
                   {{ authStore.user?.role }}
-                  <span v-if="authStore.activeKasirProfile?.nama" class="text-retro-primary font-bold">
+                  <span
+                    v-if="authStore.activeKasirProfile?.nama"
+                    class="text-retro-primary font-bold"
+                  >
                     ({{ authStore.activeKasirProfile.nama }})
                   </span>
                 </span>
               </div>
-              <svg xmlns="http://www.w3.org/2000/svg" class="w-3 h-3 text-slate-400" viewBox="0 0 20 20" fill="currentColor">
-                <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"/>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="w-3 h-3 text-slate-400"
+                viewBox="0 0 20 20"
+                fill="currentColor"
+              >
+                <path
+                  fill-rule="evenodd"
+                  d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                  clip-rule="evenodd"
+                />
               </svg>
             </button>
 
@@ -169,10 +248,17 @@
                 class="absolute right-0 mt-2 w-48 bg-white border border-slate-200 rounded-md shadow-lg py-1.5 z-50 animate-fadeIn font-sans"
               >
                 <div class="px-3 py-2 border-b border-slate-100">
-                  <p class="text-xs font-semibold text-slate-800 truncate">{{ authStore.userName }}</p>
-                  <p class="text-[10px] text-slate-400 font-mono font-bold uppercase mt-0.5">{{ authStore.user?.role }}</p>
+                  <p class="text-xs font-semibold text-slate-800 truncate">
+                    {{ authStore.userName }}
+                  </p>
+                  <p class="text-[10px] text-slate-400 font-mono font-bold uppercase mt-0.5">
+                    {{ authStore.user?.role }}
+                  </p>
                 </div>
-                <div class="py-1 border-b border-slate-100" v-if="authStore.isAdmin || authStore.isOwner">
+                <div
+                  class="py-1 border-b border-slate-100"
+                  v-if="authStore.isAdmin || authStore.isOwner"
+                >
                   <router-link
                     to="/profil"
                     @click="closeDropdown"
@@ -187,8 +273,17 @@
                     @click="triggerLogout"
                     class="w-full flex items-center gap-2 px-3 py-2 text-xs text-red-600 hover:bg-red-50 text-left transition-colors"
                   >
-                    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 20 20" fill="currentColor">
-                      <path fill-rule="evenodd" d="M3 3a1 1 0 00-1 1v12a1 1 0 00 1 1h5a1 1 0 100-2H4V5h4a1 1 0 100-2H3zm12.293 3.293a1 1 0 011.414 0l3 3a1 1 0 010 1.414l-3 3a1 1 0 01-1.414-1.414L16.586 11H8a1 1 0 110-2h8.586l-1.293-1.293a1 1 0 010-1.414z" clip-rule="evenodd"/>
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      class="w-4 h-4"
+                      viewBox="0 0 20 20"
+                      fill="currentColor"
+                    >
+                      <path
+                        fill-rule="evenodd"
+                        d="M3 3a1 1 0 00-1 1v12a1 1 0 00 1 1h5a1 1 0 100-2H4V5h4a1 1 0 100-2H3zm12.293 3.293a1 1 0 011.414 0l3 3a1 1 0 010 1.414l-3 3a1 1 0 01-1.414-1.414L16.586 11H8a1 1 0 110-2h8.586l-1.293-1.293a1 1 0 010-1.414z"
+                        clip-rule="evenodd"
+                      />
                     </svg>
                     <span>Keluar Akun</span>
                   </button>
@@ -210,27 +305,49 @@
     </div>
 
     <!-- Confirmation Modal -->
-    <div v-if="showLogoutConfirm" class="fixed inset-0 z-[100] flex items-center justify-center bg-retro-dark/60 backdrop-blur-sm animate-fadeIn">
-      <div class="bg-white border-2 border-retro-primary rounded-lg max-w-sm w-full mx-4 overflow-hidden shadow-2xl font-mono">
+    <div
+      v-if="showLogoutConfirm"
+      class="fixed inset-0 z-[100] flex items-center justify-center bg-retro-dark/60 backdrop-blur-sm animate-fadeIn"
+    >
+      <div
+        class="bg-white border-2 border-retro-primary rounded-lg max-w-sm w-full mx-4 overflow-hidden shadow-2xl font-mono"
+      >
         <!-- Title bar -->
         <div class="bg-retro-primary text-white px-4 py-2 flex items-center justify-between">
           <span class="font-bold text-xs font-mono">KONFIRMASI KELUAR</span>
-          <button @click="showLogoutConfirm = false" class="text-white hover:text-retro-accent transition-colors font-bold text-lg leading-none">×</button>
+          <button
+            @click="showLogoutConfirm = false"
+            class="text-white hover:text-retro-accent transition-colors font-bold text-lg leading-none"
+          >
+            ×
+          </button>
         </div>
         <div class="p-6">
           <div class="flex items-start gap-3">
-            <div class="w-10 h-10 rounded bg-amber-50 border border-amber-300 flex items-center justify-center shrink-0 text-amber-500 text-xl font-bold">!</div>
+            <div
+              class="w-10 h-10 rounded bg-amber-50 border border-amber-300 flex items-center justify-center shrink-0 text-amber-500 text-xl font-bold"
+            >
+              !
+            </div>
             <div>
               <h3 class="text-sm font-bold text-slate-800 mb-1">Keluar dari Aplikasi?</h3>
-              <p class="text-xs text-slate-500 leading-relaxed font-sans">Apakah Anda yakin ingin keluar dari sistem Retrokomputer? Sesi Anda akan diakhiri.</p>
+              <p class="text-xs text-slate-500 leading-relaxed font-sans">
+                Apakah Anda yakin ingin keluar dari sistem Retrokomputer? Sesi Anda akan diakhiri.
+              </p>
             </div>
           </div>
         </div>
         <div class="bg-slate-50 px-4 py-3 flex justify-end gap-2 border-t border-slate-100">
-          <button @click="showLogoutConfirm = false" class="px-3 py-1.5 text-xs text-slate-600 hover:text-slate-800 bg-white border border-slate-300 rounded font-sans transition-colors">
+          <button
+            @click="showLogoutConfirm = false"
+            class="px-3 py-1.5 text-xs text-slate-600 hover:text-slate-800 bg-white border border-slate-300 rounded font-sans transition-colors"
+          >
             Batal
           </button>
-          <button @click="handleLogout" class="px-3 py-1.5 text-xs bg-red-600 hover:bg-red-700 text-white rounded font-sans font-semibold transition-colors shadow-sm">
+          <button
+            @click="handleLogout"
+            class="px-3 py-1.5 text-xs bg-red-600 hover:bg-red-700 text-white rounded font-sans font-semibold transition-colors shadow-sm"
+          >
             Ya, Keluar
           </button>
         </div>
@@ -261,18 +378,18 @@ const userInitial = computed(() => {
 
 const pageTitle = computed(() => {
   const titles: Record<string, string> = {
-    'dashboard': 'Dashboard',
+    dashboard: 'Dashboard',
     'dashboard-owner': 'Dashboard Owner',
-    'produk': 'Produk',
+    produk: 'Produk',
     'produk-tambah': 'Tambah Produk',
     'produk-edit': 'Edit Produk',
-    'pos': 'Kasir POS',
-    'transaksi': 'Transaksi',
+    pos: 'Kasir POS',
+    transaksi: 'Transaksi',
     'transaksi-detail': 'Detail Transaksi',
-    'pembelian': 'Pembelian',
+    pembelian: 'Pembelian',
     'pembelian-tambah': 'Tambah Pembelian',
-    'supplier': 'Supplier',
-    'retur': 'Retur',
+    supplier: 'Supplier',
+    retur: 'Retur',
     'retur-tambah': 'Tambah Retur',
     'stok-riwayat': 'Riwayat Stok',
     'laporan-penjualan': 'Laporan Penjualan',
@@ -280,70 +397,95 @@ const pageTitle = computed(() => {
     'laporan-laba-rugi': 'Laba Kotor',
     'barang-rusak': 'Barang Rusak / Hilang',
     'profil-kasir': 'Profil Kasir',
-    'profil': 'Profil Saya',
-    'settings': 'Pengaturan Sistem',
+    profil: 'Profil Saya',
+    settings: 'Pengaturan Sistem',
   }
   return titles[route.name as string] || 'Retro Komputer'
 })
 
-interface MenuItem { label: string; icon: string; path: string }
-interface MenuGroup { label: string; items: MenuItem[] }
+interface MenuItem {
+  label: string
+  icon: string
+  path: string
+}
+interface MenuGroup {
+  label: string
+  items: MenuItem[]
+}
 
 const menuGroups = computed<MenuGroup[]>(() => {
   if (authStore.isOwner) {
     return [
-      { label: 'Overview', items: [
-        { label: 'Dashboard', icon: 'dashboard', path: '/dashboard/owner' },
-      ]},
-      { label: 'Monitoring', items: [
-        { label: 'Transaksi', icon: 'transaksi', path: '/transaksi' },
-        { label: 'Barang Rusak', icon: 'barang-rusak', path: '/barang-rusak' },
-        { label: 'Riwayat Stok', icon: 'stok-riwayat', path: '/stok/riwayat' },
-      ]},
-      { label: 'Laporan', items: [
-        { label: 'Penjualan', icon: 'penjualan', path: '/laporan/penjualan' },
-        { label: 'Stok', icon: 'stok', path: '/laporan/stok' },
-        { label: 'Laba Kotor', icon: 'laba-rugi', path: '/laporan/laba-rugi' },
-      ]},
+      {
+        label: 'Overview',
+        items: [{ label: 'Dashboard', icon: 'dashboard', path: '/dashboard/owner' }],
+      },
+      {
+        label: 'Monitoring',
+        items: [
+          { label: 'Transaksi', icon: 'transaksi', path: '/transaksi' },
+          { label: 'Barang Rusak', icon: 'barang-rusak', path: '/barang-rusak' },
+          { label: 'Riwayat Stok', icon: 'stok-riwayat', path: '/stok/riwayat' },
+        ],
+      },
+      {
+        label: 'Laporan',
+        items: [
+          { label: 'Penjualan', icon: 'penjualan', path: '/laporan/penjualan' },
+          { label: 'Stok', icon: 'stok', path: '/laporan/stok' },
+          { label: 'Laba Kotor', icon: 'laba-rugi', path: '/laporan/laba-rugi' },
+        ],
+      },
     ]
   }
 
   // Kasir: only show their relevant menu items
   if (authStore.isKasir) {
     return [
-      { label: 'Menu', items: [
-        { label: 'Dashboard', icon: 'dashboard', path: '/dashboard' },
-        { label: 'Profil Kasir', icon: 'profil-kasir', path: '/profil-kasir' },
-        { label: 'Kasir POS', icon: 'pos', path: '/pos' },
-      ]},
-      { label: 'Laporan', items: [
-        { label: 'Transaksi', icon: 'transaksi', path: '/transaksi' },
-        { label: 'Penjualan', icon: 'penjualan', path: '/laporan/penjualan' },
-      ]},
+      {
+        label: 'Menu',
+        items: [
+          { label: 'Dashboard', icon: 'dashboard', path: '/dashboard' },
+          { label: 'Profil Kasir', icon: 'profil-kasir', path: '/profil-kasir' },
+          { label: 'Kasir POS', icon: 'pos', path: '/pos' },
+        ],
+      },
+      {
+        label: 'Laporan',
+        items: [
+          { label: 'Transaksi', icon: 'transaksi', path: '/transaksi' },
+          { label: 'Penjualan', icon: 'penjualan', path: '/laporan/penjualan' },
+        ],
+      },
     ]
   }
 
   // Admin items
   const items = [
-    { label: 'Menu', items: [
-      { label: 'Dashboard', icon: 'dashboard', path: '/dashboard' },
-    ]},
-    { label: 'Inventaris', items: [
-      { label: 'Produk', icon: 'produk', path: '/produk' },
-      { label: 'Supplier', icon: 'supplier', path: '/supplier' },
-      { label: 'Pembelian', icon: 'pembelian', path: '/pembelian' },
-      { label: 'Retur', icon: 'retur', path: '/retur' },
-      { label: 'Barang Rusak', icon: 'barang-rusak', path: '/barang-rusak' },
-    ]},
-    { label: 'Stok & Laporan', items: [
-      { label: 'Riwayat Stok', icon: 'stok-riwayat', path: '/stok/riwayat' },
-      { label: 'Transaksi', icon: 'transaksi', path: '/transaksi' },
-      { label: 'Penjualan', icon: 'penjualan', path: '/laporan/penjualan' },
-      { label: 'Stok', icon: 'stok', path: '/laporan/stok' },
-    ]},
-    { label: 'Pengelolaan', items: [
-      { label: 'Profil Kasir', icon: 'profil-kasir', path: '/profil-kasir' },
-    ]},
+    { label: 'Menu', items: [{ label: 'Dashboard', icon: 'dashboard', path: '/dashboard' }] },
+    {
+      label: 'Inventaris',
+      items: [
+        { label: 'Produk', icon: 'produk', path: '/produk' },
+        { label: 'Supplier', icon: 'supplier', path: '/supplier' },
+        { label: 'Pembelian', icon: 'pembelian', path: '/pembelian' },
+        { label: 'Retur', icon: 'retur', path: '/retur' },
+        { label: 'Barang Rusak', icon: 'barang-rusak', path: '/barang-rusak' },
+      ],
+    },
+    {
+      label: 'Stok & Laporan',
+      items: [
+        { label: 'Riwayat Stok', icon: 'stok-riwayat', path: '/stok/riwayat' },
+        { label: 'Transaksi', icon: 'transaksi', path: '/transaksi' },
+        { label: 'Penjualan', icon: 'penjualan', path: '/laporan/penjualan' },
+        { label: 'Stok', icon: 'stok', path: '/laporan/stok' },
+      ],
+    },
+    {
+      label: 'Pengelolaan',
+      items: [{ label: 'Profil Kasir', icon: 'profil-kasir', path: '/profil-kasir' }],
+    },
   ]
 
   // (Removed system administration menu)
@@ -401,7 +543,10 @@ function getIconSvg(iconName: string): string {
     pembelian: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4.5 h-4.5"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>`,
     retur: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4.5 h-4.5"><path d="M3 2v6h6M3 10a9 9 0 1 1 3.4-6.9l-3.4 3.4"></path></svg>`,
   }
-  return icons[iconName] || `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-4.5 h-4.5"><circle cx="12" cy="12" r="10"></circle></svg>`
+  return (
+    icons[iconName] ||
+    `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-4.5 h-4.5"><circle cx="12" cy="12" r="10"></circle></svg>`
+  )
 }
 
 onMounted(() => {
@@ -417,17 +562,23 @@ onUnmounted(() => {
 </script>
 
 <style scoped>
-.page-enter-active, .page-leave-active {
+.page-enter-active,
+.page-leave-active {
   transition: opacity 0.15s ease;
 }
-.page-enter-from, .page-leave-to {
+.page-enter-from,
+.page-leave-to {
   opacity: 0;
 }
 
-.dropdown-enter-active, .dropdown-leave-active {
-  transition: opacity 0.15s ease, transform 0.15s ease;
+.dropdown-enter-active,
+.dropdown-leave-active {
+  transition:
+    opacity 0.15s ease,
+    transform 0.15s ease;
 }
-.dropdown-enter-from, .dropdown-leave-to {
+.dropdown-enter-from,
+.dropdown-leave-to {
   opacity: 0;
   transform: translateY(-4px);
 }
@@ -453,7 +604,6 @@ onUnmounted(() => {
 
 .sidebar-link:hover :deep(svg) {
   transform: scale(1.1) translateX(2px);
-  color: var(--color-accent, #1D4ED8) !important;
+  color: var(--color-accent, #1d4ed8) !important;
 }
 </style>
-

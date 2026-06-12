@@ -14,7 +14,9 @@
             class="filter-tab"
             :class="{ active: periode === opt.value }"
             @click="setPeriode(opt.value)"
-          >{{ opt.label }}</button>
+          >
+            {{ opt.label }}
+          </button>
         </div>
         <!-- Filter jumlah produk -->
         <div class="filter-tabs">
@@ -24,20 +26,63 @@
             class="filter-tab"
             :class="{ active: topN === opt.value }"
             @click="setTopN(opt.value)"
-          >{{ opt.label }}</button>
+          >
+            {{ opt.label }}
+          </button>
         </div>
         <!-- Toggle tampilan: chart vs tabel -->
-        <button class="view-toggle" @click="viewMode = viewMode === 'chart' ? 'table' : 'chart'" :title="viewMode === 'chart' ? 'Lihat Tabel' : 'Lihat Chart'">
-          <svg v-if="viewMode === 'chart'" class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M3 10h18M3 14h18M3 6h18M3 18h18"/>
+        <button
+          class="view-toggle"
+          @click="viewMode = viewMode === 'chart' ? 'table' : 'chart'"
+          :title="viewMode === 'chart' ? 'Lihat Tabel' : 'Lihat Chart'"
+        >
+          <svg
+            v-if="viewMode === 'chart'"
+            class="w-4 h-4"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M3 10h18M3 14h18M3 6h18M3 18h18"
+            />
           </svg>
-          <svg v-else class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M9 19v-6a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h2a2 2 0 0 0 2-2zm0 0V9a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v10m-6 0a2 2 0 0 0 2 2h2a2 2 0 0 0 2-2m0 0V5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v14a2 2 0 0 0 2 2h2a2 2 0 0 0 2-2"/>
+          <svg
+            v-else
+            class="w-4 h-4"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M9 19v-6a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h2a2 2 0 0 0 2-2zm0 0V9a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v10m-6 0a2 2 0 0 0 2 2h2a2 2 0 0 0 2-2m0 0V5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v14a2 2 0 0 0 2 2h2a2 2 0 0 0 2-2"
+            />
           </svg>
         </button>
-        <button v-if="hasData" class="btn-download-csv" @click="exportExcel" title="Unduh Laporan Excel">
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3"/>
+        <button
+          v-if="hasData"
+          class="btn-download-csv"
+          @click="exportExcel"
+          title="Unduh Laporan Excel"
+        >
+          <svg
+            class="w-4 h-4"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2.5"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3"
+            />
           </svg>
           Unduh Excel
         </button>
@@ -70,7 +115,10 @@
             class="table-row"
             :style="{ animationDelay: `${idx * 40}ms` }"
           >
-            <span class="rank-badge" :class="{ gold: idx === 0, silver: idx === 1, bronze: idx === 2 }">
+            <span
+              class="rank-badge"
+              :class="{ gold: idx === 0, silver: idx === 1, bronze: idx === 2 }"
+            >
               {{ idx + 1 }}
             </span>
             <div class="row-info">
@@ -106,11 +154,11 @@
               <span class="item-qty">
                 {{ item.total_terjual }} pcs <span class="qty-label">{{ periodeLabel }}</span>
               </span>
-              
+
               <!-- Growth Indicator -->
-              <span 
-                v-if="item.total_terjual_bulan_lalu > 0" 
-                class="growth-badge" 
+              <span
+                v-if="item.total_terjual_bulan_lalu > 0"
+                class="growth-badge"
                 :class="getGrowthClass(item.total_terjual, item.total_terjual_bulan_lalu)"
               >
                 {{ getGrowthSign(item.total_terjual, item.total_terjual_bulan_lalu) }}
@@ -125,7 +173,19 @@
 
     <div v-else class="chart-empty">
       <div class="empty-icon-wrapper">
-        <svg class="w-8 h-8 text-slate-500 mx-auto mb-2" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M20.25 7.5l-.625 10.632a2.25 2.25 0 01-2.247 2.118H6.622a2.25 2.25 0 01-2.247-2.118L3.75 7.5M10 11.25h4M3.375 7.5h17.25c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125z"/></svg>
+        <svg
+          class="w-8 h-8 text-slate-500 mx-auto mb-2"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.5"
+          viewBox="0 0 24 24"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            d="M20.25 7.5l-.625 10.632a2.25 2.25 0 01-2.247 2.118H6.622a2.25 2.25 0 01-2.247-2.118L3.75 7.5M10 11.25h4M3.375 7.5h17.25c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125z"
+          />
+        </svg>
       </div>
       <p class="text-xs text-slate-500 font-mono">Belum ada data produk terlaris</p>
     </div>
@@ -171,7 +231,18 @@ const periodePembandingLabel = computed(() => {
   return map[periode.value]
 })
 
-const barColors = ['#F28500', '#FFD700', '#fb923c', '#fbbf24', '#fde68a', '#f59e0b', '#fcd34d', '#fef08a', '#fed7aa', '#fdba74']
+const barColors = [
+  '#F28500',
+  '#FFD700',
+  '#fb923c',
+  '#fbbf24',
+  '#fde68a',
+  '#f59e0b',
+  '#fcd34d',
+  '#fef08a',
+  '#fed7aa',
+  '#fdba74',
+]
 
 const subtitleLabel = computed(() => `Top ${topN.value} ${periodeLabel.value}`)
 
@@ -179,15 +250,17 @@ const subtitleLabel = computed(() => `Top ${topN.value} ${periodeLabel.value}`)
 const displayData = computed(() => allData.value.slice(0, topN.value))
 
 const hasData = computed(() => displayData.value.length > 0)
-const maxTerjual = computed(() => Math.max(...displayData.value.map(d => d.total_terjual), 1))
+const maxTerjual = computed(() => Math.max(...displayData.value.map((d) => d.total_terjual), 1))
 
 // Tinggi chart menyesuaikan jumlah item
 const chartHeight = computed(() => Math.max(240, topN.value * 44))
 
-const series = computed(() => [{
-  name: 'Terjual',
-  data: displayData.value.map(d => d.total_terjual)
-}])
+const series = computed(() => [
+  {
+    name: 'Terjual',
+    data: displayData.value.map((d) => d.total_terjual),
+  },
+])
 
 const chartOptions = computed(() => ({
   chart: {
@@ -244,8 +317,8 @@ const chartOptions = computed(() => ({
       style: { colors: '#cbd5e1', fontSize: '11px', fontWeight: 600 },
     },
   },
-  labels: displayData.value.map(d =>
-    d.nama_produk.length > 20 ? d.nama_produk.substring(0, 18) + '…' : d.nama_produk
+  labels: displayData.value.map((d) =>
+    d.nama_produk.length > 20 ? d.nama_produk.substring(0, 18) + '…' : d.nama_produk,
   ),
   grid: {
     borderColor: '#1e293b',
@@ -261,7 +334,9 @@ const chartOptions = computed(() => ({
         const item = displayData.value[opts?.dataPointIndex]
         if (!item) return `${val} unit`
         const revenue = new Intl.NumberFormat('id-ID', {
-          style: 'currency', currency: 'IDR', minimumFractionDigits: 0,
+          style: 'currency',
+          currency: 'IDR',
+          minimumFractionDigits: 0,
         }).format(item.total_pendapatan)
         return `${val} unit • ${revenue}`
       },
@@ -297,8 +372,10 @@ function setPeriode(val: 'bulan-ini' | 'bulan-lalu' | 'tahun-ini') {
 async function loadData() {
   loading.value = true
   try {
-    const res = await (laporanService.getChartProdukTerlaris as any)({ limit: 10, periode: periode.value })
-      .catch(() => laporanService.getChartProdukTerlaris())
+    const res = await (laporanService.getChartProdukTerlaris as any)({
+      limit: 10,
+      periode: periode.value,
+    }).catch(() => laporanService.getChartProdukTerlaris())
     allData.value = res.data as ChartProdukTerlaris[]
   } catch (e) {
     console.error('Failed to load top products chart:', e)
@@ -382,12 +459,14 @@ function getGrowthPercent(current: number, previous: number) {
   background: transparent;
   color: #475569;
   cursor: pointer;
-  transition: background 0.15s, color 0.15s;
+  transition:
+    background 0.15s,
+    color 0.15s;
 }
 
 .filter-tab.active {
   background: #1e293b;
-  color: #F28500;
+  color: #f28500;
 }
 
 .filter-tab:hover:not(.active) {
@@ -405,12 +484,14 @@ function getGrowthPercent(current: number, previous: number) {
   border-radius: 7px;
   color: #64748b;
   cursor: pointer;
-  transition: border-color 0.2s, color 0.2s;
+  transition:
+    border-color 0.2s,
+    color 0.2s;
 }
 
 .view-toggle:hover {
-  border-color: #F28500;
-  color: #F28500;
+  border-color: #f28500;
+  color: #f28500;
 }
 
 /* Table view */
@@ -432,7 +513,9 @@ function getGrowthPercent(current: number, previous: number) {
   background: #0b0f19;
   border: 1px solid #1e293b;
   border-radius: 8px;
-  transition: border-color 0.2s, transform 0.15s;
+  transition:
+    border-color 0.2s,
+    transform 0.15s;
   animation: fadeSlideIn 0.3s ease both;
 }
 
@@ -442,8 +525,14 @@ function getGrowthPercent(current: number, previous: number) {
 }
 
 @keyframes fadeSlideIn {
-  from { opacity: 0; transform: translateX(-6px); }
-  to   { opacity: 1; transform: translateX(0); }
+  from {
+    opacity: 0;
+    transform: translateX(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
 }
 
 .rank-badge {
@@ -460,9 +549,18 @@ function getGrowthPercent(current: number, previous: number) {
   flex-shrink: 0;
 }
 
-.rank-badge.gold   { background: #F28500; color: #000; }
-.rank-badge.silver { background: #94a3b8; color: #000; }
-.rank-badge.bronze { background: #78350f; color: #fbbf24; }
+.rank-badge.gold {
+  background: #f28500;
+  color: #000;
+}
+.rank-badge.silver {
+  background: #94a3b8;
+  color: #000;
+}
+.rank-badge.bronze {
+  background: #78350f;
+  color: #fbbf24;
+}
 
 .row-info {
   flex: 1;
@@ -516,10 +614,20 @@ function getGrowthPercent(current: number, previous: number) {
 }
 
 /* transition-group */
-.table-row-enter-active { transition: all 0.3s ease; }
-.table-row-leave-active { transition: all 0.2s ease; }
-.table-row-enter-from  { opacity: 0; transform: translateY(-4px); }
-.table-row-leave-to    { opacity: 0; transform: translateY(4px); }
+.table-row-enter-active {
+  transition: all 0.3s ease;
+}
+.table-row-leave-active {
+  transition: all 0.2s ease;
+}
+.table-row-enter-from {
+  opacity: 0;
+  transform: translateY(-4px);
+}
+.table-row-leave-to {
+  opacity: 0;
+  transform: translateY(4px);
+}
 
 /* Detailed comparison list styles */
 .products-comparison-list {
@@ -551,7 +659,9 @@ function getGrowthPercent(current: number, previous: number) {
   background: #0b0f19;
   border-radius: 8px;
   border: 1px solid #1e293b;
-  transition: border-color 0.2s, transform 0.15s;
+  transition:
+    border-color 0.2s,
+    transform 0.15s;
 }
 
 .comparison-item:hover {

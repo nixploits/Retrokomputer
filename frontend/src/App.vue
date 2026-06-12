@@ -1,20 +1,63 @@
 <template>
   <router-view />
-  
+
   <!-- Global Toasts Container -->
   <div class="toast-container">
     <transition-group name="toast">
-      <div
-        v-for="t in toast.toasts.value"
-        :key="t.id"
-        class="toast-item"
-        :class="t.type"
-      >
+      <div v-for="t in toast.toasts.value" :key="t.id" class="toast-item" :class="t.type">
         <span class="toast-icon">
-          <svg v-if="t.type === 'success'" class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
-          <svg v-else-if="t.type === 'error'" class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z"/></svg>
-          <svg v-else-if="t.type === 'warning'" class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z"/></svg>
-          <svg v-else class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 111.085 1.085l-.04.04m-2.137.882a.5.5 0 00.582.896l2.07-.93a1.5 1.5 0 00.9-.4l.08-.08"/></svg>
+          <svg
+            v-if="t.type === 'success'"
+            class="w-4 h-4"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2.5"
+            viewBox="0 0 24 24"
+          >
+            <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" />
+          </svg>
+          <svg
+            v-else-if="t.type === 'error'"
+            class="w-4 h-4"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2.5"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z"
+            />
+          </svg>
+          <svg
+            v-else-if="t.type === 'warning'"
+            class="w-4 h-4"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2.5"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z"
+            />
+          </svg>
+          <svg
+            v-else
+            class="w-4 h-4"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2.5"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M11.25 11.25l.041-.02a.75.75 0 111.085 1.085l-.04.04m-2.137.882a.5.5 0 00.582.896l2.07-.93a1.5 1.5 0 00.9-.4l.08-.08"
+            />
+          </svg>
         </span>
         <span class="toast-message">{{ t.message }}</span>
         <button class="toast-close" @click="toast.dismiss(t.id)">×</button>
@@ -24,57 +67,116 @@
 
   <!-- Global Custom Dialog Modal -->
   <transition name="dialog-fade">
-    <div v-if="customDialog.activeDialog.value" class="dialog-overlay" @click.self="customDialog.activeDialog.value.onCancel?.()">
-      <div 
-        class="dialog-box animate-scaleUp"
-        :class="customDialog.activeDialog.value.type"
-      >
+    <div
+      v-if="customDialog.activeDialog.value"
+      class="dialog-overlay"
+      @click.self="customDialog.activeDialog.value.onCancel?.()"
+    >
+      <div class="dialog-box animate-scaleUp" :class="customDialog.activeDialog.value.type">
         <!-- Title bar -->
         <div class="dialog-header">
           <div class="flex items-center gap-1.5">
             <span class="dialog-title-prefix">■</span>
             <span class="dialog-title">{{ customDialog.activeDialog.value.title }}</span>
           </div>
-          <button @click="customDialog.activeDialog.value.onCancel?.()" class="dialog-close-btn">×</button>
+          <button @click="customDialog.activeDialog.value.onCancel?.()" class="dialog-close-btn">
+            ×
+          </button>
         </div>
-        
+
         <!-- Content Body -->
         <div class="dialog-body font-sans">
           <div class="dialog-icon-wrapper">
             <!-- Success Icon -->
-            <div v-if="customDialog.activeDialog.value.type === 'success'" class="dialog-icon success">
-              <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
+            <div
+              v-if="customDialog.activeDialog.value.type === 'success'"
+              class="dialog-icon success"
+            >
+              <svg
+                class="w-6 h-6"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2.5"
+                viewBox="0 0 24 24"
+              >
+                <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" />
+              </svg>
             </div>
             <!-- Error Icon -->
-            <div v-else-if="customDialog.activeDialog.value.type === 'error'" class="dialog-icon error">
-              <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z"/></svg>
+            <div
+              v-else-if="customDialog.activeDialog.value.type === 'error'"
+              class="dialog-icon error"
+            >
+              <svg
+                class="w-6 h-6"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2.5"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z"
+                />
+              </svg>
             </div>
             <!-- Warning / Confirm Icon -->
-            <div v-else-if="customDialog.activeDialog.value.type === 'warning' || customDialog.activeDialog.value.type === 'confirm'" class="dialog-icon warning">
-              <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z"/></svg>
+            <div
+              v-else-if="
+                customDialog.activeDialog.value.type === 'warning' ||
+                customDialog.activeDialog.value.type === 'confirm'
+              "
+              class="dialog-icon warning"
+            >
+              <svg
+                class="w-6 h-6"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2.5"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z"
+                />
+              </svg>
             </div>
             <!-- Info Icon -->
             <div v-else class="dialog-icon info">
-              <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 111.085 1.085l-.04.04m-2.137.882a.5.5 0 00.582.896l2.07-.93a1.5 1.5 0 00.9-.4l.08-.08"/></svg>
+              <svg
+                class="w-6 h-6"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2.5"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M11.25 11.25l.041-.02a.75.75 0 111.085 1.085l-.04.04m-2.137.882a.5.5 0 00.582.896l2.07-.93a1.5 1.5 0 00.9-.4l.08-.08"
+                />
+              </svg>
             </div>
           </div>
-          
+
           <div class="dialog-message-content">
             <p class="dialog-message">{{ customDialog.activeDialog.value.message }}</p>
           </div>
         </div>
-        
+
         <!-- Footer Actions -->
         <div class="dialog-footer">
-          <button 
-            v-if="customDialog.activeDialog.value.cancelText" 
-            @click="customDialog.activeDialog.value.onCancel?.()" 
+          <button
+            v-if="customDialog.activeDialog.value.cancelText"
+            @click="customDialog.activeDialog.value.onCancel?.()"
             class="dialog-btn cancel"
           >
             {{ customDialog.activeDialog.value.cancelText }}
           </button>
-          <button 
-            @click="customDialog.activeDialog.value.onConfirm?.()" 
+          <button
+            @click="customDialog.activeDialog.value.onConfirm?.()"
             class="dialog-btn confirm"
             :class="customDialog.activeDialog.value.type"
           >
@@ -91,13 +193,16 @@ import { toast } from '@/utils/toast'
 import { customDialog } from '@/utils/dialog'
 import { watch } from 'vue'
 
-watch(() => customDialog.activeDialog.value, (newVal) => {
-  if (newVal) {
-    document.addEventListener('keydown', handleKeyDown)
-  } else {
-    document.removeEventListener('keydown', handleKeyDown)
-  }
-})
+watch(
+  () => customDialog.activeDialog.value,
+  (newVal) => {
+    if (newVal) {
+      document.addEventListener('keydown', handleKeyDown)
+    } else {
+      document.removeEventListener('keydown', handleKeyDown)
+    }
+  },
+)
 
 function handleKeyDown(e: KeyboardEvent) {
   if (!customDialog.activeDialog.value) return
@@ -134,7 +239,9 @@ function handleKeyDown(e: KeyboardEvent) {
   border: 1px solid rgba(255, 122, 0, 0.2) !important;
   border-left: 4px solid #3b82f6 !important;
   border-radius: 8px;
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.4), 0 0 15px rgba(255, 122, 0, 0.05);
+  box-shadow:
+    0 10px 15px -3px rgba(0, 0, 0, 0.4),
+    0 0 15px rgba(255, 122, 0, 0.05);
   color: #f8fafc;
   pointer-events: auto;
   transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
@@ -142,17 +249,23 @@ function handleKeyDown(e: KeyboardEvent) {
 
 .toast-item.success {
   border-left-color: #10b981 !important;
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.4), 0 0 15px rgba(16, 185, 129, 0.1);
+  box-shadow:
+    0 10px 15px -3px rgba(0, 0, 0, 0.4),
+    0 0 15px rgba(16, 185, 129, 0.1);
 }
 
 .toast-item.error {
   border-left-color: #ef4444 !important;
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.4), 0 0 15px rgba(239, 68, 68, 0.1);
+  box-shadow:
+    0 10px 15px -3px rgba(0, 0, 0, 0.4),
+    0 0 15px rgba(239, 68, 68, 0.1);
 }
 
 .toast-item.warning {
   border-left-color: #f59e0b !important;
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.4), 0 0 15px rgba(245, 158, 11, 0.1);
+  box-shadow:
+    0 10px 15px -3px rgba(0, 0, 0, 0.4),
+    0 0 15px rgba(245, 158, 11, 0.1);
 }
 
 .toast-icon {
@@ -162,10 +275,18 @@ function handleKeyDown(e: KeyboardEvent) {
   justify-content: center;
 }
 
-.toast-item.success .toast-icon { color: #10b981; }
-.toast-item.error .toast-icon { color: #ef4444; }
-.toast-item.warning .toast-icon { color: #f59e0b; }
-.toast-item.info .toast-icon { color: #3b82f6; }
+.toast-item.success .toast-icon {
+  color: #10b981;
+}
+.toast-item.error .toast-icon {
+  color: #ef4444;
+}
+.toast-item.warning .toast-icon {
+  color: #f59e0b;
+}
+.toast-item.info .toast-icon {
+  color: #3b82f6;
+}
 
 .toast-message {
   font-family: 'Inter', system-ui, sans-serif;
@@ -230,19 +351,28 @@ function handleKeyDown(e: KeyboardEvent) {
 /* Borders based on type */
 .dialog-box.success {
   border-color: var(--color-success) !important;
-  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.6), 0 0 25px var(--color-success-glow) !important;
+  box-shadow:
+    0 25px 50px -12px rgba(0, 0, 0, 0.6),
+    0 0 25px var(--color-success-glow) !important;
 }
 .dialog-box.error {
   border-color: var(--color-danger) !important;
-  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.6), 0 0 25px var(--color-danger-glow) !important;
+  box-shadow:
+    0 25px 50px -12px rgba(0, 0, 0, 0.6),
+    0 0 25px var(--color-danger-glow) !important;
 }
-.dialog-box.warning, .dialog-box.confirm {
+.dialog-box.warning,
+.dialog-box.confirm {
   border-color: var(--color-accent) !important;
-  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.6), 0 0 25px var(--color-accent-glow) !important;
+  box-shadow:
+    0 25px 50px -12px rgba(0, 0, 0, 0.6),
+    0 0 25px var(--color-accent-glow) !important;
 }
 .dialog-box.info {
   border-color: var(--color-primary) !important;
-  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.6), 0 0 25px var(--color-primary-glow) !important;
+  box-shadow:
+    0 25px 50px -12px rgba(0, 0, 0, 0.6),
+    0 0 25px var(--color-primary-glow) !important;
 }
 
 /* Header */
@@ -261,7 +391,8 @@ function handleKeyDown(e: KeyboardEvent) {
   background: linear-gradient(90deg, #7f1d1d 0%, var(--color-danger) 100%) !important;
   border-bottom: 2px solid rgba(239, 68, 68, 0.2) !important;
 }
-.dialog-box.warning .dialog-header, .dialog-box.confirm .dialog-header {
+.dialog-box.warning .dialog-header,
+.dialog-box.confirm .dialog-header {
   background: linear-gradient(90deg, #78350f 0%, var(--color-accent) 100%) !important;
   border-bottom: 2px solid rgba(245, 158, 11, 0.2) !important;
 }
@@ -397,11 +528,13 @@ function handleKeyDown(e: KeyboardEvent) {
   background-color: var(--color-danger-hover) !important;
   transform: translateY(-1px);
 }
-.dialog-btn.confirm.warning, .dialog-btn.confirm.confirm {
+.dialog-btn.confirm.warning,
+.dialog-btn.confirm.confirm {
   background-color: var(--color-accent) !important;
   box-shadow: 0 4px 6px var(--color-accent-glow);
 }
-.dialog-btn.confirm.warning:hover, .dialog-btn.confirm.confirm:hover {
+.dialog-btn.confirm.warning:hover,
+.dialog-btn.confirm.confirm:hover {
   background-color: var(--color-accent-hover) !important;
   transform: translateY(-1px);
 }

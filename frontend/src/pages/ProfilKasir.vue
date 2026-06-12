@@ -3,12 +3,16 @@
     <!-- Header -->
     <div class="flex items-center justify-between">
       <div class="flex items-center gap-3">
-        <div class="w-1 h-8 bg-gradient-to-b from-retro-orange to-retro-orange/50 rounded-full"></div>
+        <div
+          class="w-1 h-8 bg-gradient-to-b from-retro-orange to-retro-orange/50 rounded-full"
+        ></div>
         <h2 class="text-base font-bold text-slate-800 dark:text-white uppercase tracking-wider">
           PENGELOLAAN PROFIL KASIR
         </h2>
       </div>
-      <div class="text-xs text-slate-400 font-bold bg-slate-100 px-2 py-1 border border-slate-200 rounded">
+      <div
+        class="text-xs text-slate-400 font-bold bg-slate-100 px-2 py-1 border border-slate-200 rounded"
+      >
         Role: {{ authStore.user?.role?.toUpperCase() }}
       </div>
     </div>
@@ -19,7 +23,7 @@
       <div class="lg:col-span-1 space-y-4">
         <div class="bg-white border-2 border-retro-blue rounded-lg overflow-hidden shadow-sm">
           <div class="bg-retro-blue text-white px-4 py-2.5 text-xs font-bold uppercase">
-        {{ isEditing ? 'Edit Profil Kasir' : 'Tambah Profil Kasir' }}
+            {{ isEditing ? 'Edit Profil Kasir' : 'Tambah Profil Kasir' }}
           </div>
 
           <form @submit.prevent="handleSubmit" class="p-4 space-y-4">
@@ -37,17 +41,21 @@
                 </option>
               </select>
             </div>
-            
+
             <div class="space-y-1.5" v-else>
               <label class="text-[10px] font-bold text-slate-650 uppercase block">AKUN KASIR</label>
-              <div class="w-full px-3 py-2 text-xs border-2 border-slate-100 rounded bg-slate-50 font-sans text-slate-550 font-medium">
+              <div
+                class="w-full px-3 py-2 text-xs border-2 border-slate-100 rounded bg-slate-50 font-sans text-slate-550 font-medium"
+              >
                 {{ editingProfileUser }}
               </div>
             </div>
 
             <!-- Nama -->
             <div class="space-y-1.5">
-              <label class="text-[10px] font-bold text-slate-650 uppercase">NAMA PROFIL KASIR</label>
+              <label class="text-[10px] font-bold text-slate-650 uppercase"
+                >NAMA PROFIL KASIR</label
+              >
               <input
                 v-model="form.nama"
                 type="text"
@@ -68,7 +76,11 @@
                 type="password"
                 :required="!isEditing"
                 class="w-full px-3 py-2 text-xs border-2 border-slate-200 rounded focus:outline-none focus:border-retro-blue font-mono"
-                :placeholder="isEditing ? 'Biarkan kosong jika tidak ingin diubah' : 'Masukkan kode PIN khusus...'"
+                :placeholder="
+                  isEditing
+                    ? 'Biarkan kosong jika tidak ingin diubah'
+                    : 'Masukkan kode PIN khusus...'
+                "
                 maxlength="255"
               />
               <span class="text-[9px] text-slate-400 font-sans block mt-1 leading-normal">
@@ -90,7 +102,7 @@
                 :disabled="processing"
                 class="flex-1 py-2 text-xs font-bold text-white bg-retro-blue hover:bg-blue-700 rounded transition-colors uppercase shadow-sm"
               >
-                {{ processing ? 'PROSES...' : (isEditing ? 'PERBARUI' : 'TAMBAH') }}
+                {{ processing ? 'PROSES...' : isEditing ? 'PERBARUI' : 'TAMBAH' }}
               </button>
             </div>
           </form>
@@ -98,13 +110,21 @@
       </div>
 
       <!-- Admin List Panel (2 columns) -->
-      <div class="lg:col-span-2 bg-white rounded-lg border-2 border-slate-200 overflow-hidden shadow-sm flex flex-col">
-        <div class="p-4 border-b-2 border-slate-200 dark:border-slate-700 flex justify-between items-center bg-slate-50 dark:bg-slate-800/50">
-          <h3 class="text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-200 flex items-center gap-2">
+      <div
+        class="lg:col-span-2 bg-white rounded-lg border-2 border-slate-200 overflow-hidden shadow-sm flex flex-col"
+      >
+        <div
+          class="p-4 border-b-2 border-slate-200 dark:border-slate-700 flex justify-between items-center bg-slate-50 dark:bg-slate-800/50"
+        >
+          <h3
+            class="text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-200 flex items-center gap-2"
+          >
             <span class="inline-block w-2 h-2 bg-retro-orange rounded-full"></span>
             DAFTAR SEMUA PROFIL KASIR
           </h3>
-          <span class="text-[10px] text-slate-400 font-mono">Total: {{ profiles.length }} profil</span>
+          <span class="text-[10px] text-slate-400 font-mono"
+            >Total: {{ profiles.length }} profil</span
+          >
         </div>
 
         <div class="overflow-x-auto flex-1">
@@ -113,7 +133,9 @@
           </div>
           <table v-else class="w-full text-left text-xs border-collapse font-mono">
             <thead>
-              <tr class="bg-slate-100/80 text-slate-650 border-b-2 border-slate-200 uppercase tracking-wider text-[10px]">
+              <tr
+                class="bg-slate-100/80 text-slate-650 border-b-2 border-slate-200 uppercase tracking-wider text-[10px]"
+              >
                 <th class="py-3 px-4 font-bold">Akun Kasir</th>
                 <th class="py-3 px-4 font-bold">Nama Profil</th>
                 <th class="py-3 px-4 font-bold text-center">Status</th>
@@ -122,12 +144,16 @@
             </thead>
             <tbody class="divide-y-2 divide-slate-100 text-slate-700">
               <tr v-if="profiles.length === 0">
-                <td colspan="4" class="py-8 text-center text-slate-450 font-medium">Belum ada profil kasir yang terdaftar.</td>
+                <td colspan="4" class="py-8 text-center text-slate-450 font-medium">
+                  Belum ada profil kasir yang terdaftar.
+                </td>
               </tr>
               <tr v-for="p in profiles" :key="p.id" class="hover:bg-slate-55/50 transition-colors">
                 <td class="py-3.5 px-4 font-sans text-slate-800">
                   <span class="font-bold">{{ p.user?.name || '-' }}</span>
-                  <span class="text-xs text-slate-400 block font-mono">@{{ p.user?.username || '-' }}</span>
+                  <span class="text-xs text-slate-400 block font-mono"
+                    >@{{ p.user?.username || '-' }}</span
+                  >
                 </td>
                 <td class="py-3.5 px-4 font-medium text-slate-800 font-sans">{{ p.nama }}</td>
                 <td class="py-3.5 px-4 text-center">
@@ -136,7 +162,7 @@
                       'text-[9px] font-bold px-2 py-0.5 rounded border uppercase',
                       p.is_active
                         ? 'bg-emerald-50 text-emerald-600 border-emerald-200'
-                        : 'bg-slate-50 text-slate-400 border-slate-200'
+                        : 'bg-slate-50 text-slate-400 border-slate-200',
                     ]"
                   >
                     {{ p.is_active ? 'Aktif' : 'Nonaktif' }}
@@ -173,7 +199,9 @@
         class="bg-emerald-50 border-2 border-emerald-500 text-emerald-800 p-4 rounded-lg flex items-center justify-between shadow-sm animate-fadeIn"
       >
         <div class="flex items-center gap-3">
-          <div class="w-8 h-8 rounded bg-emerald-500 text-white flex items-center justify-center font-bold text-sm">
+          <div
+            class="w-8 h-8 rounded bg-emerald-500 text-white flex items-center justify-center font-bold text-sm"
+          >
             ✓
           </div>
           <div>
@@ -194,34 +222,45 @@
         v-else
         class="bg-amber-50 border-2 border-amber-400 text-amber-800 p-4 rounded-lg flex items-center gap-3 shadow-sm"
       >
-        <div class="w-8 h-8 rounded bg-amber-400 text-white flex items-center justify-center font-bold text-sm">
+        <div
+          class="w-8 h-8 rounded bg-amber-400 text-white flex items-center justify-center font-bold text-sm"
+        >
           !
         </div>
         <div>
           <p class="text-xs font-bold uppercase tracking-wider">BELUM ADA PROFIL AKTIF</p>
           <p class="text-xs font-sans text-amber-700 leading-relaxed mt-0.5">
-            Anda harus memilih dan mengaktifkan salah satu profil kasir di bawah sebelum dapat mengakses menu Kasir POS atau memproses transaksi.
+            Anda harus memilih dan mengaktifkan salah satu profil kasir di bawah sebelum dapat
+            mengakses menu Kasir POS atau memproses transaksi.
           </p>
         </div>
       </div>
 
       <!-- Profiles List -->
       <div class="bg-white border-2 border-slate-200 rounded-lg overflow-hidden shadow-sm">
-        <div class="bg-slate-100 dark:bg-slate-800 border-b-2 border-slate-200 dark:border-slate-700 px-4 py-2.5 text-xs font-bold text-slate-700 dark:text-slate-200 flex justify-between items-center">
+        <div
+          class="bg-slate-100 dark:bg-slate-800 border-b-2 border-slate-200 dark:border-slate-700 px-4 py-2.5 text-xs font-bold text-slate-700 dark:text-slate-200 flex justify-between items-center"
+        >
           <span class="flex items-center gap-2">
             <span class="inline-block w-2 h-2 bg-retro-orange rounded-full"></span>
             DAFTAR PROFIL KASIR SAYA
           </span>
-          <span class="text-[10px] text-slate-400 dark:text-slate-400 font-sans">Pilih dan aktifkan profil untuk mulai bekerja</span>
+          <span class="text-[10px] text-slate-400 dark:text-slate-400 font-sans"
+            >Pilih dan aktifkan profil untuk mulai bekerja</span
+          >
         </div>
 
         <div class="p-4">
           <div v-if="loading" class="py-12 text-center text-sm text-slate-400 font-mono">
             Memuat profil kasir...
           </div>
-          
-          <div v-else-if="profiles.length === 0" class="py-12 text-center text-sm text-slate-400 font-mono">
-            Belum ada profil kasir untuk akun Anda. Silakan hubungi Admin untuk menambahkan profil baru.
+
+          <div
+            v-else-if="profiles.length === 0"
+            class="py-12 text-center text-sm text-slate-400 font-mono"
+          >
+            Belum ada profil kasir untuk akun Anda. Silakan hubungi Admin untuk menambahkan profil
+            baru.
           </div>
 
           <div v-else class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 font-mono">
@@ -232,7 +271,7 @@
                 'border-2 rounded-lg p-4 transition-all duration-150 flex flex-col justify-between h-36 shadow-sm relative overflow-hidden bg-white',
                 p.is_active
                   ? 'border-emerald-500 shadow-[0_0_10px_rgba(16,185,129,0.1)]'
-                  : 'border-slate-200 hover:border-retro-blue'
+                  : 'border-slate-200 hover:border-retro-blue',
               ]"
             >
               <!-- Badge status -->
@@ -242,7 +281,7 @@
                     'text-[9px] font-bold px-2 py-0.5 rounded-bl uppercase border-l border-b',
                     p.is_active
                       ? 'bg-emerald-500 text-white border-emerald-500'
-                      : 'bg-slate-100 text-slate-400 border-slate-200'
+                      : 'bg-slate-100 text-slate-400 border-slate-200',
                   ]"
                 >
                   {{ p.is_active ? 'Aktif' : 'Nonaktif' }}
@@ -251,7 +290,9 @@
 
               <!-- Profile Info -->
               <div class="space-y-1 pr-12">
-                <span class="text-[9px] text-slate-400 font-bold block uppercase tracking-wider">KASIR #{{ p.id }}</span>
+                <span class="text-[9px] text-slate-400 font-bold block uppercase tracking-wider"
+                  >KASIR #{{ p.id }}</span
+                >
                 <h3 class="text-sm font-black text-slate-800 truncate font-sans">{{ p.nama }}</h3>
                 <p class="text-[10px] text-slate-400">PIN: ****</p>
               </div>
@@ -284,16 +325,27 @@
       v-if="showPinModal"
       class="fixed inset-0 bg-retro-dark/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-fadeIn"
     >
-      <div class="bg-white border-2 border-retro-blue rounded-lg w-full max-w-sm overflow-hidden shadow-2xl font-mono">
+      <div
+        class="bg-white border-2 border-retro-blue rounded-lg w-full max-w-sm overflow-hidden shadow-2xl font-mono"
+      >
         <div class="bg-retro-blue text-white px-4 py-2 flex items-center justify-between">
           <span class="font-bold text-xs">■ VERIFIKASI KODE KHUSUS</span>
-          <button @click="closePinModal" class="text-white hover:text-retro-yellow font-bold text-lg leading-none">×</button>
+          <button
+            @click="closePinModal"
+            class="text-white hover:text-retro-yellow font-bold text-lg leading-none"
+          >
+            ×
+          </button>
         </div>
 
         <form @submit.prevent="submitActivation" class="p-6 space-y-4">
           <div class="text-center mb-2">
-            <h3 class="text-sm font-bold text-slate-800 font-sans">Aktifkan Profil: {{ targetProfile?.nama }}</h3>
-            <p class="text-[10px] text-slate-400 font-sans mt-0.5">Masukkan kode khusus / PIN kasir untuk verifikasi</p>
+            <h3 class="text-sm font-bold text-slate-800 font-sans">
+              Aktifkan Profil: {{ targetProfile?.nama }}
+            </h3>
+            <p class="text-[10px] text-slate-400 font-sans mt-0.5">
+              Masukkan kode khusus / PIN kasir untuk verifikasi
+            </p>
           </div>
 
           <div class="space-y-1.5">
@@ -454,11 +506,13 @@ async function handleSubmit() {
 }
 
 async function confirmDelete(p: ProfilKasir) {
-  const confirmed = await customDialog.confirm(`Apakah Anda yakin ingin menghapus profil kasir "${p.nama}"?`)
+  const confirmed = await customDialog.confirm(
+    `Apakah Anda yakin ingin menghapus profil kasir "${p.nama}"?`,
+  )
   if (!confirmed) {
     return
   }
-  
+
   try {
     await profilKasirService.delete(p.id)
     if (authStore.activeKasirProfile?.id === p.id) {

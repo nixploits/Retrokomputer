@@ -14,11 +14,28 @@
             class="filter-tab"
             :class="{ active: activeFilter === opt.value }"
             @click="setFilter(opt.value)"
-          >{{ opt.label }}</button>
+          >
+            {{ opt.label }}
+          </button>
         </div>
-        <button v-if="hasData" class="btn-download-csv" @click="exportExcel" title="Unduh Laporan Excel">
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3"/>
+        <button
+          v-if="hasData"
+          class="btn-download-csv"
+          @click="exportExcel"
+          title="Unduh Laporan Excel"
+        >
+          <svg
+            class="w-4 h-4"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2.5"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3"
+            />
           </svg>
           Unduh Excel
         </button>
@@ -45,7 +62,10 @@
           class="payment-item"
           :style="{ animationDelay: `${idx * 60}ms` }"
         >
-          <span class="payment-dot" :style="{ background: getColor(item.metode_pembayaran) }"></span>
+          <span
+            class="payment-dot"
+            :style="{ background: getColor(item.metode_pembayaran) }"
+          ></span>
           <div class="payment-info">
             <div class="payment-left">
               <span class="payment-label">{{ formatLabel(item.metode_pembayaran) }}</span>
@@ -61,9 +81,23 @@
     </div>
     <div v-else class="chart-empty">
       <div class="empty-icon-wrapper">
-        <svg class="w-8 h-8 text-slate-500 mx-auto mb-2" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 8.25h19.5M2.25 9h19.5m-16.5 5.25h6m-6 2.25h3m-3.75 3h15a2.25 2.25 0 002.25-2.25V6.75A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25v10.5A2.25 2.25 0 004.5 19.5z"/></svg>
+        <svg
+          class="w-8 h-8 text-slate-500 mx-auto mb-2"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.5"
+          viewBox="0 0 24 24"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            d="M2.25 8.25h19.5M2.25 9h19.5m-16.5 5.25h6m-6 2.25h3m-3.75 3h15a2.25 2.25 0 002.25-2.25V6.75A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25v10.5A2.25 2.25 0 004.5 19.5z"
+          />
+        </svg>
       </div>
-      <p class="text-xs text-slate-500 font-mono">Belum ada transaksi {{ activeFilter === 'bulan' ? 'bulan' : 'minggu' }} ini</p>
+      <p class="text-xs text-slate-500 font-mono">
+        Belum ada transaksi {{ activeFilter === 'bulan' ? 'bulan' : 'minggu' }} ini
+      </p>
     </div>
   </div>
 </template>
@@ -105,19 +139,19 @@ function getPct(jumlah: number) {
 const colorMap = computed<Record<string, string>>(() => {
   if (isDark.value) {
     return {
-      tunai: '#3b82f6',     // Accent (Blue) in dark mode
-      transfer: '#FF7A00',  // Primary (Orange) in dark mode
-      debit: '#60a5fa',     // Secondary Blue
-      kredit: '#FFC857',    // Yellow
-      qris: '#00D1FF',      // Cyan
+      tunai: '#3b82f6', // Accent (Blue) in dark mode
+      transfer: '#FF7A00', // Primary (Orange) in dark mode
+      debit: '#60a5fa', // Secondary Blue
+      kredit: '#FFC857', // Yellow
+      qris: '#00D1FF', // Cyan
     }
   } else {
     return {
-      tunai: '#FF7A00',     // Accent (Orange) in light mode
-      transfer: '#1D4ED8',  // Primary (Blue) in light mode
-      debit: '#3b82f6',     // Secondary Blue
-      kredit: '#FFC857',    // Yellow
-      qris: '#60a5fa',      // Lighter Blue
+      tunai: '#FF7A00', // Accent (Orange) in light mode
+      transfer: '#1D4ED8', // Primary (Blue) in light mode
+      debit: '#3b82f6', // Secondary Blue
+      kredit: '#FFC857', // Yellow
+      qris: '#60a5fa', // Lighter Blue
     }
   }
 })
@@ -137,7 +171,7 @@ function formatLabel(method: string) {
   return labels[method.toLowerCase()] ?? method
 }
 
-const series = computed(() => data.value.map(d => d.jumlah_transaksi))
+const series = computed(() => data.value.map((d) => d.jumlah_transaksi))
 
 const chartOptions = computed(() => ({
   chart: {
@@ -151,8 +185,8 @@ const chartOptions = computed(() => ({
       dynamicAnimation: { enabled: true, speed: 400 },
     },
   },
-  labels: data.value.map(d => formatLabel(d.metode_pembayaran)),
-  colors: data.value.map(d => getColor(d.metode_pembayaran)),
+  labels: data.value.map((d) => formatLabel(d.metode_pembayaran)),
+  colors: data.value.map((d) => getColor(d.metode_pembayaran)),
   plotOptions: {
     pie: {
       donut: {
@@ -199,7 +233,12 @@ const chartOptions = computed(() => ({
       formatter: (val: number, opts: any) => {
         const item = data.value[opts?.seriesIndex]
         const nominal = item
-          ? ' • ' + new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(item.total_nominal)
+          ? ' • ' +
+            new Intl.NumberFormat('id-ID', {
+              style: 'currency',
+              currency: 'IDR',
+              minimumFractionDigits: 0,
+            }).format(item.total_nominal)
           : ''
         return `${val} transaksi${nominal}`
       },
@@ -207,15 +246,19 @@ const chartOptions = computed(() => ({
   },
   states: {
     hover: { filter: { type: 'lighten' as any, value: 0.15 } },
-    active: { allowMultipleDataPointsSelection: false, filter: { type: 'darken' as any, value: 0.15 } },
+    active: {
+      allowMultipleDataPointsSelection: false,
+      filter: { type: 'darken' as any, value: 0.15 },
+    },
   },
 }))
 
 async function loadData() {
   loading.value = true
   try {
-    const res = await (laporanService.getChartMetodePembayaran as any)({ periode: activeFilter.value })
-      .catch(() => laporanService.getChartMetodePembayaran())
+    const res = await (laporanService.getChartMetodePembayaran as any)({
+      periode: activeFilter.value,
+    }).catch(() => laporanService.getChartMetodePembayaran())
     data.value = res.data as ChartMetodePembayaran[]
     chartKey.value++ // force donut re-render
   } catch (e) {
@@ -237,7 +280,11 @@ watch(isDark, () => {
 })
 
 function formatCurrency(v: number) {
-  return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(v)
+  return new Intl.NumberFormat('id-ID', {
+    style: 'currency',
+    currency: 'IDR',
+    minimumFractionDigits: 0,
+  }).format(v)
 }
 
 async function exportExcel() {
@@ -291,13 +338,15 @@ onMounted(loadData)
   background: transparent;
   color: #475569;
   cursor: pointer;
-  transition: background 0.15s, color 0.15s;
+  transition:
+    background 0.15s,
+    color 0.15s;
   letter-spacing: 0.03em;
 }
 
 .filter-tab.active {
   background: #1e293b;
-  color: #F28500;
+  color: #f28500;
 }
 
 .filter-tab:hover:not(.active) {
@@ -320,7 +369,9 @@ onMounted(loadData)
   border-radius: 8px;
   background: #0b0f19;
   border: 1px solid #1e293b;
-  transition: border-color 0.2s, transform 0.15s;
+  transition:
+    border-color 0.2s,
+    transform 0.15s;
   animation: slideInUp 0.3s ease both;
 }
 
@@ -330,8 +381,14 @@ onMounted(loadData)
 }
 
 @keyframes slideInUp {
-  from { opacity: 0; transform: translateY(6px); }
-  to   { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .payment-dot {
@@ -387,8 +444,18 @@ onMounted(loadData)
 }
 
 /* transition-group animation */
-.payment-item-enter-active { transition: all 0.3s ease; }
-.payment-item-leave-active { transition: all 0.2s ease; }
-.payment-item-enter-from  { opacity: 0; transform: translateX(-8px); }
-.payment-item-leave-to    { opacity: 0; transform: translateX(8px); }
+.payment-item-enter-active {
+  transition: all 0.3s ease;
+}
+.payment-item-leave-active {
+  transition: all 0.2s ease;
+}
+.payment-item-enter-from {
+  opacity: 0;
+  transform: translateX(-8px);
+}
+.payment-item-leave-to {
+  opacity: 0;
+  transform: translateX(8px);
+}
 </style>

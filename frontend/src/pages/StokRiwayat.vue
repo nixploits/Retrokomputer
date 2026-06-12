@@ -4,7 +4,9 @@
     <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
       <div class="flex items-center gap-2">
         <span class="text-xl font-bold text-retro-blue"></span>
-        <h2 class="text-base font-bold text-slate-800 uppercase tracking-wider">RIWAYAT MUTASI STOK</h2>
+        <h2 class="text-base font-bold text-slate-800 uppercase tracking-wider">
+          RIWAYAT MUTASI STOK
+        </h2>
       </div>
 
       <!-- Date Filter Dropdown -->
@@ -27,7 +29,7 @@
       <div v-if="loading" class="p-8 text-center text-sm text-slate-400 font-mono">
         Memuat riwayat mutasi stok...
       </div>
-      
+
       <div v-else class="overflow-x-auto">
         <table class="w-full text-left border-collapse">
           <thead>
@@ -46,22 +48,34 @@
               class="border-b border-slate-100 hover:bg-slate-50/50 transition-colors"
             >
               <td class="px-4 py-3">
-                <span class="block font-bold text-slate-800">{{ r.produk?.nama_produk || '-' }}</span>
-                <span class="text-[10px] text-slate-400 font-mono">Kode: {{ r.produk?.kode_produk || '-' }}</span>
+                <span class="block font-bold text-slate-800">{{
+                  r.produk?.nama_produk || '-'
+                }}</span>
+                <span class="text-[10px] text-slate-400 font-mono"
+                  >Kode: {{ r.produk?.kode_produk || '-' }}</span
+                >
               </td>
               <td class="px-4 py-3">
                 <!-- Redesigned tipe indicator: bright neon colors with glow -->
                 <span
                   v-if="r.tipe === 'masuk'"
                   class="font-black text-emerald-400 uppercase tracking-wide text-xs"
-                  style="text-shadow: 0 0 8px rgba(52, 211, 153, 0.6), 0 0 16px rgba(52, 211, 153, 0.3);"
+                  style="
+                    text-shadow:
+                      0 0 8px rgba(52, 211, 153, 0.6),
+                      0 0 16px rgba(52, 211, 153, 0.3);
+                  "
                 >
                   ▲ MASUK
                 </span>
                 <span
                   v-else
                   class="font-black text-rose-400 uppercase tracking-wide text-xs"
-                  style="text-shadow: 0 0 8px rgba(251, 113, 133, 0.6), 0 0 16px rgba(251, 113, 133, 0.3);"
+                  style="
+                    text-shadow:
+                      0 0 8px rgba(251, 113, 133, 0.6),
+                      0 0 16px rgba(251, 113, 133, 0.3);
+                  "
                 >
                   ▼ KELUAR
                 </span>
@@ -113,13 +127,13 @@ const filteredList = computed(() => {
   if (selectedFilter.value === 'semua') return list.value
 
   const now = new Date()
-  
+
   // start of 7 days ago
   const startOfWeek = new Date(now.getFullYear(), now.getMonth(), now.getDate() - 7)
   const currentMonth = now.getMonth()
   const currentYear = now.getFullYear()
 
-  return list.value.filter(item => {
+  return list.value.filter((item) => {
     const itemDate = new Date(item.created_at)
     if (selectedFilter.value === 'minggu') {
       return itemDate >= startOfWeek
@@ -138,7 +152,7 @@ function formatDate(d: string) {
     month: 'short',
     year: 'numeric',
     hour: '2-digit',
-    minute: '2-digit'
+    minute: '2-digit',
   })
 }
 </script>

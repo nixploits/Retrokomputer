@@ -3,13 +3,130 @@
     <!-- ============ HEADER ============ -->
     <div class="dashboard-header">
       <div>
-        <h1 class="dashboard-title">
-          Dashboard Owner
-        </h1>
+        <h1 class="dashboard-title">Dashboard Owner</h1>
         <p class="dashboard-subtitle">Pantau performa bisnis Anda secara real-time</p>
       </div>
       <div class="header-date">
         {{ currentDate }}
+      </div>
+    </div>
+
+    <!-- ============ FILTER BAR ============ -->
+    <div class="filter-bar-card">
+      <h3 class="filter-title">
+        <span class="filter-bullet">■</span>
+        Filter Data Analitis
+      </h3>
+      <div class="filter-inputs">
+        <!-- Mode Filter -->
+        <div class="filter-group">
+          <label class="filter-label">Mode</label>
+          <select v-model="filterMode" @change="onFilterModeChange" class="filter-select">
+            <optgroup label="Default">
+              <option value="hari_ini">Hari Ini</option>
+              <option value="minggu_ini">Minggu Ini</option>
+              <option value="">Bulan Ini</option>
+            </optgroup>
+            <optgroup label="Periode">
+              <option value="harian">Hari</option>
+              <option value="mingguan">Minggu</option>
+              <option value="bulanan">Bulan</option>
+              <option value="tahunan">Tahun</option>
+            </optgroup>
+            <optgroup label="Spesifik">
+              <option value="tanggal">Berdasarkan Tanggal</option>
+              <option value="rentang">Rentang Waktu Khusus</option>
+            </optgroup>
+          </select>
+        </div>
+
+        <!-- Sub-filter: Harian -->
+        <div v-if="filterMode === 'harian'" class="filter-group">
+          <label class="filter-label">Pilih Hari</label>
+          <select v-model="filterValue" @change="applyFilter" class="filter-select">
+            <option value="senin">Senin</option>
+            <option value="selasa">Selasa</option>
+            <option value="rabu">Rabu</option>
+            <option value="kamis">Kamis</option>
+            <option value="jumat">Jumat</option>
+            <option value="sabtu">Sabtu</option>
+            <option value="minggu">Minggu</option>
+          </select>
+        </div>
+
+        <!-- Sub-filter: Mingguan -->
+        <div v-if="filterMode === 'mingguan'" class="filter-group">
+          <label class="filter-label">Pilih Minggu</label>
+          <select v-model="filterValue" @change="applyFilter" class="filter-select">
+            <option value="1">Minggu ke-1</option>
+            <option value="2">Minggu ke-2</option>
+            <option value="3">Minggu ke-3</option>
+            <option value="4">Minggu ke-4</option>
+            <option value="5">Minggu ke-5</option>
+          </select>
+        </div>
+
+        <!-- Sub-filter: Bulanan -->
+        <div v-if="filterMode === 'bulanan'" class="filter-group">
+          <label class="filter-label">Pilih Bulan</label>
+          <select v-model="filterValue" @change="applyFilter" class="filter-select">
+            <option v-for="(name, idx) in monthNames" :key="idx" :value="String(idx + 1)">
+              {{ name }}
+            </option>
+          </select>
+        </div>
+
+        <!-- Sub-filter: Tanggal -->
+        <div v-if="filterMode === 'tanggal'" class="filter-group">
+          <label class="filter-label">Pilih Tanggal</label>
+          <input
+            v-model="filterValue"
+            type="date"
+            @change="applyFilter"
+            class="filter-input-date"
+          />
+        </div>
+
+        <!-- Sub-filter: Tahun -->
+        <div v-if="filterMode === 'tahunan'" class="filter-group">
+          <label class="filter-label">Pilih Tahun</label>
+          <select v-model="filterValue" @change="applyFilter" class="filter-select">
+            <option v-for="y in availableYears" :key="y" :value="String(y)">{{ y }}</option>
+          </select>
+        </div>
+
+        <!-- Sub-filter: Rentang -->
+        <template v-if="filterMode === 'rentang'">
+          <div class="filter-group">
+            <label class="filter-label">Dari Tanggal</label>
+            <input
+              v-model="filterStart"
+              type="date"
+              @change="applyFilter"
+              class="filter-input-date"
+            />
+          </div>
+          <div class="filter-group">
+            <label class="filter-label">Sampai Tanggal</label>
+            <input
+              v-model="filterEnd"
+              type="date"
+              @change="applyFilter"
+              class="filter-input-date"
+            />
+          </div>
+        </template>
+
+        <!-- Reset Button -->
+        <button v-if="filterMode" @click="resetFilter" class="btn-reset-filter">✕ Reset</button>
+      </div>
+
+      <!-- Active Filter Badge -->
+      <div v-if="filterMode" class="active-filter-row">
+        <span class="active-filter-title">Filter Aktif:</span>
+        <span class="active-filter-badge">
+          {{ activeFilterLabel }}
+        </span>
       </div>
     </div>
 
@@ -18,64 +135,176 @@
       <!-- Penjualan -->
       <div class="kpi-card kpi-sales">
         <div class="kpi-icon-wrap kpi-icon-sales">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+          <svg
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <line x1="12" y1="1" x2="12" y2="23" />
+            <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
+          </svg>
         </div>
         <div class="kpi-content">
-          <p class="kpi-label">Penjualan Bulan Ini</p>
-          <p class="kpi-value" :class="{ 'animate-count': !loading }">{{ formatCurrency(stats.penjualan_bulan_ini) }}</p>
-          <div v-if="percentChange.penjualan !== null" class="kpi-change" :class="percentChange.penjualan >= 0 ? 'change-up' : 'change-down'">
+          <p class="kpi-label">{{ kpiPenjualanLabel }}</p>
+          <p class="kpi-value" :class="{ 'animate-count': !loading }">
+            {{ formatCurrency(stats.penjualan_bulan_ini) }}
+          </p>
+          <div
+            v-if="percentChange.penjualan !== null && !filterMode"
+            class="kpi-change"
+            :class="percentChange.penjualan >= 0 ? 'change-up' : 'change-down'"
+          >
             <span>{{ percentChange.penjualan >= 0 ? '↑' : '↓' }}</span>
             {{ Math.abs(percentChange.penjualan).toFixed(1) }}% vs bulan lalu
           </div>
-      </div>
+          <div
+            v-else
+            class="kpi-change change-up"
+            style="background: rgba(59, 130, 246, 0.1); color: #3b82f6"
+          >
+            {{ kpiSublabel }}
+          </div>
+        </div>
       </div>
 
       <!-- Laba Bersih -->
       <div class="kpi-card kpi-profit">
-        <div class="kpi-icon-wrap" :class="stats.laba_bersih >= 0 ? 'kpi-icon-profit' : 'kpi-icon-loss'">
-          <svg v-if="stats.laba_bersih >= 0" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
-          <svg v-else width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 18 13.5 8.5 8.5 13.5 1 6"/><polyline points="17 18 23 18 23 12"/></svg>
+        <div
+          class="kpi-icon-wrap"
+          :class="stats.laba_bersih >= 0 ? 'kpi-icon-profit' : 'kpi-icon-loss'"
+        >
+          <svg
+            v-if="stats.laba_bersih >= 0"
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <polyline points="23 6 13.5 15.5 8.5 10.5 1 18" />
+            <polyline points="17 6 23 6 23 12" />
+          </svg>
+          <svg
+            v-else
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <polyline points="23 18 13.5 8.5 8.5 13.5 1 6" />
+            <polyline points="17 18 23 18 23 12" />
+          </svg>
         </div>
         <div class="kpi-content">
           <p class="kpi-label">Laba Bersih</p>
-          <p class="kpi-value" :class="stats.laba_bersih >= 0 ? 'text-emerald' : 'text-red'">{{ formatCurrency(stats.laba_bersih) }}</p>
-          <div v-if="percentChange.laba !== null" class="kpi-change" :class="percentChange.laba >= 0 ? 'change-up' : 'change-down'">
+          <p class="kpi-value" :class="stats.laba_bersih >= 0 ? 'text-emerald' : 'text-red'">
+            {{ formatCurrency(stats.laba_bersih) }}
+          </p>
+          <div
+            v-if="percentChange.laba !== null && !filterMode"
+            class="kpi-change"
+            :class="percentChange.laba >= 0 ? 'change-up' : 'change-down'"
+          >
             <span>{{ percentChange.laba >= 0 ? '↑' : '↓' }}</span>
             {{ Math.abs(percentChange.laba).toFixed(1) }}% vs bulan lalu
           </div>
-      </div>
+          <div
+            v-else
+            class="kpi-change change-up"
+            style="background: rgba(59, 130, 246, 0.1); color: #3b82f6"
+          >
+            {{ kpiSublabel }}
+          </div>
+        </div>
       </div>
 
       <!-- Total Transaksi -->
       <div class="kpi-card kpi-transactions">
         <div class="kpi-icon-wrap kpi-icon-trx">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+          <svg
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+            <polyline points="14 2 14 8 20 8" />
+            <line x1="16" y1="13" x2="8" y2="13" />
+            <line x1="16" y1="17" x2="8" y2="17" />
+          </svg>
         </div>
         <div class="kpi-content">
           <p class="kpi-label">Total Transaksi</p>
           <p class="kpi-value">{{ stats.total_transaksi }}</p>
-          <div v-if="percentChange.transaksi !== null" class="kpi-change" :class="percentChange.transaksi >= 0 ? 'change-up' : 'change-down'">
+          <div
+            v-if="percentChange.transaksi !== null && !filterMode"
+            class="kpi-change"
+            :class="percentChange.transaksi >= 0 ? 'change-up' : 'change-down'"
+          >
             <span>{{ percentChange.transaksi >= 0 ? '↑' : '↓' }}</span>
             {{ Math.abs(percentChange.transaksi).toFixed(1) }}% vs bulan lalu
           </div>
-      </div>
+          <div
+            v-else
+            class="kpi-change change-up"
+            style="background: rgba(59, 130, 246, 0.1); color: #3b82f6"
+          >
+            {{ kpiSublabel }}
+          </div>
+        </div>
       </div>
 
       <!-- Pembelian -->
       <div class="kpi-card kpi-purchases">
         <div class="kpi-icon-wrap kpi-icon-purchase">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <circle cx="9" cy="21" r="1"/>
-            <circle cx="20" cy="21" r="1"/>
-            <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+          <svg
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <circle cx="9" cy="21" r="1" />
+            <circle cx="20" cy="21" r="1" />
+            <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6" />
           </svg>
         </div>
         <div class="kpi-content">
-          <p class="kpi-label">Pembelian Bulan Ini</p>
+          <p class="kpi-label">{{ kpiPembelianLabel }}</p>
           <p class="kpi-value">{{ formatCurrency(stats.pembelian_bulan_ini) }}</p>
-          <div v-if="percentChange.pembelian !== null" class="kpi-change" :class="percentChange.pembelian <= 0 ? 'change-up' : 'change-down'">
+          <div
+            v-if="percentChange.pembelian !== null && !filterMode"
+            class="kpi-change"
+            :class="percentChange.pembelian <= 0 ? 'change-up' : 'change-down'"
+          >
             <span>{{ percentChange.pembelian <= 0 ? '↓' : '↑' }}</span>
             {{ Math.abs(percentChange.pembelian).toFixed(1) }}% vs bulan lalu
+          </div>
+          <div
+            v-else
+            class="kpi-change change-up"
+            style="background: rgba(59, 130, 246, 0.1); color: #3b82f6"
+          >
+            {{ kpiSublabel }}
           </div>
         </div>
       </div>
@@ -84,19 +313,73 @@
     <!-- ============ TABS FILTER ============ -->
     <div class="chart-tabs">
       <button :class="{ active: activeTab === 'all' }" @click="activeTab = 'all'">
-        <svg class="tab-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9"/><rect x="14" y="3" width="7" height="5"/><rect x="14" y="12" width="7" height="9"/><rect x="3" y="16" width="7" height="5"/></svg>
+        <svg
+          class="tab-icon"
+          width="16"
+          height="16"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <rect x="3" y="3" width="7" height="9" />
+          <rect x="14" y="3" width="7" height="5" />
+          <rect x="14" y="12" width="7" height="9" />
+          <rect x="3" y="16" width="7" height="5" />
+        </svg>
         Semua Grafik
       </button>
       <button :class="{ active: activeTab === 'sales' }" @click="activeTab = 'sales'">
-        <svg class="tab-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+        <svg
+          class="tab-icon"
+          width="16"
+          height="16"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <polyline points="23 6 13.5 15.5 8.5 10.5 1 18" />
+          <polyline points="17 6 23 6 23 12" />
+        </svg>
         Tren Penjualan
       </button>
       <button :class="{ active: activeTab === 'profit' }" @click="activeTab = 'profit'">
-        <svg class="tab-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+        <svg
+          class="tab-icon"
+          width="16"
+          height="16"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <line x1="12" y1="1" x2="12" y2="23" />
+          <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
+        </svg>
         Laba Kotor
       </button>
       <button :class="{ active: activeTab === 'products' }" @click="activeTab = 'products'">
-        <svg class="tab-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="7"/><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"/></svg>
+        <svg
+          class="tab-icon"
+          width="16"
+          height="16"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <circle cx="12" cy="8" r="7" />
+          <polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88" />
+        </svg>
         Produk & Pembayaran
       </button>
     </div>
@@ -152,8 +435,8 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, onMounted } from 'vue'
-import type { DashboardStats, ChartPenjualanBulanan } from '@/types'
+import { ref, reactive, computed, onMounted } from 'vue'
+import type { DashboardStats, ChartPenjualanBulanan, DashboardFilterParams } from '@/types'
 import { laporanService } from '@/services'
 
 // Chart Components
@@ -192,7 +475,168 @@ const currentDate = new Date().toLocaleDateString('id-ID', {
   year: 'numeric',
 })
 
+// ===== Filter State =====
+const filterMode = ref<string>('')
+const filterValue = ref<string>('')
+const filterStart = ref<string>('')
+const filterEnd = ref<string>('')
 
+// Daftar tahun untuk filter mode "Tahun" (5 tahun terakhir)
+const availableYears = computed(() => {
+  const y = new Date().getFullYear()
+  return [y, y - 1, y - 2, y - 3, y - 4]
+})
+
+const monthNames = [
+  'Januari',
+  'Februari',
+  'Maret',
+  'April',
+  'Mei',
+  'Juni',
+  'Juli',
+  'Agustus',
+  'September',
+  'Oktober',
+  'November',
+  'Desember',
+]
+
+const dayNames: Record<string, string> = {
+  senin: 'Senin',
+  selasa: 'Selasa',
+  rabu: 'Rabu',
+  kamis: 'Kamis',
+  jumat: 'Jumat',
+  sabtu: 'Sabtu',
+  minggu: 'Minggu',
+}
+
+// Format tanggal pendek untuk label rentang
+function formatShortDate(d: string): string {
+  if (!d) return ''
+  return new Date(d).toLocaleDateString('id-ID', {
+    day: '2-digit',
+    month: 'short',
+    year: 'numeric',
+  })
+}
+
+// ===== Computed: active filter label =====
+const activeFilterLabel = computed(() => {
+  if (!filterMode.value) return 'Bulan Ini'
+  switch (filterMode.value) {
+    case 'hari_ini':
+      return 'Hari Ini'
+    case 'minggu_ini':
+      return 'Minggu Ini'
+    case 'harian':
+      return `Hari ${dayNames[filterValue.value] || filterValue.value}`
+    case 'mingguan':
+      return `Minggu ke-${filterValue.value}`
+    case 'bulanan':
+      return monthNames[parseInt(filterValue.value) - 1] || filterValue.value
+    case 'tahunan':
+      return `Tahun ${filterValue.value}`
+    case 'tanggal':
+      if (filterValue.value) {
+        return new Date(filterValue.value).toLocaleDateString('id-ID', {
+          day: '2-digit',
+          month: 'long',
+          year: 'numeric',
+        })
+      }
+      return 'Pilih tanggal'
+    case 'rentang':
+      if (filterStart.value && filterEnd.value) {
+        return `${formatShortDate(filterStart.value)} – ${formatShortDate(filterEnd.value)}`
+      }
+      return 'Pilih rentang'
+    default:
+      return 'Bulan Ini'
+  }
+})
+
+// ===== KPI Labels =====
+const kpiPenjualanLabel = computed(() => {
+  if (!filterMode.value) return 'Penjualan Bulan Ini'
+  switch (filterMode.value) {
+    case 'hari_ini':
+      return 'Penjualan Hari Ini'
+    case 'minggu_ini':
+      return 'Penjualan Minggu Ini'
+    case 'harian':
+      return `Penjualan Hari ${dayNames[filterValue.value] || ''}`
+    case 'mingguan':
+      return `Penjualan Minggu ke-${filterValue.value}`
+    case 'bulanan':
+      return `Penjualan ${monthNames[parseInt(filterValue.value) - 1] || ''}`
+    case 'tahunan':
+      return `Penjualan Tahun ${filterValue.value}`
+    case 'tanggal':
+      if (filterValue.value) {
+        return `Penjualan ${new Date(filterValue.value).toLocaleDateString('id-ID', { day: '2-digit', month: 'short' })}`
+      }
+      return 'Penjualan Tanggal'
+    case 'rentang':
+      return 'Penjualan Rentang'
+    default:
+      return 'Penjualan Bulan Ini'
+  }
+})
+
+const kpiPembelianLabel = computed(() => {
+  if (!filterMode.value) return 'Pembelian Bulan Ini'
+  switch (filterMode.value) {
+    case 'hari_ini':
+      return 'Pembelian Hari Ini'
+    case 'minggu_ini':
+      return 'Pembelian Minggu Ini'
+    case 'harian':
+      return `Pembelian Hari ${dayNames[filterValue.value] || ''}`
+    case 'mingguan':
+      return `Pembelian Minggu ke-${filterValue.value}`
+    case 'bulanan':
+      return `Pembelian ${monthNames[parseInt(filterValue.value) - 1] || ''}`
+    case 'tahunan':
+      return `Pembelian Tahun ${filterValue.value}`
+    case 'tanggal':
+      if (filterValue.value) {
+        return `Pembelian ${new Date(filterValue.value).toLocaleDateString('id-ID', { day: '2-digit', month: 'short' })}`
+      }
+      return 'Pembelian Tanggal'
+    case 'rentang':
+      return 'Pembelian Rentang'
+    default:
+      return 'Pembelian Bulan Ini'
+  }
+})
+
+const kpiSublabel = computed(() => {
+  if (!filterMode.value) return 'Data bulan ini'
+  switch (filterMode.value) {
+    case 'hari_ini':
+      return 'Data hari ini'
+    case 'minggu_ini':
+      return 'Data minggu ini'
+    case 'harian':
+      return `Setiap hari ${dayNames[filterValue.value] || ''} bulan ini`
+    case 'mingguan':
+      return `Minggu ke-${filterValue.value} bulan ini`
+    case 'bulanan':
+      return `Bulan ${monthNames[parseInt(filterValue.value) - 1] || ''}`
+    case 'tahunan':
+      return `Tahun ${filterValue.value}`
+    case 'tanggal':
+      return `Tanggal ${filterValue.value}`
+    case 'rentang':
+      return filterStart.value && filterEnd.value
+        ? `${formatShortDate(filterStart.value)} – ${formatShortDate(filterEnd.value)}`
+        : 'Rentang tanggal'
+    default:
+      return 'Data bulan ini'
+  }
+})
 
 function formatCurrency(v: number) {
   return new Intl.NumberFormat('id-ID', {
@@ -206,6 +650,87 @@ function calcPercentChange(current: number, previous: number): number | null {
   if (previous === 0 && current === 0) return null
   if (previous === 0) return 100
   return ((current - previous) / Math.abs(previous)) * 100
+}
+
+// ===== Filter Logic =====
+function buildFilterParams(): DashboardFilterParams | undefined {
+  if (!filterMode.value) return undefined
+
+  if (filterMode.value === 'hari_ini' || filterMode.value === 'minggu_ini') {
+    return {
+      filter_mode: filterMode.value as DashboardFilterParams['filter_mode'],
+      filter_year: new Date().getFullYear(),
+    }
+  }
+
+  if (filterMode.value === 'rentang') {
+    if (!filterStart.value || !filterEnd.value) return undefined
+    return {
+      filter_mode: 'rentang',
+      filter_value: `${filterStart.value},${filterEnd.value}`,
+      filter_year: new Date().getFullYear(),
+    }
+  }
+
+  if (!filterValue.value) return undefined
+  return {
+    filter_mode: filterMode.value as DashboardFilterParams['filter_mode'],
+    filter_value: filterValue.value,
+    filter_year: new Date().getFullYear(),
+  }
+}
+
+function onFilterModeChange() {
+  switch (filterMode.value) {
+    case 'harian':
+      filterValue.value = 'senin'
+      break
+    case 'mingguan':
+      filterValue.value = '1'
+      break
+    case 'bulanan':
+      filterValue.value = String(new Date().getMonth() + 1)
+      break
+    case 'tahunan':
+      filterValue.value = String(new Date().getFullYear())
+      break
+    case 'tanggal':
+      filterValue.value = new Date().toISOString().split('T')[0] || ''
+      break
+    case 'rentang': {
+      const today = new Date()
+      const firstDay = new Date(today.getFullYear(), today.getMonth(), 1)
+      filterStart.value = firstDay.toISOString().split('T')[0] || ''
+      filterEnd.value = today.toISOString().split('T')[0] || ''
+      filterValue.value = ''
+      break
+    }
+    default:
+      filterValue.value = ''
+      break
+  }
+  applyFilter()
+}
+
+function resetFilter() {
+  filterMode.value = ''
+  filterValue.value = ''
+  filterStart.value = ''
+  filterEnd.value = ''
+  applyFilter()
+}
+
+async function applyFilter() {
+  loading.value = true
+  try {
+    const params = buildFilterParams()
+    const dashRes = await laporanService.getDashboard(params)
+    stats.value = dashRes.data
+  } catch (e) {
+    console.error('Gagal memfilter dashboard:', e)
+  } finally {
+    loading.value = false
+  }
 }
 
 onMounted(async () => {
@@ -245,6 +770,115 @@ onMounted(async () => {
   gap: 20px;
   max-width: 1280px;
   margin: 0 auto;
+}
+
+/* ===== Filter Bar Card ===== */
+.filter-bar-card {
+  background: #131926;
+  border: 1px solid var(--color-primary-glow);
+  border-radius: 14px;
+  padding: 20px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+}
+
+.filter-title {
+  font-size: 13px;
+  font-weight: 700;
+  color: #f8fafc;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin: 0 0 16px 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.filter-bullet {
+  color: var(--color-primary);
+}
+
+.filter-inputs {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 12px;
+}
+
+.filter-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.filter-label {
+  font-size: 10px;
+  font-weight: 600;
+  color: #94a3b8;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.filter-select,
+.filter-input-date {
+  font-size: 12px;
+  border-radius: 6px;
+  border: 1px solid var(--color-primary-glow);
+  background: #0b0f19;
+  color: #f8fafc;
+  padding: 8px 12px;
+  min-width: 150px;
+  outline: none;
+  transition: all 0.2s ease;
+}
+
+.filter-select:focus,
+.filter-input-date:focus {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 8px var(--color-primary-glow);
+}
+
+.btn-reset-filter {
+  font-size: 11px;
+  font-weight: 700;
+  color: #f43f5e;
+  border: 1px solid rgba(244, 63, 94, 0.2);
+  background: transparent;
+  padding: 8px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-reset-filter:hover {
+  background: rgba(244, 63, 94, 0.1);
+  border-color: #f43f5e;
+  box-shadow: 0 0 8px rgba(244, 63, 94, 0.2);
+}
+
+.active-filter-row {
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid var(--color-primary-glow);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.active-filter-title {
+  font-size: 11px;
+  font-weight: 700;
+  color: #94a3b8;
+  text-transform: uppercase;
+}
+
+.active-filter-badge {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--color-primary);
+  background: var(--color-primary-glow);
+  padding: 4px 12px;
+  border-radius: 20px;
+  border: 1px solid var(--color-primary-glow);
 }
 
 /* ===== Header ===== */
@@ -334,7 +968,9 @@ onMounted(async () => {
   position: relative;
   overflow: hidden;
   transition: all 0.3s ease;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+  box-shadow:
+    0 4px 6px -1px rgba(0, 0, 0, 0.05),
+    0 2px 4px -1px rgba(0, 0, 0, 0.03);
 }
 
 .kpi-card:hover {
@@ -363,10 +999,18 @@ onMounted(async () => {
   height: 3px;
 }
 
-.kpi-sales::before { background: linear-gradient(90deg, #ff7a00, #fed7aa); }
-.kpi-profit::before { background: linear-gradient(90deg, var(--color-success), var(--color-success-glow)); }
-.kpi-transactions::before { background: linear-gradient(90deg, #1d4ed8, #60a5fa); }
-.kpi-purchases::before { background: linear-gradient(90deg, #f97316, #fed7aa); }
+.kpi-sales::before {
+  background: linear-gradient(90deg, #ff7a00, #fed7aa);
+}
+.kpi-profit::before {
+  background: linear-gradient(90deg, var(--color-success), var(--color-success-glow));
+}
+.kpi-transactions::before {
+  background: linear-gradient(90deg, #1d4ed8, #60a5fa);
+}
+.kpi-purchases::before {
+  background: linear-gradient(90deg, #f97316, #fed7aa);
+}
 
 .kpi-icon-wrap {
   width: 44px;
@@ -379,11 +1023,26 @@ onMounted(async () => {
   flex-shrink: 0;
 }
 
-.kpi-icon-sales { background: linear-gradient(135deg, #fff7ed, #ffedd5); color: #ff7a00; }
-.kpi-icon-profit { background: var(--color-success-glow); color: var(--color-success); }
-.kpi-icon-loss { background: linear-gradient(135deg, #fef2f2, #fecaca); color: #ef4444; }
-.kpi-icon-trx { background: linear-gradient(135deg, #dbeafe, #eff6ff); color: #1d4ed8; }
-.kpi-icon-purchase { background: linear-gradient(135deg, #fff7ed, #fed7aa); color: #f97316; }
+.kpi-icon-sales {
+  background: linear-gradient(135deg, #fff7ed, #ffedd5);
+  color: #ff7a00;
+}
+.kpi-icon-profit {
+  background: var(--color-success-glow);
+  color: var(--color-success);
+}
+.kpi-icon-loss {
+  background: linear-gradient(135deg, #fef2f2, #fecaca);
+  color: #ef4444;
+}
+.kpi-icon-trx {
+  background: linear-gradient(135deg, #dbeafe, #eff6ff);
+  color: #1d4ed8;
+}
+.kpi-icon-purchase {
+  background: linear-gradient(135deg, #fff7ed, #fed7aa);
+  color: #f97316;
+}
 
 .kpi-content {
   flex: 1;
@@ -416,8 +1075,12 @@ onMounted(async () => {
   color: #f8fafc;
 }
 
-.kpi-value.text-emerald { color: var(--color-success); }
-.kpi-value.text-red { color: #dc2626; }
+.kpi-value.text-emerald {
+  color: var(--color-success);
+}
+.kpi-value.text-red {
+  color: #dc2626;
+}
 
 .kpi-change {
   display: inline-flex;
@@ -550,7 +1213,9 @@ onMounted(async () => {
   border-radius: 14px;
   border: 1px solid #e2e8f0;
   overflow: hidden;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+  box-shadow:
+    0 4px 6px -1px rgba(0, 0, 0, 0.05),
+    0 2px 4px -1px rgba(0, 0, 0, 0.03);
   transition: all 0.3s ease;
 }
 
@@ -633,7 +1298,9 @@ onMounted(async () => {
 }
 
 @keyframes spin {
-  to { transform: rotate(360deg); }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 .chart-empty {

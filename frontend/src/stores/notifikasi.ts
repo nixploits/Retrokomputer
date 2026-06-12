@@ -13,7 +13,7 @@ export const useNotifikasiStore = defineStore('notifikasi', () => {
     try {
       const res = await notifikasiService.getAll()
       items.value = res.data
-      unreadCount.value = items.value.filter(n => !n.status_baca).length
+      unreadCount.value = items.value.filter((n) => !n.status_baca).length
     } catch {
       // silent fail
     } finally {
@@ -24,7 +24,7 @@ export const useNotifikasiStore = defineStore('notifikasi', () => {
   async function markRead(id: number) {
     try {
       await notifikasiService.markRead(id)
-      const item = items.value.find(n => n.id === id)
+      const item = items.value.find((n) => n.id === id)
       if (item) {
         item.status_baca = true
         unreadCount.value = Math.max(0, unreadCount.value - 1)
@@ -37,7 +37,7 @@ export const useNotifikasiStore = defineStore('notifikasi', () => {
   async function markAllRead() {
     try {
       await notifikasiService.markAllRead()
-      items.value.forEach(n => (n.status_baca = true))
+      items.value.forEach((n) => (n.status_baca = true))
       unreadCount.value = 0
     } catch {
       // silent fail

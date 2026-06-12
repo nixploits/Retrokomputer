@@ -7,12 +7,16 @@
       </div>
 
       <div class="p-6 font-sans">
-        <div v-if="loadingInit" class="py-8 text-center text-sm text-slate-400 font-mono">Memuat...</div>
+        <div v-if="loadingInit" class="py-8 text-center text-sm text-slate-400 font-mono">
+          Memuat...
+        </div>
 
         <form v-else @submit.prevent="handleSubmit" class="space-y-4">
           <div class="grid grid-cols-2 gap-4">
             <div>
-              <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Kode Produk</label>
+              <label class="block text-xs font-bold text-slate-700 uppercase mb-1"
+                >Kode Produk</label
+              >
               <input
                 v-model="form.kode_produk"
                 @input="handleKodeProdukInput"
@@ -37,7 +41,7 @@
                   <option v-for="cat in uniqueCategories" :key="cat" :value="cat">{{ cat }}</option>
                   <option value="__NEW__">-- + Kategori Baru --</option>
                 </select>
-                
+
                 <div v-else class="flex gap-2">
                   <input
                     v-model="newCategoryInput"
@@ -72,7 +76,9 @@
 
           <div class="grid grid-cols-2 gap-4">
             <div>
-              <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Harga Beli (Rp)</label>
+              <label class="block text-xs font-bold text-slate-700 uppercase mb-1"
+                >Harga Beli (Rp)</label
+              >
               <input
                 v-model="hargaBeliInput"
                 @input="handleHargaBeliInput"
@@ -82,7 +88,9 @@
               />
             </div>
             <div>
-              <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Harga Jual (Rp)</label>
+              <label class="block text-xs font-bold text-slate-700 uppercase mb-1"
+                >Harga Jual (Rp)</label
+              >
               <input
                 v-model="hargaJualInput"
                 @input="handleHargaJualInput"
@@ -95,7 +103,9 @@
 
           <div class="grid grid-cols-2 gap-4">
             <div>
-              <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Stok {{ isEdit ? '(read-only)' : '' }}</label>
+              <label class="block text-xs font-bold text-slate-700 uppercase mb-1"
+                >Stok {{ isEdit ? '(read-only)' : '' }}</label
+              >
               <input
                 v-model.number="form.stok"
                 type="number"
@@ -107,7 +117,9 @@
               />
             </div>
             <div>
-              <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Stok Minimum</label>
+              <label class="block text-xs font-bold text-slate-700 uppercase mb-1"
+                >Stok Minimum</label
+              >
               <input
                 v-model.number="form.stok_minimum"
                 type="number"
@@ -119,12 +131,18 @@
             </div>
           </div>
 
-          <div v-if="error" class="p-3 rounded bg-red-50 border-2 border-red-200 text-red-600 text-xs font-mono">
+          <div
+            v-if="error"
+            class="p-3 rounded bg-red-50 border-2 border-red-200 text-red-600 text-xs font-mono"
+          >
             <strong>ERROR:</strong> {{ error }}
           </div>
 
           <div class="flex justify-end gap-2 pt-2">
-            <router-link to="/produk" class="text-xs font-mono font-bold px-3 py-2 rounded border-2 border-slate-200 text-slate-600 hover:bg-slate-50">
+            <router-link
+              to="/produk"
+              class="text-xs font-mono font-bold px-3 py-2 rounded border-2 border-slate-200 text-slate-600 hover:bg-slate-50"
+            >
               Batal
             </router-link>
             <button
@@ -246,11 +264,11 @@ onMounted(async () => {
         harga_beli: Math.round(Number(p.harga_beli)),
         harga_jual: Math.round(Number(p.harga_jual)),
         stok: p.stok,
-        stok_minimum: p.stok_minimum
+        stok_minimum: p.stok_minimum,
       }
       hargaBeliInput.value = formatRupiah(Math.round(Number(p.harga_beli)))
       hargaJualInput.value = formatRupiah(Math.round(Number(p.harga_jual)))
-      
+
       // select category if it exists, otherwise open input
       if (uniqueCategories.value.includes(p.kategori)) {
         selectedCategory.value = p.kategori
@@ -320,4 +338,3 @@ async function handleSubmit() {
   }
 }
 </script>
-

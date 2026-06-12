@@ -6,16 +6,12 @@ export const useCartStore = defineStore('cart', () => {
   const items = ref<CartItem[]>([])
   const metode_pembayaran = ref<string>('tunai')
 
-  const totalItems = computed(() =>
-    items.value.reduce((sum, item) => sum + item.qty, 0)
-  )
+  const totalItems = computed(() => items.value.reduce((sum, item) => sum + item.qty, 0))
 
-  const grandTotal = computed(() =>
-    items.value.reduce((sum, item) => sum + item.subtotal, 0)
-  )
+  const grandTotal = computed(() => items.value.reduce((sum, item) => sum + item.subtotal, 0))
 
   function addItem(produk: Produk, qty: number = 1) {
-    const existing = items.value.find(i => i.produk.id === produk.id)
+    const existing = items.value.find((i) => i.produk.id === produk.id)
     if (existing) {
       if (existing.qty + qty > produk.stok) {
         throw new Error(`Stok ${produk.nama_produk} tidak mencukupi. Tersedia: ${produk.stok}`)
@@ -35,7 +31,7 @@ export const useCartStore = defineStore('cart', () => {
   }
 
   function updateQty(produkId: number, qty: number) {
-    const item = items.value.find(i => i.produk.id === produkId)
+    const item = items.value.find((i) => i.produk.id === produkId)
     if (item) {
       if (qty > item.produk.stok) {
         throw new Error(`Stok tidak mencukupi. Tersedia: ${item.produk.stok}`)
@@ -50,7 +46,7 @@ export const useCartStore = defineStore('cart', () => {
   }
 
   function removeItem(produkId: number) {
-    items.value = items.value.filter(i => i.produk.id !== produkId)
+    items.value = items.value.filter((i) => i.produk.id !== produkId)
   }
 
   function clearCart() {
@@ -60,7 +56,7 @@ export const useCartStore = defineStore('cart', () => {
 
   function getPayload() {
     return {
-      items: items.value.map(i => ({
+      items: items.value.map((i) => ({
         produk_id: i.produk.id,
         qty: i.qty,
       })),
@@ -69,8 +65,14 @@ export const useCartStore = defineStore('cart', () => {
   }
 
   return {
-    items, metode_pembayaran,
-    totalItems, grandTotal,
-    addItem, updateQty, removeItem, clearCart, getPayload,
+    items,
+    metode_pembayaran,
+    totalItems,
+    grandTotal,
+    addItem,
+    updateQty,
+    removeItem,
+    clearCart,
+    getPayload,
   }
 })

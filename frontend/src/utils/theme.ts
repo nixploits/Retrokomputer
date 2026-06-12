@@ -30,6 +30,6 @@ export function useTheme() {
   return {
     isDark,
     toggleTheme,
-    initTheme
+    initTheme,
   }
 }
