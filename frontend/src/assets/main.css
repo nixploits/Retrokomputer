@@ -660,12 +660,27 @@ html:not(.dark) .apexcharts-legend-text {
   font-weight: 500 !important;
 }
 
+/* --- Annotation Labels --- */
+.apexcharts-text.apexcharts-yaxis-annotation-label,
+.apexcharts-text.apexcharts-xaxis-annotation-label {
+  fill: #ffffff !important;
+  color: #ffffff !important;
+}
+
+/* --- Donut / Pie Slice Datalabels --- */
+.apexcharts-text.apexcharts-pie-label {
+  fill: #ffffff !important;
+  color: #ffffff !important;
+  font-weight: 700 !important;
+  filter: drop-shadow(0px 1px 1.5px rgba(0, 0, 0, 0.7));
+}
+
 /* --- Donut Chart Inner Text Labels --- */
 html:not(.dark) .apexcharts-datalabel-label {
   fill: #64748b !important;
 }
 .dark .apexcharts-datalabel-label {
-  fill: var(--text-muted) !important;
+  fill: var(--text-secondary) !important;
 }
 
 html:not(.dark) .apexcharts-datalabel-value {
