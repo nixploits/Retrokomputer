@@ -53,7 +53,7 @@ class ReturController extends Controller
                     'qty' => $item['qty']
                 ]);
 
-                $produk = Produk::find($item['produk_id']);
+                $produk = Produk::lockForUpdate()->findOrFail($item['produk_id']);
 
                 if ($validated['jenis_retur'] == 'penjualan') {
                     // Retur dari customer (barang kembali ke toko/rusak)

@@ -55,7 +55,7 @@ class BarangRusakController extends Controller
         }
 
         $result = DB::transaction(function () use ($request, $buktiPath) {
-            $produk = Produk::findOrFail($request->produk_id);
+            $produk = Produk::lockForUpdate()->findOrFail($request->produk_id);
 
             if ($produk->stok < $request->qty) {
                 throw new \Exception('Stok produk tidak mencukupi untuk dilaporkan.');

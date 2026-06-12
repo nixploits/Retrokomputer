@@ -65,7 +65,7 @@ class SettingController extends Controller
         }
         if ($request->hasFile('logo_file')) {
             $path = $request->file('logo_file')->store('settings', 'public');
-            Setting::updateOrCreate(['key' => 'retro_logo_url'], ['value' => asset('storage/' . $path)]);
+            Setting::updateOrCreate(['key' => 'retro_logo_url'], ['value' => '/storage/' . $path]);
             Setting::updateOrCreate(['key' => 'retro_logo_type'], ['value' => 'image']);
         }
 
@@ -79,7 +79,7 @@ class SettingController extends Controller
         }
         if ($request->hasFile('background_file')) {
             $path = $request->file('background_file')->store('settings', 'public');
-            Setting::updateOrCreate(['key' => 'login_background_url'], ['value' => asset('storage/' . $path)]);
+            Setting::updateOrCreate(['key' => 'login_background_url'], ['value' => '/storage/' . $path]);
             Setting::updateOrCreate(['key' => 'login_background_type'], ['value' => 'image']);
         }
 
