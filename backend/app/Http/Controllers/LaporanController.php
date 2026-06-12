@@ -728,6 +728,36 @@ class LaporanController extends Controller
                 }
                 break;
 
+            case 'transaksi':
+                $filterMode = $request->query('filter_mode');
+                $filterValue = $request->query('filter_value');
+                $filterYear = $request->query('filter_year', Carbon::now()->year);
+
+                $title = 'Laporan Rincian Transaksi Penjualan';
+
+                $query = Transaksi::query();
+                if ($filterMode) {
+                    $this->applyDateFilter($query, $filterMode, $filterValue, $filterYear);
+                }
+                $transactions = $query->orderBy('created_at', 'desc')->get();
+
+                $filterLabel = $filterMode ? str_replace('_', '-', $filterMode) : 'semua-periode';
+                $filename = 'Laporan_Transaksi_' . $filterLabel . '_' . Carbon::now()->format('Ymd_His') . '.xlsx';
+
+                $headers = ['No', 'Kode Transaksi', 'Tanggal Transaksi', 'Metode Pembayaran', 'Total Penjualan (IDR)'];
+                $currencyColumns = [4];
+                $no = 1;
+                foreach ($transactions as $t) {
+                    $rows[] = [
+                        $no++,
+                        $t->kode_transaksi,
+                        $t->created_at->translatedFormat('d F Y, H:i'),
+                        strtoupper($t->metode_pembayaran),
+                        (float) $t->total
+                    ];
+                }
+                break;
+
             default:
                 return response()->json(['message' => 'Invalid export type'], 400);
         }

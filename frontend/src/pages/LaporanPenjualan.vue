@@ -12,7 +12,7 @@
       </div>
       <button
         v-if="canDownload"
-        @click="exportExcel"
+        @click="showDownloadModal = true"
         class="inline-flex items-center gap-2 px-3 py-1.5 text-xs font-bold text-white bg-retro-primary hover:bg-retro-primary-hover rounded-md transition-all shadow-md"
       >
         <svg
@@ -28,7 +28,7 @@
             d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3"
           />
         </svg>
-        Unduh Excel
+        Unduh Laporan
       </button>
     </div>
 
@@ -289,6 +289,90 @@
         </table>
       </div>
     </div>
+
+    <!-- Modal Unduh Laporan -->
+    <div
+      v-if="showDownloadModal"
+      class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm"
+    >
+      <div
+        class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 w-full max-w-md rounded-xl p-6 shadow-2xl space-y-4 text-slate-800 dark:text-slate-200"
+      >
+        <div
+          class="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-3"
+        >
+          <h3 class="text-sm font-bold uppercase tracking-wider">Unduh Laporan Penjualan</h3>
+          <button
+            @click="showDownloadModal = false"
+            class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-300"
+          >
+            ✕
+          </button>
+        </div>
+
+        <div class="space-y-3">
+          <!-- Opsi Periode -->
+          <div class="flex flex-col gap-1">
+            <label class="text-[10px] font-bold uppercase text-slate-500 dark:text-slate-400"
+              >Pilih Periode</label
+            >
+            <select
+              v-model="downloadPeriod"
+              class="text-xs rounded-md border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-slate-800 dark:text-slate-200 px-3 py-2 focus:ring-2 focus:ring-retro-primary/30"
+            >
+              <option value="active">Sesuai Filter Aktif ({{ activeFilterLabel }})</option>
+              <option value="mingguan">Mingguan (7 Hari Terakhir)</option>
+              <option value="bulanan">Bulanan (Bulan Ini)</option>
+              <option value="tahunan">Tahunan (Tahun Ini)</option>
+            </select>
+          </div>
+
+          <!-- Opsi Format -->
+          <div class="flex flex-col gap-1">
+            <label class="text-[10px] font-bold uppercase text-slate-500 dark:text-slate-400"
+              >Format Laporan</label
+            >
+            <div class="flex gap-4 mt-1">
+              <label class="flex items-center gap-2 cursor-pointer text-xs">
+                <input
+                  type="radio"
+                  v-model="downloadFormat"
+                  value="excel"
+                  class="text-retro-primary focus:ring-retro-primary"
+                />
+                Excel (.xlsx)
+              </label>
+              <label class="flex items-center gap-2 cursor-pointer text-xs">
+                <input
+                  type="radio"
+                  v-model="downloadFormat"
+                  value="pdf"
+                  class="text-retro-primary focus:ring-retro-primary"
+                />
+                PDF (.pdf)
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <div
+          class="flex items-center justify-end gap-3 pt-3 border-t border-slate-100 dark:border-slate-800"
+        >
+          <button
+            @click="showDownloadModal = false"
+            class="px-4 py-2 text-xs font-semibold rounded-md border border-slate-200 hover:bg-slate-50 dark:border-slate-700 dark:hover:bg-slate-800"
+          >
+            Batal
+          </button>
+          <button
+            @click="handleDownload"
+            class="px-4 py-2 text-xs font-bold text-white bg-retro-primary hover:bg-retro-primary-hover rounded-md transition-all shadow-md flex items-center gap-2"
+          >
+            <span>Unduh</span>
+          </button>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -302,6 +386,11 @@ const authStore = useAuthStore()
 const loading = ref(true)
 const list = ref<Transaksi[]>([])
 const grandTotal = computed(() => list.value.reduce((s, t) => s + Number(t.total), 0))
+
+// ===== Download State =====
+const showDownloadModal = ref(false)
+const downloadPeriod = ref<'active' | 'mingguan' | 'bulanan' | 'tahunan'>('active')
+const downloadFormat = ref<'excel' | 'pdf'>('excel')
 
 // ===== Filter State =====
 const filterMode = ref<string>('')
@@ -469,23 +558,58 @@ async function applyFilter() {
   }
 }
 
-async function exportExcel() {
-  const token = localStorage.getItem('auth_token') ?? ''
-  const url = new URL('/api/laporan/export-excel', window.location.origin)
+async function handleDownload() {
+  showDownloadModal.value = false
 
-  if (filterMode.value === 'tahunan') {
-    url.searchParams.set('type', 'penjualan-bulanan')
-    url.searchParams.set('tahun', filterValue.value || String(new Date().getFullYear()))
-  } else if (filterMode.value === 'bulanan') {
-    url.searchParams.set('type', 'penjualan-bulanan')
-    url.searchParams.set('tahun', String(new Date().getFullYear()))
-  } else {
-    // default: penjualan-harian (30 hari)
-    url.searchParams.set('type', 'penjualan-harian')
-    url.searchParams.set('hari', '30')
+  let params: DashboardFilterParams = {}
+
+  if (downloadPeriod.value === 'active') {
+    const activeParams = buildFilterParams()
+    if (activeParams) {
+      params = activeParams
+    }
+  } else if (downloadPeriod.value === 'mingguan') {
+    params = {
+      filter_mode: 'minggu_ini',
+      filter_year: new Date().getFullYear(),
+    }
+  } else if (downloadPeriod.value === 'bulanan') {
+    params = {
+      filter_mode: 'bulan_ini',
+      filter_year: new Date().getFullYear(),
+    }
+  } else if (downloadPeriod.value === 'tahunan') {
+    params = {
+      filter_mode: 'tahunan',
+      filter_value: String(new Date().getFullYear()),
+      filter_year: new Date().getFullYear(),
+    }
   }
 
-  if (token) url.searchParams.set('token', token)
+  if (downloadFormat.value === 'excel') {
+    await triggerExcelDownload(params)
+  } else {
+    await triggerPdfDownload(params)
+  }
+}
+
+async function triggerExcelDownload(params: DashboardFilterParams) {
+  const token = localStorage.getItem('auth_token') ?? ''
+  const url = new URL('/api/laporan/export-excel', window.location.origin)
+  url.searchParams.set('type', 'transaksi')
+
+  if (params.filter_mode) {
+    url.searchParams.set('filter_mode', params.filter_mode)
+  }
+  if (params.filter_value) {
+    url.searchParams.set('filter_value', params.filter_value)
+  }
+  if (params.filter_year) {
+    url.searchParams.set('filter_year', String(params.filter_year))
+  }
+  if (token) {
+    url.searchParams.set('token', token)
+  }
 
   try {
     const res = await fetch(url.toString())
@@ -503,7 +627,171 @@ async function exportExcel() {
     a.click()
     URL.revokeObjectURL(a.href)
   } catch (e) {
-    console.error('Download failed:', e)
+    console.error('Download Excel failed:', e)
+  }
+}
+
+async function triggerPdfDownload(params: DashboardFilterParams) {
+  loading.value = true
+  try {
+    const res = await transaksiService.getAll(params)
+    const transactions = res.data as Transaksi[]
+    const totalAmount = transactions.reduce((sum, t) => sum + Number(t.total), 0)
+
+    const printWindow = window.open('', '_blank')
+    if (!printWindow) {
+      alert('Gagal membuka jendela cetak. Pastikan pop-up diizinkan.')
+      return
+    }
+
+    const title = 'Laporan Rincian Transaksi Penjualan'
+    let periodLabel = 'Semua Periode'
+    if (downloadPeriod.value === 'active') {
+      periodLabel = activeFilterLabel.value
+    } else if (downloadPeriod.value === 'mingguan') {
+      periodLabel = 'Minggu Ini (7 Hari Terakhir)'
+    } else if (downloadPeriod.value === 'bulanan') {
+      periodLabel = 'Bulan Ini'
+    } else if (downloadPeriod.value === 'tahunan') {
+      periodLabel = 'Tahun Ini'
+    }
+
+    const rowsHtml = transactions
+      .map(
+        (t, idx) => `
+      <tr>
+        <td style="text-align: center;">${idx + 1}</td>
+        <td style="font-family: monospace; font-weight: bold; color: #1d4ed8;">${t.kode_transaksi}</td>
+        <td>${new Date(t.created_at).toLocaleString('id-ID', { day: '2-digit', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' })}</td>
+        <td style="text-align: center; font-weight: 600;">${t.metode_pembayaran.toUpperCase()}</td>
+        <td style="text-align: right; font-weight: 600;">${formatCurrency(Number(t.total))}</td>
+      </tr>
+    `,
+      )
+      .join('')
+
+    printWindow.document.write(`
+      <html>
+        <head>
+          <title>${title}</title>
+          <style>
+            @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+            body {
+              font-family: 'Inter', sans-serif;
+              color: #1e293b;
+              padding: 40px;
+              margin: 0;
+              background-color: #ffffff;
+            }
+            .header {
+              text-align: center;
+              margin-bottom: 30px;
+              border-bottom: 2px solid #ff7a00;
+              padding-bottom: 20px;
+            }
+            .logo-text {
+              font-size: 24px;
+              font-weight: 800;
+              color: #0b0f19;
+              letter-spacing: 1px;
+            }
+            .logo-text span {
+              color: #ff7a00;
+            }
+            .doc-title {
+              font-size: 16px;
+              font-weight: 700;
+              text-transform: uppercase;
+              color: #475569;
+              margin-top: 5px;
+            }
+            .meta-info {
+              display: flex;
+              justify-content: space-between;
+              margin-bottom: 20px;
+              font-size: 11px;
+              color: #64748b;
+            }
+            table {
+              width: 100%;
+              border-collapse: collapse;
+              margin-top: 15px;
+            }
+            th {
+              background-color: #ff7a00;
+              color: #ffffff;
+              padding: 10px 12px;
+              font-size: 11px;
+              font-weight: 700;
+              text-transform: uppercase;
+              border: 1px solid #cc6200;
+              letter-spacing: 0.5px;
+            }
+            td {
+              padding: 10px 12px;
+              font-size: 11px;
+              border: 1px solid #e2e8f0;
+              color: #334155;
+            }
+            tr:nth-child(even) td {
+              background-color: #f8fafc;
+            }
+            .total-row td {
+              font-weight: 800;
+              background-color: #f1f5f9 !important;
+              border-top: 2px solid #cbd5e1;
+              color: #0b0f19;
+            }
+            @media print {
+              body { padding: 20px; }
+              .no-print { display: none; }
+            }
+          </style>
+        </head>
+        <body>
+          <div class="header">
+            <div class="logo-text">RETRO<span>KOMPUTER</span></div>
+            <div class="doc-title">${title}</div>
+          </div>
+
+          <div class="meta-info">
+            <div><strong>Periode Laporan:</strong> ${periodLabel}</div>
+            <div><strong>Dicetak Pada:</strong> ${new Date().toLocaleString('id-ID', { day: '2-digit', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' })}</div>
+          </div>
+
+          <table>
+            <thead>
+              <tr>
+                <th style="width: 50px; text-align: center;">No</th>
+                <th>Kode Transaksi</th>
+                <th>Tanggal Transaksi</th>
+                <th style="width: 120px; text-align: center;">Metode Pembayaran</th>
+                <th style="width: 150px; text-align: right;">Total Nominal</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${rowsHtml}
+              <tr class="total-row">
+                <td colspan="4" style="text-align: right; text-transform: uppercase; letter-spacing: 0.5px;">Grand Total</td>
+                <td style="text-align: right;">${formatCurrency(totalAmount)}</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <script>
+            window.onload = function() {
+              window.print();
+              setTimeout(function() { window.close(); }, 500);
+            };
+          <\/script>
+        </body>
+      </html>
+    `)
+    printWindow.document.close()
+  } catch (err) {
+    console.error('Cetak PDF gagal:', err)
+  } finally {
+    loading.value = false
   }
 }
 
