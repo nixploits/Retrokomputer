@@ -73,7 +73,9 @@ import { ref, computed, onMounted, watch } from 'vue'
 import VueApexCharts from 'vue3-apexcharts'
 import type { ChartMetodePembayaran } from '@/types'
 import { laporanService } from '@/services'
+import { useTheme } from '@/utils/theme'
 
+const { isDark } = useTheme()
 const apexchart = VueApexCharts
 
 const loading = ref(true)
@@ -100,16 +102,28 @@ function getPct(jumlah: number) {
   return ((jumlah / totalTransaksi.value) * 100).toFixed(1)
 }
 
-const colorMap: Record<string, string> = {
-  tunai: '#39FF14',
-  transfer: '#3b82f6',
-  debit: '#F28500',
-  kredit: '#FFD700',
-  qris: '#a855f7',
-}
+const colorMap = computed<Record<string, string>>(() => {
+  if (isDark.value) {
+    return {
+      tunai: '#3b82f6',     // Accent (Blue) in dark mode
+      transfer: '#FF7A00',  // Primary (Orange) in dark mode
+      debit: '#60a5fa',     // Secondary Blue
+      kredit: '#FFC857',    // Yellow
+      qris: '#00D1FF',      // Cyan
+    }
+  } else {
+    return {
+      tunai: '#FF7A00',     // Accent (Orange) in light mode
+      transfer: '#1D4ED8',  // Primary (Blue) in light mode
+      debit: '#3b82f6',     // Secondary Blue
+      kredit: '#FFC857',    // Yellow
+      qris: '#60a5fa',      // Lighter Blue
+    }
+  }
+})
 
 function getColor(method: string) {
-  return colorMap[method.toLowerCase()] ?? '#64748b'
+  return colorMap.value[method.toLowerCase()] ?? '#64748b'
 }
 
 function formatLabel(method: string) {
@@ -218,6 +232,9 @@ function setFilter(val: 'minggu' | 'bulan' | '3bulan') {
 
 // Re-load saat filter berubah
 watch(activeFilter, loadData)
+watch(isDark, () => {
+  chartKey.value++
+})
 
 function formatCurrency(v: number) {
   return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(v)

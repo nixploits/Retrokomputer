@@ -242,8 +242,16 @@ async function handleSubmit() {
     }
     resetForm()
     await fetchSuppliers()
-  } catch (err: any) {
-    error.value = err.response?.data?.message || 'Gagal menyimpan supplier.'
+  } catch (err: unknown) {
+    let errorMsg = 'Gagal menyimpan supplier.'
+    if (err && typeof err === 'object' && 'response' in err) {
+      const response = (err as Record<string, unknown>).response
+      if (response && typeof response === 'object' && 'data' in response) {
+        const data = response.data as Record<string, unknown>
+        if (data.message) errorMsg = String(data.message)
+      }
+    }
+    error.value = errorMsg
   } finally {
     saving.value = false
   }

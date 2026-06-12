@@ -3,12 +3,12 @@
     <!-- Header -->
     <div class="flex items-center justify-between">
       <div class="flex items-center gap-3">
-        <div class="w-1 h-6 rounded-full bg-gradient-to-b from-indigo-400 to-teal-400"></div>
+        <div class="w-1 h-6 rounded-full bg-gradient-to-b from-retro-accent to-retro-primary"></div>
         <h2 class="text-sm font-semibold tracking-wider uppercase text-slate-800 dark:text-slate-200">
           {{ isOwner ? 'Analisis Penjualan' : 'Riwayat Transaksi' }}
         </h2>
       </div>
-      <div v-if="isOwner" class="text-[11px] font-medium px-2.5 py-1 rounded-full bg-indigo-50 dark:bg-indigo-950/40 text-indigo-600 dark:text-indigo-400 border border-indigo-100 dark:border-indigo-900/30">
+      <div v-if="isOwner" class="text-[11px] font-medium px-2.5 py-1 rounded-full bg-retro-primary/10 dark:bg-retro-primary/20 text-retro-primary dark:text-retro-primary border border-retro-primary/20">
         Owner
       </div>
     </div>
@@ -18,10 +18,10 @@
       <!-- KPI Cards Row -->
       <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
         <!-- Card 1: Total Omzet -->
-        <div class="kpi-card group bg-white dark:bg-gradient-to-br dark:from-slate-900 dark:to-slate-950 border border-slate-200 dark:border-indigo-500/20 rounded-xl p-5 transition-all duration-300 hover:shadow-lg dark:hover:shadow-indigo-500/5 hover:-translate-y-0.5">
+        <div class="kpi-card group bg-white dark:bg-gradient-to-br dark:from-slate-900 dark:to-slate-950 border border-slate-200 dark:border-retro-accent/20 rounded-xl p-5 transition-all duration-300 hover:shadow-lg dark:hover:shadow-retro-accent/5 hover:-translate-y-0.5">
           <div class="flex items-center justify-between mb-3">
             <div class="flex items-center gap-2">
-              <div class="w-8 h-8 rounded-lg flex items-center justify-center bg-indigo-50 dark:bg-indigo-950/40 text-indigo-600 dark:text-indigo-400">
+              <div class="w-8 h-8 rounded-lg flex items-center justify-center bg-retro-accent/10 dark:bg-retro-accent/20 text-retro-accent">
                 <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
                 </svg>
@@ -34,14 +34,14 @@
           </div>
           <div class="text-[10px] mt-1.5 text-slate-400 dark:text-slate-500">Volume penjualan terkumpul</div>
           <!-- Subtle accent line -->
-          <div class="mt-3 h-[2px] rounded-full bg-gradient-to-r from-indigo-500 to-transparent dark:from-indigo-400 opacity-40"></div>
+          <div class="mt-3 h-[2px] rounded-full bg-gradient-to-r from-retro-accent to-transparent dark:from-retro-accent opacity-40"></div>
         </div>
 
         <!-- Card 2: Total Transaksi -->
-        <div class="kpi-card group bg-white dark:bg-gradient-to-br dark:from-slate-900 dark:to-slate-950 border border-slate-200 dark:border-teal-500/20 rounded-xl p-5 transition-all duration-300 hover:shadow-lg dark:hover:shadow-teal-500/5 hover:-translate-y-0.5">
+        <div class="kpi-card group bg-white dark:bg-gradient-to-br dark:from-slate-900 dark:to-slate-950 border border-slate-200 dark:border-retro-primary/20 rounded-xl p-5 transition-all duration-300 hover:shadow-lg dark:hover:shadow-retro-primary/5 hover:-translate-y-0.5">
           <div class="flex items-center justify-between mb-3">
             <div class="flex items-center gap-2">
-              <div class="w-8 h-8 rounded-lg flex items-center justify-center bg-teal-50 dark:bg-teal-950/40 text-teal-600 dark:text-teal-400">
+              <div class="w-8 h-8 rounded-lg flex items-center justify-center bg-retro-primary/10 dark:bg-retro-primary/20 text-retro-primary">
                 <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"/>
                 </svg>
@@ -53,14 +53,14 @@
             {{ transaksiList.length }} <span class="text-sm font-normal text-slate-400">trx</span>
           </div>
           <div class="text-[10px] mt-1.5 text-slate-400 dark:text-slate-500">Jumlah nota kasir tercetak</div>
-          <div class="mt-3 h-[2px] rounded-full bg-gradient-to-r from-teal-500 to-transparent dark:from-teal-400 opacity-40"></div>
+          <div class="mt-3 h-[2px] rounded-full bg-gradient-to-r from-retro-primary to-transparent dark:from-retro-primary opacity-40"></div>
         </div>
 
         <!-- Card 3: Rata-Rata Transaksi -->
-        <div class="kpi-card group bg-white dark:bg-gradient-to-br dark:from-slate-900 dark:to-slate-950 border border-slate-200 dark:border-purple-500/20 rounded-xl p-5 transition-all duration-300 hover:shadow-lg dark:hover:shadow-purple-500/5 hover:-translate-y-0.5">
+        <div class="kpi-card group bg-white dark:bg-gradient-to-br dark:from-slate-900 dark:to-slate-950 border border-slate-200 dark:border-retro-accent/20 rounded-xl p-5 transition-all duration-300 hover:shadow-lg dark:hover:shadow-retro-accent/5 hover:-translate-y-0.5">
           <div class="flex items-center justify-between mb-3">
             <div class="flex items-center gap-2">
-              <div class="w-8 h-8 rounded-lg flex items-center justify-center bg-purple-50 dark:bg-purple-950/40 text-purple-600 dark:text-purple-400">
+              <div class="w-8 h-8 rounded-lg flex items-center justify-center bg-retro-accent/10 dark:bg-retro-accent/20 text-retro-accent">
                 <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/>
                 </svg>
@@ -72,7 +72,7 @@
             Rp {{ formatRupiah(avgTransaction) }}
           </div>
           <div class="text-[10px] mt-1.5 text-slate-400 dark:text-slate-500">Nilai rata-rata per transaksi</div>
-          <div class="mt-3 h-[2px] rounded-full bg-gradient-to-r from-purple-500 to-transparent dark:from-purple-400 opacity-40"></div>
+          <div class="mt-3 h-[2px] rounded-full bg-gradient-to-r from-retro-accent to-transparent dark:from-retro-accent opacity-40"></div>
         </div>
       </div>
 
@@ -82,7 +82,7 @@
         <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl overflow-hidden shadow-sm">
           <div class="px-5 py-4 flex justify-between items-center border-b border-slate-100 dark:border-slate-800">
             <span class="text-xs font-semibold tracking-wide text-slate-700 dark:text-slate-200">Tren Penjualan Harian</span>
-            <span class="text-[10px] font-medium px-2 py-0.5 rounded-full bg-indigo-50 dark:bg-indigo-950/40 text-indigo-600 dark:text-indigo-400">7 Hari</span>
+            <span class="text-[10px] font-medium px-2 py-0.5 rounded-full bg-retro-accent/10 text-retro-accent">7 Hari</span>
           </div>
           <div class="p-5 min-h-[260px] flex flex-col justify-between">
             <div v-if="trendData.length === 0" class="flex-1 flex items-center justify-center text-xs italic text-slate-400 dark:text-slate-500">
@@ -113,9 +113,9 @@
                   class="w-7 sm:w-9 rounded-md transition-all duration-500 ease-out relative group-hover:scale-x-110"
                   :style="{
                     height: `${day.percentage}%`,
-                    background: `linear-gradient(to top, rgba(99, 102, 241, 0.7) 0%, rgba(129, 140, 248, 0.4) 100%)`,
-                    boxShadow: `0 0 12px rgba(99, 102, 241, 0.08)`,
-                    border: `1px solid rgba(99, 102, 241, 0.15)`
+                    background: `linear-gradient(to top, var(--color-primary) 0%, var(--color-primary-glow) 100%)`,
+                    boxShadow: `0 0 12px var(--color-primary-glow)`,
+                    border: `1px solid var(--color-primary-glow)`
                   }"
                 >
                 </div>
@@ -133,7 +133,7 @@
         <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl overflow-hidden shadow-sm">
           <div class="px-5 py-4 flex justify-between items-center border-b border-slate-100 dark:border-slate-800">
             <span class="text-xs font-semibold tracking-wide text-slate-700 dark:text-slate-200">Metode Pembayaran</span>
-            <span class="text-[10px] font-medium px-2 py-0.5 rounded-full bg-teal-50 dark:bg-teal-950/40 text-teal-600 dark:text-teal-400">Breakdown</span>
+            <span class="text-[10px] font-medium px-2 py-0.5 rounded-full bg-retro-primary/10 text-retro-primary">Breakdown</span>
           </div>
           <div class="p-5 flex-1 flex flex-col justify-center space-y-5">
             <div v-for="method in paymentMethods" :key="method.name" class="space-y-2">
@@ -190,7 +190,7 @@
               :key="t.id"
               class="transition-colors duration-200 hover:bg-slate-50/50 dark:hover:bg-slate-800/30 border-b border-slate-100 dark:border-slate-800/50"
             >
-              <td class="px-4 py-3 font-mono font-bold text-indigo-600 dark:text-indigo-400">
+              <td class="px-4 py-3 font-mono font-bold text-retro-primary dark:text-retro-primary">
                 {{ t.kode_transaksi }}
               </td>
               <td class="px-4 py-3 text-slate-500 dark:text-slate-400">
@@ -210,14 +210,14 @@
               <td class="px-4 py-3 text-center flex items-center justify-center gap-1.5">
                 <router-link
                   :to="`/transaksi/${t.id}`"
-                  class="px-2.5 py-1 text-[10px] font-semibold rounded-md transition-all duration-200 bg-indigo-50 dark:bg-indigo-950/40 text-indigo-600 dark:text-indigo-400 border border-indigo-200 dark:border-indigo-800 hover:bg-indigo-100 dark:hover:bg-indigo-900/50"
+                  class="px-2.5 py-1 text-[10px] font-semibold rounded-md transition-all duration-200 bg-retro-primary/10 text-retro-primary border border-retro-primary/20 hover:bg-retro-primary/20"
                 >
                   Detail
                 </router-link>
                 <button
                   @click="printTransaction(t.id)"
                   :disabled="printingId === t.id"
-                  class="px-2.5 py-1 text-[10px] font-semibold rounded-md transition-all duration-200 bg-teal-50 dark:bg-teal-950/40 text-teal-600 dark:text-teal-400 border border-teal-200 dark:border-teal-800 hover:bg-teal-100 dark:hover:bg-teal-900/50 disabled:opacity-40"
+                  class="px-2.5 py-1 text-[10px] font-semibold rounded-md transition-all duration-200 bg-retro-orange/10 text-retro-orange border border-retro-orange/20 hover:bg-retro-orange/20 disabled:opacity-40"
                 >
                   {{ printingId === t.id ? 'Loading...' : 'Cetak' }}
                 </button>
@@ -249,7 +249,9 @@ import { transaksiService, settingService } from '@/services'
 import { useAuthStore } from '@/stores/auth'
 import { printReceipt } from '@/utils/printReceipt'
 import { customDialog } from '@/utils/dialog'
+import { useTheme } from '@/utils/theme'
 
+const { isDark } = useTheme()
 const authStore = useAuthStore()
 const loading = ref(true)
 const transaksiList = ref<Transaksi[]>([])
@@ -290,7 +292,7 @@ async function printTransaction(id: number) {
     if (res.data) {
       printReceipt(res.data, null, logoText.value)
     }
-  } catch (err) {
+  } catch {
     customDialog.error('Gagal mengambil detail transaksi untuk dicetak.')
   } finally {
     printingId.value = null
@@ -307,8 +309,15 @@ async function deleteTransaction(t: Transaksi) {
     await transaksiService.delete(t.id)
     customDialog.success('Transaksi berhasil dihapus.')
     await fetchTransactions()
-  } catch (err: any) {
-    const msg = err.response?.data?.message || 'Gagal menghapus transaksi.'
+  } catch (err: unknown) {
+    let msg = 'Gagal menghapus transaksi.'
+    if (err && typeof err === 'object' && 'response' in err) {
+      const response = (err as Record<string, unknown>).response
+      if (response && typeof response === 'object' && 'data' in response) {
+        const data = response.data as Record<string, unknown>
+        if (data.message) msg = String(data.message)
+      }
+    }
     customDialog.error(msg)
   }
 }
@@ -325,27 +334,49 @@ const avgTransaction = computed(() => {
 
 // Payment Methods breakdown calculation
 const paymentMethods = computed(() => {
-  const methods = [
+  const methods = isDark.value ? [
     { 
       name: 'tunai', count: 0, total: 0, 
-      dotColor: '#34d399',
-      barGradient: 'linear-gradient(90deg, rgba(52, 211, 153, 0.6) 0%, rgba(16, 185, 129, 0.3) 100%)',
-      badgeBg: 'rgba(52, 211, 153, 0.1)',
-      badgeText: '#34d399'
+      dotColor: '#3b82f6',
+      barGradient: 'linear-gradient(90deg, rgba(59, 130, 246, 0.6) 0%, rgba(59, 130, 246, 0.3) 100%)',
+      badgeBg: 'rgba(59, 130, 246, 0.1)',
+      badgeText: '#3b82f6'
     },
     { 
       name: 'debit', count: 0, total: 0, 
-      dotColor: '#818cf8',
-      barGradient: 'linear-gradient(90deg, rgba(129, 140, 248, 0.6) 0%, rgba(99, 102, 241, 0.3) 100%)',
-      badgeBg: 'rgba(129, 140, 248, 0.1)',
-      badgeText: '#818cf8'
+      dotColor: '#60a5fa',
+      barGradient: 'linear-gradient(90deg, rgba(96, 165, 250, 0.6) 0%, rgba(96, 165, 250, 0.3) 100%)',
+      badgeBg: 'rgba(96, 165, 250, 0.1)',
+      badgeText: '#60a5fa'
     },
     { 
       name: 'transfer', count: 0, total: 0, 
-      dotColor: '#c084fc',
-      barGradient: 'linear-gradient(90deg, rgba(192, 132, 252, 0.6) 0%, rgba(168, 85, 247, 0.3) 100%)',
-      badgeBg: 'rgba(192, 132, 252, 0.1)',
-      badgeText: '#c084fc'
+      dotColor: '#FF7A00',
+      barGradient: 'linear-gradient(90deg, rgba(255, 122, 0, 0.6) 0%, rgba(255, 122, 0, 0.3) 100%)',
+      badgeBg: 'rgba(255, 122, 0, 0.1)',
+      badgeText: '#FF7A00'
+    }
+  ] : [
+    { 
+      name: 'tunai', count: 0, total: 0, 
+      dotColor: '#FF7A00',
+      barGradient: 'linear-gradient(90deg, rgba(255, 122, 0, 0.6) 0%, rgba(255, 122, 0, 0.3) 100%)',
+      badgeBg: 'rgba(255, 122, 0, 0.1)',
+      badgeText: '#FF7A00'
+    },
+    { 
+      name: 'debit', count: 0, total: 0, 
+      dotColor: '#3b82f6',
+      barGradient: 'linear-gradient(90deg, rgba(59, 130, 246, 0.6) 0%, rgba(59, 130, 246, 0.3) 100%)',
+      badgeBg: 'rgba(59, 130, 246, 0.1)',
+      badgeText: '#3b82f6'
+    },
+    { 
+      name: 'transfer', count: 0, total: 0, 
+      dotColor: '#1D4ED8',
+      barGradient: 'linear-gradient(90deg, rgba(29, 78, 216, 0.6) 0%, rgba(29, 78, 216, 0.3) 100%)',
+      badgeBg: 'rgba(29, 78, 216, 0.1)',
+      badgeText: '#1D4ED8'
     }
   ]
 

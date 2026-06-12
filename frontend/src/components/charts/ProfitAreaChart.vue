@@ -64,6 +64,7 @@
         height="280"
         :options="chartOptions"
         :series="filteredSeries"
+        :key="chartKey"
       />
     </div>
     <div v-else class="chart-empty">
@@ -76,7 +77,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted, reactive, onUnmounted } from 'vue'
+import { ref, computed, onMounted, reactive, onUnmounted, watch } from 'vue'
 import VueApexCharts from 'vue3-apexcharts'
 // FIX: import type yang pasti ada, ChartLabaRugi di-extend dari ChartPenjualanBulanan
 //      jika tipe ChartLabaRugi belum ada di @/types, ganti dengan baris di bawah:
@@ -88,7 +89,10 @@ type ChartLabaRugi = ChartPenjualanBulanan & {
   laba_bersih: number
 }
 import { laporanService } from '@/services'
+import { useTheme } from '@/utils/theme'
 
+const { isDark } = useTheme()
+const chartKey = ref(0)
 const apexchart = VueApexCharts
 const chartRef = ref<any>(null)
 
@@ -111,11 +115,11 @@ const rangeOptions = [
 // Data yang ditampilkan = N bulan terakhir
 const visibleData = computed(() => data.value.slice(-rangeMonths.value))
 
-const seriesConfig = [
-  { key: 'total_penjualan' as const, label: 'Penjualan', color: '#6366f1', type: 'column' as const },
-  { key: 'total_pembelian' as const, label: 'Pembelian', color: '#f97316', type: 'column' as const },
-  { key: 'laba_bersih'     as const, label: 'Laba Bersih', color: '#39FF14', type: 'line' as const },
-]
+const seriesConfig = computed(() => [
+  { key: 'total_penjualan' as const, label: 'Penjualan', color: isDark.value ? '#FF7A00' : '#1D4ED8', type: 'column' as const },
+  { key: 'total_pembelian' as const, label: 'Pembelian', color: isDark.value ? '#3b82f6' : '#FF7A00', type: 'column' as const },
+  { key: 'laba_bersih'     as const, label: 'Laba Bersih', color: '#10b981', type: 'line' as const },
+])
 
 const visibleSeries = reactive<Record<string, boolean>>({
   total_penjualan: true,
@@ -138,7 +142,7 @@ const latestData = computed(() => {
 })
 
 const filteredSeries = computed(() =>
-  seriesConfig
+  seriesConfig.value
     .filter(s => visibleSeries[s.key])
     .map(s => ({
       name: s.label,
@@ -149,7 +153,7 @@ const filteredSeries = computed(() =>
 )
 
 const chartOptions = computed(() => {
-  const visibleCfg = seriesConfig.filter(s => visibleSeries[s.key])
+  const visibleCfg = seriesConfig.value.filter(s => visibleSeries[s.key])
   return {
     chart: {
       type: 'line' as const,
@@ -274,6 +278,10 @@ onMounted(async () => {
   } finally {
     loading.value = false
   }
+})
+
+watch(isDark, () => {
+  chartKey.value++
 })
 
 onUnmounted(() => {

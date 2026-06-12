@@ -26,11 +26,11 @@ export default defineConfig({
     host: '0.0.0.0', // Allow access from all IPs (localhost, 127.0.0.1, 192.168.x.x, etc)
     proxy: {
       '/api': {
-        target: 'http://localhost:8000',
+        target: 'http://backend:8000',
         changeOrigin: true,
       },
       '/storage': {
-        target: 'http://localhost:8000',
+        target: 'http://backend:8000',
         changeOrigin: true,
       },
     },

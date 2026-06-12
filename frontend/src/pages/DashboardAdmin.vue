@@ -4,7 +4,7 @@
     <div class="mb-8">
       <div class="flex items-center gap-3 mb-2">
         <div
-          class="w-1 h-8 bg-gradient-to-b from-retro-orange to-retro-orange/50 rounded-full"
+          class="w-1 h-8 bg-gradient-to-b from-retro-primary to-retro-primary/50 rounded-full"
         ></div>
         <h1 class="text-3xl font-bold text-slate-900 dark:text-white font-display">
           {{ authStore.isKasir ? 'Dashboard Kasir' : 'Dashboard Admin' }}
@@ -24,7 +24,7 @@
       <h3
         class="text-sm font-bold text-slate-800 dark:text-slate-200 uppercase tracking-wide mb-4 flex items-center gap-2"
       >
-        <span class="inline-block w-2 h-2 bg-retro-orange rounded-full"></span>
+        <span class="inline-block w-2 h-2 bg-retro-primary rounded-full"></span>
         Filter Data
       </h3>
       <div class="flex flex-wrap items-end gap-3">
@@ -34,7 +34,7 @@
           <select
             v-model="filterMode"
             @change="onFilterModeChange"
-            class="text-xs rounded-md border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-slate-800 dark:text-slate-200 px-3 py-2 min-w-[160px] focus:ring-2 focus:ring-retro-orange/30"
+            class="text-xs rounded-md border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-slate-800 dark:text-slate-200 px-3 py-2 min-w-[160px] focus:ring-2 focus:ring-retro-primary/30"
           >
             <optgroup label="Default">
               <option value="hari_ini">Hari Ini</option>
@@ -60,7 +60,7 @@
           <select
             v-model="filterValue"
             @change="applyFilter"
-            class="text-xs rounded-md border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-slate-800 dark:text-slate-200 px-3 py-2 min-w-[130px] focus:ring-2 focus:ring-retro-orange/30"
+            class="text-xs rounded-md border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-slate-800 dark:text-slate-200 px-3 py-2 min-w-[130px] focus:ring-2 focus:ring-retro-primary/30"
           >
             <option value="senin">Senin</option>
             <option value="selasa">Selasa</option>
@@ -78,7 +78,7 @@
           <select
             v-model="filterValue"
             @change="applyFilter"
-            class="text-xs rounded-md border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-slate-800 dark:text-slate-200 px-3 py-2 min-w-[150px] focus:ring-2 focus:ring-retro-orange/30"
+            class="text-xs rounded-md border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-slate-800 dark:text-slate-200 px-3 py-2 min-w-[150px] focus:ring-2 focus:ring-retro-primary/30"
           >
             <option value="1">Minggu ke-1</option>
             <option value="2">Minggu ke-2</option>
@@ -93,7 +93,7 @@
           <select
             v-model="filterValue"
             @change="applyFilter"
-            class="text-xs rounded-md border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-slate-800 dark:text-slate-200 px-3 py-2 min-w-[140px] focus:ring-2 focus:ring-retro-orange/30"
+            class="text-xs rounded-md border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-slate-800 dark:text-slate-200 px-3 py-2 min-w-[140px] focus:ring-2 focus:ring-retro-primary/30"
           >
             <option v-for="(name, idx) in monthNames" :key="idx" :value="String(idx + 1)">
               {{ name }}
@@ -108,7 +108,7 @@
             v-model="filterValue"
             type="date"
             @change="applyFilter"
-            class="text-xs rounded-md border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-slate-800 dark:text-slate-200 px-3 py-2 min-w-[160px] focus:ring-2 focus:ring-retro-orange/30"
+            class="text-xs rounded-md border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-slate-800 dark:text-slate-200 px-3 py-2 min-w-[160px] focus:ring-2 focus:ring-retro-primary/30"
           />
         </div>
 
@@ -118,7 +118,7 @@
           <select
             v-model="filterValue"
             @change="applyFilter"
-            class="text-xs rounded-md border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-slate-800 dark:text-slate-200 px-3 py-2 min-w-[120px] focus:ring-2 focus:ring-retro-orange/30"
+            class="text-xs rounded-md border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-slate-800 dark:text-slate-200 px-3 py-2 min-w-[120px] focus:ring-2 focus:ring-retro-primary/30"
           >
             <option v-for="y in availableYears" :key="y" :value="String(y)">{{ y }}</option>
           </select>
@@ -132,7 +132,7 @@
               v-model="filterStart"
               type="date"
               @change="applyFilter"
-              class="text-xs rounded-md border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-slate-800 dark:text-slate-200 px-3 py-2 min-w-[160px] focus:ring-2 focus:ring-retro-orange/30"
+              class="text-xs rounded-md border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-slate-800 dark:text-slate-200 px-3 py-2 min-w-[160px] focus:ring-2 focus:ring-retro-primary/30"
             />
           </div>
           <div class="flex flex-col gap-1">
@@ -141,7 +141,7 @@
               v-model="filterEnd"
               type="date"
               @change="applyFilter"
-              class="text-xs rounded-md border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-slate-800 dark:text-slate-200 px-3 py-2 min-w-[160px] focus:ring-2 focus:ring-retro-orange/30"
+              class="text-xs rounded-md border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-slate-800 dark:text-slate-200 px-3 py-2 min-w-[160px] focus:ring-2 focus:ring-retro-primary/30"
             />
           </div>
         </template>
@@ -160,7 +160,7 @@
       <div v-if="filterMode" class="mt-4 pt-4 border-t border-slate-100 dark:border-slate-700 flex items-center gap-2">
         <span class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Filter Aktif:</span>
         <span
-          class="text-xs px-3 py-1.5 rounded-full bg-retro-orange/10 text-retro-orange font-semibold border border-retro-orange/30"
+          class="text-xs px-3 py-1.5 rounded-full bg-retro-primary/10 text-retro-primary font-semibold border border-retro-primary/30"
         >
           {{ activeFilterLabel }}
         </span>
@@ -174,19 +174,19 @@
     >
       <!-- Penjualan -->
       <div
-        class="bg-gradient-to-br from-green-50 to-white dark:from-green-900/20 dark:to-slate-800 rounded-lg border border-green-200/50 dark:border-green-800/50 p-3 md:p-5 hover:shadow-lg transition-all hover:border-green-300 dark:hover:border-green-700 min-h-[120px] md:min-h-[140px] flex flex-col justify-between"
+        class="bg-gradient-to-br from-retro-success-glow to-white dark:from-retro-success-glow dark:to-slate-800 rounded-lg border border-retro-success/20 dark:border-retro-success/30 p-3 md:p-5 hover:shadow-lg transition-all hover:border-retro-success/50 dark:hover:border-retro-success-hover min-h-[120px] md:min-h-[140px] flex flex-col justify-between"
       >
         <div>
           <p
-            class="text-[10px] md:text-xs text-green-600 dark:text-green-400 font-bold uppercase tracking-wider mb-1 md:mb-2 line-clamp-1"
+            class="text-[10px] md:text-xs text-retro-success font-bold uppercase tracking-wider mb-1 md:mb-2 line-clamp-1"
           >
             {{ kpiPenjualanLabel }}
           </p>
-          <p class="text-xl md:text-3xl font-bold text-green-700 dark:text-green-300 mb-1 line-clamp-2 break-words">
+          <p class="text-xl md:text-3xl font-bold text-retro-success mb-1 line-clamp-2 break-words">
             {{ formatCurrency(stats.penjualan_bulan_ini) }}
           </p>
         </div>
-        <p class="text-[10px] md:text-xs text-green-500 dark:text-green-500/80 font-medium">{{ kpiSublabel }}</p>
+        <p class="text-[10px] md:text-xs text-retro-success font-medium">{{ kpiSublabel }}</p>
       </div>
 
       <!-- Total Transaksi -->
@@ -229,7 +229,7 @@
         v-if="!authStore.isKasir"
         :class="[
           stats.laba_bersih >= 0
-            ? 'bg-gradient-to-br from-emerald-50 to-white dark:from-emerald-900/20 dark:to-slate-800 border border-emerald-200/50 dark:border-emerald-800/50 hover:border-emerald-300 dark:hover:border-emerald-700'
+            ? 'bg-gradient-to-br from-retro-success-glow to-white dark:from-retro-success-glow dark:to-slate-800 border border-retro-success/20 dark:border-retro-success/30 hover:border-retro-success/50 dark:hover:border-retro-success-hover'
             : 'bg-gradient-to-br from-red-50 to-white dark:from-red-900/20 dark:to-slate-800 border border-red-200/50 dark:border-red-800/50 hover:border-red-300 dark:hover:border-red-700',
           'rounded-lg p-3 md:p-5 hover:shadow-lg transition-all min-h-[120px] md:min-h-[140px] flex flex-col justify-between',
         ]"
@@ -237,20 +237,20 @@
         <div>
           <p
             class="text-[10px] md:text-xs font-bold uppercase tracking-wider mb-1 md:mb-2 line-clamp-1"
-            :class="stats.laba_bersih >= 0 ? 'text-emerald-600 dark:text-emerald-400' : 'text-red-600 dark:text-red-400'"
+            :class="stats.laba_bersih >= 0 ? 'text-retro-success' : 'text-red-600 dark:text-red-400'"
           >
             Laba Bersih
           </p>
           <p
             class="text-xl md:text-3xl font-bold mb-1 line-clamp-2 break-words"
-            :class="stats.laba_bersih >= 0 ? 'text-emerald-700 dark:text-emerald-300' : 'text-red-700 dark:text-red-300'"
+            :class="stats.laba_bersih >= 0 ? 'text-retro-success' : 'text-red-700 dark:text-red-300'"
           >
             {{ formatCurrency(stats.laba_bersih) }}
           </p>
         </div>
         <p
           class="text-[10px] md:text-xs font-medium"
-          :class="stats.laba_bersih >= 0 ? 'text-emerald-500 dark:text-emerald-500/80' : 'text-red-500 dark:text-red-500/80'"
+          :class="stats.laba_bersih >= 0 ? 'text-retro-success' : 'text-red-500 dark:text-red-500/80'"
         >
           Keuntungan bersih
         </p>
@@ -266,7 +266,7 @@
         class="flex items-center justify-between p-5 border-b border-slate-200 dark:border-slate-700 bg-gradient-to-r from-slate-50 to-white dark:from-slate-800 dark:to-slate-800"
       >
         <h3 class="text-sm font-bold text-slate-800 dark:text-slate-200 flex items-center gap-2.5">
-          <span class="inline-block w-1 h-1 bg-retro-blue rounded-full"></span>
+          <span class="inline-block w-1 h-1 bg-retro-accent rounded-full"></span>
           {{ authStore.isKasir ? 'Transaksi Saya' : 'Transaksi Terbaru' }}
         </h3>
         <div class="flex items-center gap-3">
@@ -274,7 +274,7 @@
           <select
             v-model="listFilter"
             @change="onListFilterChange"
-            class="text-[11px] rounded-md border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-slate-800 dark:text-slate-200 px-2 py-1.5 focus:ring-2 focus:ring-retro-blue/30"
+            class="text-[11px] rounded-md border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-slate-800 dark:text-slate-200 px-2 py-1.5 focus:ring-2 focus:ring-retro-accent/30"
           >
             <option value="minggu_ini">Minggu Ini</option>
             <option value="1_minggu">Seminggu yang lalu</option>
@@ -285,7 +285,7 @@
           </select>
           <router-link
             to="/transaksi"
-            class="text-xs text-retro-blue hover:text-retro-blue-deep font-semibold hover:underline"
+            class="text-xs text-retro-accent hover:text-retro-accent-hover font-semibold hover:underline"
             >Lihat semua →</router-link
           >
         </div>
@@ -322,15 +322,15 @@
                 <td colspan="5" class="px-4 py-2.5 border-b border-t border-slate-200 dark:border-slate-700">
                   <div class="flex items-center gap-3">
                     <div
-                      class="h-px flex-1 bg-gradient-to-r from-retro-orange/40 to-transparent"
+                      class="h-px flex-1 bg-gradient-to-r from-retro-primary/40 to-transparent"
                     ></div>
                     <span
-                      class="text-[11px] font-bold text-retro-orange uppercase tracking-wider whitespace-nowrap"
+                      class="text-[11px] font-bold text-retro-primary uppercase tracking-wider whitespace-nowrap"
                     >
                       {{ group.label }}
                     </span>
                     <div
-                      class="h-px flex-1 bg-gradient-to-l from-retro-orange/40 to-transparent"
+                      class="h-px flex-1 bg-gradient-to-l from-retro-primary/40 to-transparent"
                     ></div>
                     <span
                       class="text-[10px] font-semibold text-slate-400 bg-slate-100 dark:bg-slate-700 dark:text-slate-300 px-2 py-0.5 rounded-full"
@@ -346,7 +346,7 @@
                 :key="trx.id"
                 class="hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors"
               >
-                <td class="px-4 py-3 text-xs font-mono text-retro-blue font-semibold">
+                <td class="px-4 py-3 text-xs font-mono text-retro-accent font-semibold">
                   {{ trx.kode_transaksi }}
                 </td>
                 <td class="px-4 py-3 text-xs text-slate-600 dark:text-slate-400">{{ formatTime(trx.created_at) }}</td>
@@ -355,10 +355,10 @@
                     class="text-[11px] px-2.5 py-1 rounded-full font-semibold"
                     :class="
                       trx.metode_pembayaran === 'tunai'
-                        ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400'
+                        ? 'bg-retro-success-glow text-retro-success'
                         : trx.metode_pembayaran === 'transfer'
                           ? 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400'
-                          : 'bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-400'
+                          : 'bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-400'
                     "
                   >
                     {{
@@ -376,7 +376,7 @@
                 <td class="px-4 py-3 text-center">
                   <router-link
                     :to="`/transaksi/${trx.id}`"
-                    class="inline-flex items-center gap-1.5 px-2.5 py-1.5 text-[10px] font-bold border-2 border-retro-blue text-retro-blue rounded-md hover:bg-retro-blue hover:text-white transition-all"
+                    class="inline-flex items-center gap-1.5 px-2.5 py-1.5 text-[10px] font-bold border-2 border-retro-accent text-retro-accent rounded-md hover:bg-retro-accent hover:text-white transition-all"
                   >
                     Detail
                   </router-link>
@@ -393,14 +393,14 @@
       <!-- Tambah Produk (Admin Only) -->
       <router-link
         to="/produk/tambah"
-        class="group bg-white dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 p-5 hover:shadow-lg hover:border-retro-blue/50 transition-all"
+        class="group bg-white dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 p-5 hover:shadow-lg hover:border-retro-accent/50 transition-all"
       >
         <div class="flex items-start justify-between mb-3">
           <div
-            class="w-12 h-12 rounded-lg bg-retro-blue/10 flex items-center justify-center group-hover:bg-retro-blue/20 transition-colors"
+            class="w-12 h-12 rounded-lg bg-retro-accent/10 flex items-center justify-center group-hover:bg-retro-accent/20 transition-colors"
           >
             <svg
-              class="w-6 h-6 text-retro-blue"
+              class="w-6 h-6 text-retro-accent"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -414,7 +414,7 @@
             </svg>
           </div>
           <span
-            class="text-xs font-semibold text-slate-400 group-hover:text-retro-blue transition-colors"
+            class="text-xs font-semibold text-slate-400 group-hover:text-retro-accent transition-colors"
             >→</span
           >
         </div>
@@ -425,14 +425,14 @@
       <!-- Input Pembelian (Admin Only) -->
       <router-link
         to="/pembelian/tambah"
-        class="group bg-white dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 p-5 hover:shadow-lg hover:border-retro-orange/50 transition-all"
+        class="group bg-white dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 p-5 hover:shadow-lg hover:border-retro-primary/50 transition-all"
       >
         <div class="flex items-start justify-between mb-3">
           <div
-            class="w-12 h-12 rounded-lg bg-retro-orange/10 flex items-center justify-center group-hover:bg-retro-orange/20 transition-colors"
+            class="w-12 h-12 rounded-lg bg-retro-primary/10 flex items-center justify-center group-hover:bg-retro-primary/20 transition-colors"
           >
             <svg
-              class="w-6 h-6 text-retro-orange"
+              class="w-6 h-6 text-retro-primary"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -446,7 +446,7 @@
             </svg>
           </div>
           <span
-            class="text-xs font-semibold text-slate-400 group-hover:text-retro-orange transition-colors"
+            class="text-xs font-semibold text-slate-400 group-hover:text-retro-primary transition-colors"
             >→</span
           >
         </div>

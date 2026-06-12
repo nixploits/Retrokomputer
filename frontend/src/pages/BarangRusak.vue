@@ -25,7 +25,7 @@
           <div class="space-y-3 text-xs">
             <div class="flex justify-between items-center pb-3 border-b border-slate-100 dark:border-slate-800">
               <span class="font-semibold uppercase tracking-wide flex items-center gap-2 text-slate-700 dark:text-slate-300">
-                <span class="w-2 h-2 rounded-full bg-purple-400"></span>
+                <span class="w-2 h-2 rounded-full bg-retro-primary"></span>
                 Barang Rusak
               </span>
               <div class="text-right">
@@ -48,13 +48,13 @@
           <!-- Ratio Visual Bar -->
           <div class="space-y-2">
             <div class="flex justify-between text-[10px] font-semibold">
-              <span class="text-purple-500 dark:text-purple-400">Rusak ({{ ratioRusak }}%)</span>
-              <span class="text-rose-500 dark:text-rose-400">Hilang ({{ ratioHilang }}%)</span>
+              <span class="text-retro-primary">Rusak ({{ ratioRusak }}%)</span>
+              <span class="text-rose-550 dark:text-rose-450">Hilang ({{ ratioHilang }}%)</span>
             </div>
             <div class="relative w-full h-2 rounded-full overflow-hidden flex bg-slate-100 dark:bg-slate-800">
               <div
                 class="h-full rounded-l-full transition-all duration-700 ease-out"
-                :style="{ width: `${ratioRusak}%`, background: 'linear-gradient(90deg, rgba(192, 132, 252, 0.6) 0%, rgba(168, 85, 247, 0.4) 100%)' }"
+                :style="{ width: `${ratioRusak}%`, background: 'linear-gradient(90deg, var(--color-primary) 0%, var(--color-primary-glow) 100%)' }"
               ></div>
               <div
                 class="h-full rounded-r-full transition-all duration-700 ease-out"
@@ -68,7 +68,7 @@
       <!-- ADMIN RECORD FORM -->
       <div v-else class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl overflow-hidden shadow-sm">
         <div class="px-5 py-4 flex items-center gap-2 border-b border-slate-100 dark:border-slate-800">
-          <div class="w-1 h-5 rounded-full bg-gradient-to-b from-purple-400 to-indigo-500"></div>
+          <div class="w-1 h-5 rounded-full bg-gradient-to-b from-retro-accent to-retro-primary"></div>
           <h3 class="text-xs font-semibold uppercase tracking-wide text-slate-700 dark:text-slate-200">Catat Kerugian Inventaris</h3>
         </div>
 
@@ -78,7 +78,7 @@
             <label class="block text-[11px] font-semibold mb-1.5 text-slate-500 dark:text-slate-400">Pilih Produk</label>
             <select
               v-model="form.produk_id"
-              class="w-full px-3 py-2 text-xs rounded-lg bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-850 text-slate-800 dark:text-slate-200 focus:outline-none focus:border-indigo-500"
+              class="w-full px-3 py-2 text-xs rounded-lg bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-850 text-slate-800 dark:text-slate-200 focus:outline-none focus:border-retro-primary"
               required
             >
               <option value="" disabled>-- Pilih Produk --</option>
@@ -93,11 +93,11 @@
             <label class="block text-[11px] font-semibold mb-1.5 text-slate-500 dark:text-slate-400">Kategori Laporan</label>
             <div class="flex gap-4">
               <label class="inline-flex items-center text-xs cursor-pointer text-slate-700 dark:text-slate-300">
-                <input v-model="form.kategori" type="radio" value="rusak" class="mr-1.5 accent-indigo-600 dark:accent-indigo-400" />
+                <input v-model="form.kategori" type="radio" value="rusak" class="mr-1.5 accent-retro-primary" />
                 Barang Rusak
               </label>
               <label class="inline-flex items-center text-xs cursor-pointer text-slate-700 dark:text-slate-300">
-                <input v-model="form.kategori" type="radio" value="hilang" class="mr-1.5 accent-indigo-600 dark:accent-indigo-400" />
+                <input v-model="form.kategori" type="radio" value="hilang" class="mr-1.5 accent-retro-primary" />
                 Barang Hilang
               </label>
             </div>
@@ -110,7 +110,7 @@
               v-model.number="form.qty"
               type="number"
               min="1"
-              class="w-full px-3 py-2 text-xs rounded-lg bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-850 text-slate-800 dark:text-slate-200 focus:outline-none focus:border-indigo-500"
+              class="w-full px-3 py-2 text-xs rounded-lg bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-850 text-slate-800 dark:text-slate-200 focus:outline-none focus:border-retro-primary"
               placeholder="1"
               required
             />
@@ -122,7 +122,7 @@
             <textarea
               v-model="form.keterangan"
               rows="3"
-              class="w-full px-3 py-2 text-xs rounded-lg bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-850 text-slate-800 dark:text-slate-200 focus:outline-none focus:border-indigo-500"
+              class="w-full px-3 py-2 text-xs rounded-lg bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-850 text-slate-800 dark:text-slate-200 focus:outline-none focus:border-retro-primary"
               placeholder="Tulis alasan atau kronologi detail..."
             ></textarea>
           </div>
@@ -141,7 +141,7 @@
           <button
             :disabled="submitting || products.length === 0"
             type="submit"
-            class="w-full py-2.5 text-xs font-semibold rounded-lg transition-all duration-200 disabled:opacity-40 bg-indigo-600 hover:bg-indigo-700 text-white dark:bg-indigo-900/30 dark:hover:bg-indigo-900/50 dark:text-indigo-300 dark:border dark:border-indigo-800"
+            class="w-full py-2.5 text-xs font-semibold rounded-lg transition-all duration-200 disabled:opacity-40 bg-retro-primary hover:bg-retro-primary-hover text-white dark:bg-retro-primary/20 dark:hover:bg-retro-primary/40 dark:text-retro-primary dark:border dark:border-retro-primary/30"
           >
             {{ submitting ? 'Memproses...' : 'Catat Kerugian' }}
           </button>
@@ -189,7 +189,7 @@
               <td class="py-3 px-3 text-center whitespace-nowrap">
                 <span
                   v-if="item.kategori === 'rusak'"
-                  class="inline-block px-2 py-0.5 text-[9px] font-semibold uppercase tracking-wide rounded-md bg-purple-50 dark:bg-purple-950/40 text-purple-600 dark:text-purple-400 border border-purple-200 dark:border-purple-800/40"
+                  class="inline-block px-2 py-0.5 text-[9px] font-semibold uppercase tracking-wide rounded-md bg-retro-primary/10 text-retro-primary border border-retro-primary/20"
                 >
                   Rusak
                 </span>
@@ -207,7 +207,7 @@
                 <button
                   v-if="item.bukti_foto"
                   @click="openLightbox(item.bukti_foto)"
-                  class="text-[10px] font-semibold px-2.5 py-1 rounded-md transition-all duration-200 bg-indigo-50 dark:bg-indigo-950/40 text-indigo-600 dark:text-indigo-400 border border-indigo-200 dark:border-indigo-800 hover:bg-indigo-100 dark:hover:bg-indigo-900/50"
+                  class="text-[10px] font-semibold px-2.5 py-1 rounded-md transition-all duration-200 bg-retro-accent/10 text-retro-accent border border-retro-accent/20 hover:bg-retro-accent/20"
                 >
                   Lihat Foto
                 </button>

@@ -153,7 +153,6 @@
 
 <script setup lang="ts">
 import { ref, reactive, onMounted } from 'vue'
-import VueApexCharts from 'vue3-apexcharts'
 import type { DashboardStats, ChartPenjualanBulanan } from '@/types'
 import { laporanService } from '@/services'
 
@@ -163,8 +162,6 @@ import MonthlySalesBar from '@/components/charts/MonthlySalesBar.vue'
 import PaymentDonut from '@/components/charts/PaymentDonut.vue'
 import TopProductsBar from '@/components/charts/TopProductsBar.vue'
 import ProfitAreaChart from '@/components/charts/ProfitAreaChart.vue'
-
-const apexchart = VueApexCharts
 
 const loading = ref(true)
 const activeTab = ref('all')
@@ -300,7 +297,7 @@ onMounted(async () => {
 .dark .header-date {
   color: #cbd5e1;
   background: #131926;
-  border-color: rgba(255, 122, 0, 0.15);
+  border-color: var(--color-primary-glow);
 }
 
 .date-icon {
@@ -348,13 +345,13 @@ onMounted(async () => {
 
 .dark .kpi-card {
   background: #131926;
-  border-color: rgba(255, 122, 0, 0.15);
+  border-color: var(--color-primary-glow);
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
 }
 
 .dark .kpi-card:hover {
-  box-shadow: 0 8px 30px rgba(255, 122, 0, 0.1);
-  border-color: rgba(255, 122, 0, 0.3);
+  box-shadow: 0 8px 30px var(--color-primary-glow);
+  border-color: var(--color-primary);
 }
 
 .kpi-card::before {
@@ -366,10 +363,10 @@ onMounted(async () => {
   height: 3px;
 }
 
-.kpi-sales::before { background: linear-gradient(90deg, #6366f1, #818cf8); }
-.kpi-profit::before { background: linear-gradient(90deg, #22c55e, #4ade80); }
-.kpi-transactions::before { background: linear-gradient(90deg, #3b82f6, #60a5fa); }
-.kpi-purchases::before { background: linear-gradient(90deg, #f97316, #fb923c); }
+.kpi-sales::before { background: linear-gradient(90deg, #ff7a00, #fed7aa); }
+.kpi-profit::before { background: linear-gradient(90deg, var(--color-success), var(--color-success-glow)); }
+.kpi-transactions::before { background: linear-gradient(90deg, #1d4ed8, #60a5fa); }
+.kpi-purchases::before { background: linear-gradient(90deg, #f97316, #fed7aa); }
 
 .kpi-icon-wrap {
   width: 44px;
@@ -382,10 +379,10 @@ onMounted(async () => {
   flex-shrink: 0;
 }
 
-.kpi-icon-sales { background: linear-gradient(135deg, #eef2ff, #e0e7ff); color: #6366f1; }
-.kpi-icon-profit { background: linear-gradient(135deg, #ecfdf5, #d1fae5); color: #22c55e; }
+.kpi-icon-sales { background: linear-gradient(135deg, #fff7ed, #ffedd5); color: #ff7a00; }
+.kpi-icon-profit { background: var(--color-success-glow); color: var(--color-success); }
 .kpi-icon-loss { background: linear-gradient(135deg, #fef2f2, #fecaca); color: #ef4444; }
-.kpi-icon-trx { background: linear-gradient(135deg, #eff6ff, #dbeafe); color: #3b82f6; }
+.kpi-icon-trx { background: linear-gradient(135deg, #dbeafe, #eff6ff); color: #1d4ed8; }
 .kpi-icon-purchase { background: linear-gradient(135deg, #fff7ed, #fed7aa); color: #f97316; }
 
 .kpi-content {
@@ -419,7 +416,7 @@ onMounted(async () => {
   color: #f8fafc;
 }
 
-.kpi-value.text-emerald { color: #059669; }
+.kpi-value.text-emerald { color: var(--color-success); }
 .kpi-value.text-red { color: #dc2626; }
 
 .kpi-change {
@@ -434,8 +431,8 @@ onMounted(async () => {
 }
 
 .change-up {
-  background: #ecfdf5;
-  color: #059669;
+  background: var(--color-success-glow);
+  color: var(--color-success);
 }
 
 .change-down {
@@ -484,7 +481,7 @@ onMounted(async () => {
 }
 .dark .chart-tabs {
   background: #131926;
-  border-color: rgba(255, 122, 0, 0.15);
+  border-color: var(--color-primary-glow);
 }
 
 .chart-tabs button {
@@ -516,8 +513,8 @@ onMounted(async () => {
 
 .chart-tabs button.active {
   color: #ffffff;
-  background: #ff7a00;
-  box-shadow: 0 4px 12px rgba(255, 122, 0, 0.35);
+  background: var(--color-primary);
+  box-shadow: 0 4px 12px var(--color-primary-glow);
 }
 
 .tab-icon {
@@ -564,13 +561,13 @@ onMounted(async () => {
 
 .dark .chart-card {
   background: #131926;
-  border-color: rgba(255, 122, 0, 0.15);
+  border-color: var(--color-primary-glow);
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
 }
 
 .dark .chart-card:hover {
-  box-shadow: 0 8px 30px rgba(255, 122, 0, 0.1);
-  border-color: rgba(255, 122, 0, 0.3);
+  box-shadow: 0 8px 30px var(--color-primary-glow);
+  border-color: var(--color-primary);
 }
 
 .chart-header {
@@ -602,11 +599,11 @@ onMounted(async () => {
 .chart-badge {
   font-size: 12px;
   font-weight: 700;
-  color: #ff7a00;
-  background: rgba(255, 122, 0, 0.1);
+  color: var(--color-primary);
+  background: var(--color-primary-glow);
   padding: 4px 12px;
   border-radius: 20px;
-  border: 1px solid rgba(255, 122, 0, 0.2);
+  border: 1px solid var(--color-primary-glow);
 }
 
 .chart-body {
@@ -688,9 +685,9 @@ onMounted(async () => {
 }
 .dark .btn-download-csv:hover {
   color: #ffffff;
-  border-color: #ff7a00;
-  background: rgba(255, 122, 0, 0.08);
-  box-shadow: 0 0 8px rgba(255, 122, 0, 0.15);
+  border-color: var(--color-primary);
+  background: var(--color-primary-glow);
+  box-shadow: 0 0 8px var(--color-primary-glow);
 }
 
 .btn-download-csv svg {

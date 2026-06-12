@@ -28,8 +28,8 @@ services:
     depends_on:
       - db
     environment:
-      - APP_ENV=production
-      - APP_DEBUG=false
+      - APP_ENV=local
+      - APP_DEBUG=true
       - DB_CONNECTION=mysql
       - DB_HOST=db
       - DB_PORT=3306
@@ -44,18 +44,22 @@ services:
     networks:
       - retro-network
 
-  # Frontend Nginx Reverse Proxy Service
+  # Frontend Vite Dev Server
   frontend:
     build:
       context: ./frontend
+      dockerfile: Dockerfile.dev
     container_name: retro_frontend
     restart: unless-stopped
     ports:
-      - "80:80"
+      - "5173:5173"
     depends_on:
       - backend
     volumes:
-      - backend-storage:/var/www/html/public/storage
+      - ./frontend:/app
+      - /app/node_modules
+    environment:
+      - VITE_API_BASE_URL=http://backend:8000
     networks:
       - retro-network
 

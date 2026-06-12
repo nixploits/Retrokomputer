@@ -34,7 +34,7 @@
               </span>
               <span
                 class="text-[9px] font-bold px-1.5 py-0.5 rounded font-mono uppercase"
-                :class="p.stok > 0 ? 'bg-emerald-50 text-emerald-600 border border-emerald-200' : 'bg-red-50 text-red-600 border border-red-200'"
+                :class="p.stok > 0 ? 'bg-retro-success-glow text-retro-success border border-retro-success/20' : 'bg-red-50 text-red-600 border border-red-200'"
               >
                 {{ p.stok > 0 ? `Stok: ${p.stok}` : 'Habis' }}
               </span>
@@ -200,7 +200,7 @@
             </div>
             <div v-if="uangDiterima !== null && (uangDiterima as any) !== ''" class="flex justify-between items-center text-xs font-bold font-mono pt-1">
               <span class="text-slate-500">KEMBALIAN:</span>
-              <span :class="uangDiterima >= cart.grandTotal ? 'text-emerald-600' : 'text-red-500'">
+              <span :class="uangDiterima >= cart.grandTotal ? 'text-retro-success' : 'text-red-500'">
                 {{ formatCurrency(kembalian) }}
               </span>
             </div>
@@ -227,7 +227,7 @@
           <button @click="closeSuccessModal" class="text-white hover:text-retro-yellow font-bold text-lg leading-none">×</button>
         </div>
         <div class="p-6 text-center">
-          <div class="w-12 h-12 rounded-full bg-emerald-950 border-2 border-emerald-500 flex items-center justify-center mx-auto mb-3 text-emerald-500">
+          <div class="w-12 h-12 rounded-full bg-retro-success-glow border-2 border-retro-success flex items-center justify-center mx-auto mb-3 text-retro-success">
             <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
           </div>
           <h3 class="text-sm font-bold text-slate-800 mb-1">Pembayaran Sukses!</h3>
