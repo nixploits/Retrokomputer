@@ -774,23 +774,36 @@ onMounted(async () => {
 
 /* ===== Filter Bar Card ===== */
 .filter-bar-card {
-  background: #131926;
-  border: 1px solid var(--color-primary-glow);
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
   border-radius: 14px;
   padding: 20px;
+  box-shadow:
+    0 4px 6px -1px rgba(0, 0, 0, 0.05),
+    0 2px 4px -1px rgba(0, 0, 0, 0.03);
+  transition: all 0.3s ease;
+}
+
+.dark .filter-bar-card {
+  background: #131926;
+  border-color: var(--color-primary-glow);
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
 }
 
 .filter-title {
   font-size: 13px;
   font-weight: 700;
-  color: #f8fafc;
+  color: #1e293b;
   text-transform: uppercase;
   letter-spacing: 0.5px;
   margin: 0 0 16px 0;
   display: flex;
   align-items: center;
   gap: 8px;
+}
+
+.dark .filter-title {
+  color: #f8fafc;
 }
 
 .filter-bullet {
@@ -813,22 +826,33 @@ onMounted(async () => {
 .filter-label {
   font-size: 10px;
   font-weight: 600;
-  color: #94a3b8;
+  color: #64748b;
   text-transform: uppercase;
   letter-spacing: 0.5px;
+}
+
+.dark .filter-label {
+  color: #94a3b8;
 }
 
 .filter-select,
 .filter-input-date {
   font-size: 12px;
   border-radius: 6px;
-  border: 1px solid var(--color-primary-glow);
-  background: #0b0f19;
-  color: #f8fafc;
+  border: 1px solid #cbd5e1;
+  background: #ffffff;
+  color: #1e293b;
   padding: 8px 12px;
   min-width: 150px;
   outline: none;
   transition: all 0.2s ease;
+}
+
+.dark .filter-select,
+.dark .filter-input-date {
+  border-color: var(--color-primary-glow);
+  background: #0b0f19;
+  color: #f8fafc;
 }
 
 .filter-select:focus,
@@ -858,17 +882,25 @@ onMounted(async () => {
 .active-filter-row {
   margin-top: 16px;
   padding-top: 16px;
-  border-top: 1px solid var(--color-primary-glow);
+  border-top: 1px solid #e2e8f0;
   display: flex;
   align-items: center;
   gap: 8px;
 }
 
+.dark .active-filter-row {
+  border-top-color: var(--color-primary-glow);
+}
+
 .active-filter-title {
   font-size: 11px;
   font-weight: 700;
-  color: #94a3b8;
+  color: #64748b;
   text-transform: uppercase;
+}
+
+.dark .active-filter-title {
+  color: #94a3b8;
 }
 
 .active-filter-badge {

@@ -157,4 +157,16 @@ const { isDark, toggleTheme } = useTheme()
     background-color 0.3s ease,
     box-shadow 0.3s ease;
 }
+
+/* Spin animation for knob icon when toggling */
+.theme-switch-knob svg {
+  transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+  transform: scale(1);
+}
+.track-light .theme-switch-knob svg {
+  transform: rotate(360deg);
+}
+.track-dark .theme-switch-knob svg {
+  transform: rotate(-360deg);
+}
 </style>
