@@ -717,6 +717,13 @@ async function triggerPdfDownload(params: DashboardFilterParams) {
               border-collapse: collapse;
               margin-top: 15px;
             }
+            thead {
+              display: table-header-group;
+            }
+            tr {
+              page-break-inside: avoid;
+              break-inside: avoid;
+            }
             th {
               background-color: #ff7a00;
               color: #ffffff;
