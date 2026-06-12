@@ -646,7 +646,7 @@ async function triggerPdfDownload(params: DashboardFilterParams) {
   try {
     const res = await transaksiService.getAll(params)
     const transactions = res.data as Transaksi[]
-    const totalAmount = transactions.reduce((sum, t) => sum + Number(t.total), 0)
+    const totalAmount = transactions.reduce((sum, t) => sum + (Number(t.total) || 0), 0)
 
     const printWindow = window.open('', '_blank')
     if (!printWindow) {
@@ -678,19 +678,28 @@ async function triggerPdfDownload(params: DashboardFilterParams) {
     const timestamp = new Date().toISOString().slice(0, 10).replace(/-/g, '')
     const documentTitle = `${baseTitle} - ${periodFileSuffix} (${timestamp})`
 
-    const rowsHtml = transactions
-      .map(
-        (t, idx) => `
-      <tr>
-        <td style="text-align: center;">${idx + 1}</td>
-        <td style="font-family: monospace; font-weight: bold; color: #1d4ed8;">${t.kode_transaksi}</td>
-        <td>${new Date(t.created_at).toLocaleString('id-ID', { day: '2-digit', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' })}</td>
-        <td style="text-align: center; font-weight: 600;">${t.metode_pembayaran.toUpperCase()}</td>
-        <td style="text-align: right; font-weight: 600;">${formatCurrency(Number(t.total))}</td>
-      </tr>
-    `,
-      )
-      .join('')
+    const rowsHtml =
+      transactions.length > 0
+        ? transactions
+            .map(
+              (t, idx) => `
+          <tr>
+            <td style="text-align: center; font-weight: 600; color: #0f172a;">${idx + 1}</td>
+            <td style="font-family: monospace; font-weight: bold; color: #1e3a8a;">${t.kode_transaksi}</td>
+            <td style="color: #334155;">${new Date(t.created_at).toLocaleString('id-ID', { day: '2-digit', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' })}</td>
+            <td style="text-align: center; font-weight: 600; color: #0f172a;">${t.metode_pembayaran.toUpperCase()}</td>
+            <td style="text-align: right; font-weight: 700; color: #0f172a;">${formatCurrency(Number(t.total) || 0)}</td>
+          </tr>
+        `,
+            )
+            .join('')
+        : `
+        <tr>
+          <td colspan="5" style="text-align: center; color: #64748b; padding: 24px; font-style: italic; font-size: 11px;">
+            Tidak ada data transaksi penjualan pada periode ini.
+          </td>
+        </tr>
+      `
 
     printWindow.document.write(`
       <html>
@@ -700,7 +709,7 @@ async function triggerPdfDownload(params: DashboardFilterParams) {
             @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
             body {
               font-family: 'Inter', sans-serif;
-              color: #1e293b;
+              color: #0f172a;
               padding: 40px;
               margin: 0;
               background-color: #ffffff;
@@ -755,24 +764,34 @@ async function triggerPdfDownload(params: DashboardFilterParams) {
               text-transform: uppercase;
               border: 1px solid #cc6200;
               letter-spacing: 0.5px;
+              -webkit-print-color-adjust: exact !important;
+              print-color-adjust: exact !important;
             }
             td {
               padding: 10px 12px;
               font-size: 11px;
-              border: 1px solid #e2e8f0;
-              color: #334155;
+              border: 1px solid #cbd5e1;
+              color: #0f172a;
             }
             tr:nth-child(even) td {
               background-color: #f8fafc;
+              -webkit-print-color-adjust: exact !important;
+              print-color-adjust: exact !important;
             }
             .total-row td {
               font-weight: 800;
               background-color: #f1f5f9 !important;
-              border-top: 2px solid #cbd5e1;
-              color: #0b0f19;
+              border-top: 2px solid #94a3b8;
+              color: #0f172a;
+              -webkit-print-color-adjust: exact !important;
+              print-color-adjust: exact !important;
             }
             @media print {
-              body { padding: 20px; }
+              body {
+                padding: 20px;
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+              }
               .no-print { display: none; }
             }
           </style>
