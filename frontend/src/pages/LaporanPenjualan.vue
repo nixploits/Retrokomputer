@@ -293,32 +293,37 @@
     <!-- Modal Unduh Laporan -->
     <div
       v-if="showDownloadModal"
-      class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm"
+      class="fixed inset-0 bg-retro-dark/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-fadeIn"
+      @click.self="showDownloadModal = false"
     >
       <div
-        class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 w-full max-w-md rounded-xl p-6 shadow-2xl space-y-4 text-slate-800 dark:text-slate-200"
+        class="bg-white dark:bg-retro-dark-card border-2 border-retro-primary rounded-lg w-full max-w-sm overflow-hidden shadow-2xl animate-slideUp font-mono text-slate-800 dark:text-slate-200"
       >
+        <!-- Title bar -->
         <div
-          class="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-3"
+          class="bg-retro-primary text-white px-4 py-2.5 flex items-center justify-between text-xs font-bold uppercase tracking-wider"
         >
-          <h3 class="text-sm font-bold uppercase tracking-wider">Unduh Laporan Penjualan</h3>
+          <div class="flex items-center gap-2">
+            <span>■</span>
+            <span>Unduh Laporan Penjualan</span>
+          </div>
           <button
             @click="showDownloadModal = false"
-            class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-300"
+            class="text-white hover:text-red-300 transition-colors font-bold text-lg leading-none"
           >
-            ✕
+            ×
           </button>
         </div>
 
-        <div class="space-y-3">
+        <div class="p-4 space-y-4">
           <!-- Opsi Periode -->
-          <div class="flex flex-col gap-1">
+          <div class="space-y-1.5">
             <label class="text-[10px] font-bold uppercase text-slate-500 dark:text-slate-400"
               >Pilih Periode</label
             >
             <select
               v-model="downloadPeriod"
-              class="text-xs rounded-md border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-slate-800 dark:text-slate-200 px-3 py-2 focus:ring-2 focus:ring-retro-primary/30"
+              class="w-full px-3 py-2 text-xs border-2 border-slate-200 dark:border-slate-800 rounded focus:outline-none focus:border-retro-primary font-sans bg-white dark:bg-slate-700 text-slate-800 dark:text-slate-200"
             >
               <option value="active">Sesuai Filter Aktif ({{ activeFilterLabel }})</option>
               <option value="mingguan">Mingguan (7 Hari Terakhir)</option>
@@ -328,26 +333,30 @@
           </div>
 
           <!-- Opsi Format -->
-          <div class="flex flex-col gap-1">
+          <div class="space-y-2">
             <label class="text-[10px] font-bold uppercase text-slate-500 dark:text-slate-400"
               >Format Laporan</label
             >
-            <div class="flex gap-4 mt-1">
-              <label class="flex items-center gap-2 cursor-pointer text-xs">
+            <div class="flex gap-6 mt-1 font-sans">
+              <label
+                class="flex items-center gap-2 cursor-pointer text-xs font-semibold text-slate-700 dark:text-slate-300"
+              >
                 <input
                   type="radio"
                   v-model="downloadFormat"
                   value="excel"
-                  class="text-retro-primary focus:ring-retro-primary"
+                  class="text-retro-primary focus:ring-retro-primary w-4 h-4"
                 />
                 Excel (.xlsx)
               </label>
-              <label class="flex items-center gap-2 cursor-pointer text-xs">
+              <label
+                class="flex items-center gap-2 cursor-pointer text-xs font-semibold text-slate-700 dark:text-slate-300"
+              >
                 <input
                   type="radio"
                   v-model="downloadFormat"
                   value="pdf"
-                  class="text-retro-primary focus:ring-retro-primary"
+                  class="text-retro-primary focus:ring-retro-primary w-4 h-4"
                 />
                 PDF (.pdf)
               </label>
@@ -355,20 +364,21 @@
           </div>
         </div>
 
+        <!-- Footer -->
         <div
-          class="flex items-center justify-end gap-3 pt-3 border-t border-slate-100 dark:border-slate-800"
+          class="bg-slate-50 dark:bg-slate-800/30 px-4 py-3 flex justify-end gap-2 border-t border-slate-100 dark:border-slate-800 font-sans mt-4"
         >
           <button
             @click="showDownloadModal = false"
-            class="px-4 py-2 text-xs font-semibold rounded-md border border-slate-200 hover:bg-slate-50 dark:border-slate-700 dark:hover:bg-slate-800"
+            class="px-4 py-1.5 text-xs text-slate-600 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded transition-colors"
           >
             Batal
           </button>
           <button
             @click="handleDownload"
-            class="px-4 py-2 text-xs font-bold text-white bg-retro-primary hover:bg-retro-primary-hover rounded-md transition-all shadow-md flex items-center gap-2"
+            class="px-4 py-1.5 text-xs bg-retro-primary hover:bg-retro-primary-hover text-white rounded font-bold transition-colors shadow-sm uppercase"
           >
-            <span>Unduh</span>
+            Unduh
           </button>
         </div>
       </div>
