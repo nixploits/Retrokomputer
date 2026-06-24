@@ -1,6 +1,6 @@
 import { ref } from 'vue'
 
-const isDark = ref(localStorage.getItem('theme') !== 'light')
+const isDark = ref(localStorage.getItem('theme') === 'dark')
 
 export function useTheme() {
   const toggleTheme = () => {
@@ -15,15 +15,15 @@ export function useTheme() {
   }
 
   const initTheme = () => {
-    // Check local storage, default to dark if not set
+    // Check local storage, default to light if not set
     const savedTheme = localStorage.getItem('theme')
-    if (savedTheme === 'light') {
-      isDark.value = false
-      document.documentElement.classList.remove('dark')
-    } else {
+    if (savedTheme === 'dark') {
       isDark.value = true
       document.documentElement.classList.add('dark')
-      localStorage.setItem('theme', 'dark')
+    } else {
+      isDark.value = false
+      document.documentElement.classList.remove('dark')
+      localStorage.setItem('theme', 'light')
     }
   }
 

@@ -19,10 +19,10 @@ export default {
         'retro-success': 'var(--color-success)',
         'retro-success-hover': 'var(--color-success-hover)',
         'retro-success-glow': 'var(--color-success-glow)',
-        'retro-orange': '#FF7A00',
-        'retro-orange-dark': '#E05300',
-        'retro-blue': '#1D4ED8', // Rich royal blue from logo swirl/outline
-        'retro-blue-deep': '#0A19D1', // Deep cosmic blue from logo swirl
+        'retro-orange': 'var(--color-primary)',
+        'retro-orange-dark': 'var(--color-primary-hover)',
+        'retro-blue': 'var(--color-primary)', 
+        'retro-blue-deep': 'var(--color-primary-hover)', 
         'retro-dark': '#0B0F19', // Deep premium navy-slate screen background
         'retro-dark-card': '#131926', // Lighter panel/card background
         'retro-yellow': '#FFC857', // Vibrant yellow/gold from R gradient

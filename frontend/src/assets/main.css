@@ -14,13 +14,13 @@
   --text-secondary: #94a3b8;         /* Muted blue-gray text */
   --text-muted: #475569;             /* Muted slate text */
   
-  --color-primary: #1D4ED8;          /* Blue in Light Mode */
-  --color-primary-hover: #1e40af;
-  --color-primary-glow: rgba(29, 78, 216, 0.15);
+  --color-primary: #FF7A00;          /* Orange in Light Mode */
+  --color-primary-hover: #E05300;
+  --color-primary-glow: rgba(255, 122, 0, 0.15);
   
-  --color-accent: #FF7A00;           /* Orange in Light Mode */
-  --color-accent-hover: #E05300;
-  --color-accent-glow: rgba(255, 122, 0, 0.15);
+  --color-accent: #1D4ED8;           /* Blue in Light Mode */
+  --color-accent-hover: #1e40af;
+  --color-accent-glow: rgba(29, 78, 216, 0.15);
   
   --color-success: #10b981;          /* Emerald Green */
   --color-success-hover: #059669;
@@ -48,13 +48,13 @@ body {
 }
 
 .dark {
-  --color-primary: #FF7A00;          /* Orange in Dark Mode */
-  --color-primary-hover: #E05300;
-  --color-primary-glow: rgba(255, 122, 0, 0.15);
+  --color-primary: #0915C1;          /* Dark Blue from Retro Logo */
+  --color-primary-hover: #07109E;
+  --color-primary-glow: rgba(9, 21, 193, 0.15);
   
-  --color-accent: #3b82f6;           /* Lighter Blue in Dark Mode */
-  --color-accent-hover: #60a5fa;
-  --color-accent-glow: rgba(59, 130, 246, 0.15);
+  --color-accent: #FF7A00;           /* Orange in Dark Mode */
+  --color-accent-hover: #E05300;
+  --color-accent-glow: rgba(255, 122, 0, 0.15);
 }
 
 .dark body {

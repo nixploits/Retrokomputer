@@ -23,10 +23,10 @@
       </div>
 
       <!-- Card Container -->
-      <div class="bg-white rounded-lg border border-slate-200 p-6 shadow-md transition-all duration-300"
+      <div class="bg-white rounded-lg border border-slate-200 p-6 shadow-md transition-all duration-300 backdrop-blur-md"
            :class="isDark 
-             ? 'bg-[#111827] border-slate-800 hover:border-retro-orange hover:shadow-[0_0_15px_rgba(255,122,0,0.25)]' 
-             : 'bg-white border-slate-200 hover:border-[rgba(29,78,216,0.4)] hover:shadow-[0_0_12px_rgba(29,78,216,0.35)]'">
+             ? '!bg-[#111827]/70 !bg-none border-slate-800 hover:border-retro-primary hover:shadow-[0_0_15px_rgba(9,21,193,0.35)]' 
+             : 'bg-opacity-80 border-slate-200 hover:border-transparent hover:shadow-[0_0_12px_rgba(255,122,0,0.35)]'">
         <!-- Profile/Person Icon -->
         <div class="flex justify-center mb-3">
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" 
@@ -37,7 +37,7 @@
         </div>
 
         <h2 class="text-base font-bold text-center mb-5"
-            :class="isDark ? 'text-retro-orange' : 'text-retro-blue'">Masuk ke Sistem</h2>
+            :class="isDark ? 'text-slate-300' : 'text-slate-600'">Masuk ke Sistem</h2>
         <div v-if="authStore.error" class="mb-4 p-2.5 rounded-md bg-red-50 border border-red-200 text-red-600 text-xs">
           {{ authStore.error }}
         </div>
@@ -51,7 +51,7 @@
               v-model="username"
               type="text"
               class="w-full px-3 py-2 text-xs border border-slate-300 rounded-md focus:outline-none transition-shadow"
-              :class="isDark ? 'dark:!focus:border-retro-orange dark:!focus:shadow-[0_0_15px_rgba(255,122,0,0.25)]' : 'focus:border-[rgba(29,78,216,0.4)] focus:shadow-[0_0_12px_rgba(29,78,216,0.35)]'"
+              :class="isDark ? 'dark:!focus:border-retro-primary dark:!focus:shadow-[0_0_15px_rgba(9,21,193,0.35)]' : 'focus:border-retro-primary focus:shadow-[0_0_12px_rgba(255,122,0,0.35)]'"
               placeholder="Masukkan username atau gmail"
               required
             />
@@ -64,7 +64,7 @@
               v-model="password"
               type="password"
               class="w-full px-3 py-2 text-xs border border-slate-300 rounded-md focus:outline-none transition-shadow"
-              :class="isDark ? 'dark:!focus:border-retro-orange dark:!focus:shadow-[0_0_15px_rgba(255,122,0,0.25)]' : 'focus:border-[rgba(29,78,216,0.4)] focus:shadow-[0_0_12px_rgba(29,78,216,0.35)]'"
+              :class="isDark ? 'dark:!focus:border-retro-primary dark:!focus:shadow-[0_0_15px_rgba(9,21,193,0.35)]' : 'focus:border-retro-primary focus:shadow-[0_0_12px_rgba(255,122,0,0.35)]'"
               placeholder="••••••••"
               required
             />
@@ -115,13 +115,13 @@ async function handleLogin() {
 .bg-grid-light {
   background-size: 24px 24px;
   background-image: 
-    linear-gradient(to right, rgba(29, 78, 216, 0.1) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(29, 78, 216, 0.1) 1px, transparent 1px);
+    linear-gradient(to right, rgba(255, 122, 0, 0.15) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 122, 0, 0.15) 1px, transparent 1px);
 }
 .bg-grid-dark {
   background-size: 24px 24px;
   background-image: 
-    linear-gradient(to right, rgba(255, 122, 0, 0.1) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(255, 122, 0, 0.1) 1px, transparent 1px);
+    linear-gradient(to right, rgba(9, 21, 193, 0.25) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(9, 21, 193, 0.25) 1px, transparent 1px);
 }
 </style>

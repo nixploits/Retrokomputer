@@ -1,7 +1,7 @@
 <template>
   <button
     @click="toggleTheme"
-    class="flex items-center justify-center w-8 h-8 cursor-pointer focus:outline-none transition-all duration-200 bg-transparent text-[#1d4ed8] hover:scale-110 dark:text-[#ff7a00]"
+    class="flex items-center justify-center w-8 h-8 cursor-pointer focus:outline-none transition-all duration-200 bg-transparent text-slate-600 hover:scale-110 dark:text-slate-300"
     role="switch"
     :aria-checked="isDark"
     title="Ganti Tema"
